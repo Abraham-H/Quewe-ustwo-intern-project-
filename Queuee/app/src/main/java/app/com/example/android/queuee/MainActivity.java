@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
         // Setup Firebase
         setupFirebase();
 
-        // Setup Button
+        // Setup Buttons
         Button mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
         mQueueStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,9 +40,17 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button mQueueNextButton = (Button) findViewById(R.id.queueNextButton);
+        mQueueNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                queue.remove(0);
+                mRef.setValue(queue);
+            }
+        });
+
         // Get unique ID for Google Accounts
         androidID = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        Log.d(TAG,androidID);
     }
 
 

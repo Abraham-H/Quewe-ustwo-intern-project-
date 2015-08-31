@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Next"
-        android:id="@+id/nextButton"
+        android:id="@+id/queueNextButton"
         android:layout_alignTop="@+id/queueStartButton"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="51dp" />
