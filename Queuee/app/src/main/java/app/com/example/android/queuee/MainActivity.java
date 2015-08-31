@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity {
     private static String androidID = "";
     private ArrayList<String> queue;
     private Firebase mRef;
+    private TextView mTextViewShowNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,9 @@ public class MainActivity extends Activity {
 
         // Setup Firebase
         setupFirebase();
+
+        // Get unique ID for Google Accounts
+        androidID = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
         // Setup Buttons
         Button mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
@@ -49,24 +54,32 @@ public class MainActivity extends Activity {
             }
         });
 
-        // Get unique ID for Google Accounts
-        androidID = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     }
-
 
     @Override
     public void onStart() {
+
         super.onStart();
     }
 
-
     public void setupFirebase(){
+
         Firebase.setAndroidContext(this);
-        mRef = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
+        mRef = new Firebase("https://burning-torch-3063.firebaseio.com/condition");
         mRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 queue = (ArrayList) dataSnapshot.getValue();
+                TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
+
+                for(int i=0; i<=queue.size(); i++){
+
+                   if(androidID.equals(queue.get(0))){
+
+                       mTextViewShowNext.setText("Your Next go to till 3");
+                   }
+               }
             }
 
             @Override
