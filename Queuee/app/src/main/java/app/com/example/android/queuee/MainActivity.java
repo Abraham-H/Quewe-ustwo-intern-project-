@@ -37,20 +37,29 @@ public class MainActivity extends Activity {
 
         // Setup Buttons
         Button mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
+
         mQueueStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Create queue and populate
+                if(queue == null) {
+                    queue = new ArrayList<String>();
+                }
                 queue.add(androidID);
                 mRef.setValue(queue);
             }
         });
 
+        // Setup Next Button
         Button mQueueNextButton = (Button) findViewById(R.id.queueNextButton);
         mQueueNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                queue.remove(0);
-                mRef.setValue(queue);
+                // Remove Queue Entry
+                if(queue != null) {
+                    queue.remove(0);
+                    mRef.setValue(queue);
+                }
             }
         });
 
@@ -70,21 +79,26 @@ public class MainActivity extends Activity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                queue = (ArrayList) dataSnapshot.getValue();
-                TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
+                Boolean isNext = false;
+                if(dataSnapshot.getValue() == null){
+                    queue = null;
+                    isNext = true;
+                }
+                else {
+                    TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
+                    if (androidID.equals(queue.get(0))) {
+                        isNext = true;
+                    }
+                }
 
-                for(int i=0; i<=queue.size(); i++){
-
-                   if(androidID.equals(queue.get(0))){
-
-                       mTextViewShowNext.setText("Your Next go to till 3");
-                   }
-               }
+                if(isNext){
+                    mTextViewShowNext.setText("next");
+                }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Log.e(TAG, firebaseError.toString());
             }
         });
     }
