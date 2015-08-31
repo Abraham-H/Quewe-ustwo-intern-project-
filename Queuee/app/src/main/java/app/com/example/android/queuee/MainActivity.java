@@ -20,9 +20,9 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
     private static String androidID = "";
+
     private ArrayList<String> queue;
     private Firebase mRef;
-    private TextView mTextViewShowNext;
     private Button mQueueStartButton;
 
     @Override
@@ -45,9 +45,11 @@ public class MainActivity extends Activity {
                 if(queue == null) {
                     queue = new ArrayList<String>();
                 }
-                queue.add(androidID);
-                mRef.setValue(queue);
-                mQueueStartButton.setEnabled(false);
+                // If not already in queue
+                if(queue.indexOf(androidID) == -1) {
+                    queue.add(androidID);
+                    mRef.setValue(queue);
+                }
             }
         });
 
@@ -68,7 +70,6 @@ public class MainActivity extends Activity {
 
     @Override
     public void onStart() {
-
         super.onStart();
     }
 
@@ -80,33 +81,28 @@ public class MainActivity extends Activity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Boolean isNext = false;
+
+                TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
 
                 if(dataSnapshot.getValue() == null){
                     queue = null;
-                    isNext = true;
+                    mTextViewShowNext.setText("No Queue");
+                    mQueueStartButton.setEnabled(true);
                 }
                 else {
                     queue = (ArrayList<String>) dataSnapshot.getValue();
-
                     int index = queue.indexOf(androidID);
-                    Log.d(TAG,Integer.toString(index));
-                    if (index == 0) {
-                        isNext = true;
-                        mQueueStartButton.setEnabled(true);
-                    } else if (index == -1) {
-                        mQueueStartButton.setEnabled(true);
-                    } else {
-                        mQueueStartButton.setEnabled(false);2
-                    }
-                }
 
-                TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
-                if(isNext){
-                    mTextViewShowNext.setText("next");
-                }
-                else{
-                    mTextViewShowNext.setText("wait");
+                    if (index == 0) {           // Next
+                        mTextViewShowNext.setText("Your Turn!");
+                        mQueueStartButton.setEnabled(false);
+                    } else if (index == -1) {   // Not in Queue
+                        mTextViewShowNext.setText("Not in queue");
+                        mQueueStartButton.setEnabled(true);
+                    } else {                    // In Queue
+                        mTextViewShowNext.setText("Wait, Position: " + Integer.toString(index));
+                        mQueueStartButton.setEnabled(false);
+                    }
                 }
             }
 
