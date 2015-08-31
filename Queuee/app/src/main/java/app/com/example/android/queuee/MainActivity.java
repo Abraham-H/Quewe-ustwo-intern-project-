@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
     public void setupFirebase(){
 
         Firebase.setAndroidContext(this);
-        mRef = new Firebase("https://burning-torch-3063.firebaseio.com/condition");
+        mRef = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
         mRef.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -85,13 +85,14 @@ public class MainActivity extends Activity {
                     isNext = true;
                 }
                 else {
-                    TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
+                    queue = (ArrayList<String>) dataSnapshot.getValue();
                     if (androidID.equals(queue.get(0))) {
                         isNext = true;
                     }
                 }
 
                 if(isNext){
+                    TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
                     mTextViewShowNext.setText("next");
                 }
             }
