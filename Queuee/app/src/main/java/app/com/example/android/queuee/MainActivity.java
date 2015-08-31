@@ -5,8 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -14,6 +19,7 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
     private static String androidID = "";
+    private ArrayList<String> queue;
     private Firebase mRef;
 
     @Override
@@ -22,26 +28,44 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // Setup Firebase
-        Firebase.setAndroidContext(this);
+        setupFirebase();
+
+        // Setup Button
+        Button mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
+        mQueueStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                queue.add(androidID);
+                mRef.setValue(queue);
+            }
+        });
 
         // Get unique ID for Google Accounts
         androidID = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
         Log.d(TAG,androidID);
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
-        startFirebase();
     }
 
-    private void startFirebase(){
+
+    public void setupFirebase(){
+        Firebase.setAndroidContext(this);
         mRef = new Firebase("https://burning-torch-3063.firebaseio.com/condition");
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("id1+");
-        list.add("id2+");
-        list.add("id3+");
-        mRef.setValue(list);
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                queue = (ArrayList) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     @Override
