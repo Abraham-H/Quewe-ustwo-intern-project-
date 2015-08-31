@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 
     public void setupFirebase(){
         Firebase.setAndroidContext(this);
-        mRef = new Firebase("https://burning-torch-3063.firebaseio.com/condition");
+        mRef = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
