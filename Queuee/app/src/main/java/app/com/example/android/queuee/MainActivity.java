@@ -30,22 +30,30 @@ public class MainActivity extends Activity {
         // Setup Firebase
         setupFirebase();
 
-        // Setup Buttons
-        Button mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
+        // Setup Queue Start Button
+        final Button mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
         mQueueStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Create queue and populate
+                if(queue == null) {
+                    queue = new ArrayList<String>();
+                }
                 queue.add(androidID);
                 mRef.setValue(queue);
             }
         });
 
+        // Setup Next Button
         Button mQueueNextButton = (Button) findViewById(R.id.queueNextButton);
         mQueueNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                queue.remove(0);
-                mRef.setValue(queue);
+                // Remove Queue Entry
+                if(queue != null) {
+                    queue.remove(0);
+                    mRef.setValue(queue);
+                }
             }
         });
 
@@ -66,12 +74,12 @@ public class MainActivity extends Activity {
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                queue = (ArrayList) dataSnapshot.getValue();
+                queue = dataSnapshot.getValue() == null ? null : (ArrayList) dataSnapshot.getValue();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Log.e(TAG, firebaseError.toString());
             }
         });
     }
