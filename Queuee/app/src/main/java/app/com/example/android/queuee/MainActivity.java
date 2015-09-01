@@ -1,7 +1,15 @@
 package app.com.example.android.queuee;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +49,7 @@ public class MainActivity extends Activity {
         mQueueStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendBasicNotification();
                 // Create queue and populate
                 if(queue == null) {
                     queue = new ArrayList<String>();
@@ -58,8 +67,9 @@ public class MainActivity extends Activity {
         mQueueNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendBasicNotification();
                 // Remove Queue Entry
-                if(queue != null) {
+                if (queue != null) {
                     queue.remove(0);
                     mRef.setValue(queue);
                 }
@@ -84,18 +94,18 @@ public class MainActivity extends Activity {
 
                 TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
 
-                if(dataSnapshot.getValue() == null){
+                if (dataSnapshot.getValue() == null) {
                     queue = null;
                     mTextViewShowNext.setText("No Queue");
                     mQueueStartButton.setEnabled(true);
-                }
-                else {
+                } else {
                     queue = (ArrayList<String>) dataSnapshot.getValue();
                     int index = queue.indexOf(androidID);
 
                     if (index == 0) {           // Next
                         mTextViewShowNext.setText("Your Turn!");
                         mQueueStartButton.setEnabled(false);
+
                     } else if (index == -1) {   // Not in Queue
                         mTextViewShowNext.setText("Not in queue");
                         mQueueStartButton.setEnabled(true);
@@ -111,6 +121,36 @@ public class MainActivity extends Activity {
                 Log.e(TAG, firebaseError.toString());
             }
         });
+    }
+
+    private void sendBasicNotification()
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setAutoCancel(true);
+        mBuilder.setContentTitle("Just testing notification");
+        mBuilder.setContentText("This is our notification...blah..blah");
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        int mId = 8;
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(1, mBuilder.build());
+
     }
 
     @Override
