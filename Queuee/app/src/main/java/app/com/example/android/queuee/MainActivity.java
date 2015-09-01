@@ -38,10 +38,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Setup Firebase
         setupFirebase();
-
-        // Get unique ID for Google Accounts
         androidID = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
         // Setup Start Button
@@ -94,7 +91,6 @@ public class MainActivity extends Activity {
 
                 int avgWaitInMins = 2;
                 queue = (ArrayList<String>) dataSnapshot.getValue();
-                int qWaitTimeInMins = queue.indexOf(androidID) * avgWaitInMins;
 
                 if (dataSnapshot.getValue() == null) {
                     queue = null;
@@ -105,12 +101,14 @@ public class MainActivity extends Activity {
 
                     if (index == 0) {           // Next
                         mTextViewShowNext.setText("Your Turn!");
+                        mTextViewShowWaitTime.setText("Your wait time is up!");
                         sendBasicNotification();
                         mQueueStartButton.setEnabled(false);
                     } else if (index == -1) {   // Not in Queue
                         mTextViewShowNext.setText("Not in queue");
                         mQueueStartButton.setEnabled(true);
                     } else {                    // In Queue
+                        int qWaitTimeInMins = queue.indexOf(androidID) * avgWaitInMins;
                         mTextViewShowNext.setText("Your position in q is: " + Integer.toString(index));
                         mTextViewShowWaitTime.setText("Your wait time: " + Integer.toString(qWaitTimeInMins) + " Mins");
                         mQueueStartButton.setEnabled(false);
@@ -144,11 +142,9 @@ public class MainActivity extends Activity {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
 
-
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         mNotificationManager.notify(1, mBuilder.build());
     }
 
@@ -170,7 +166,6 @@ public class MainActivity extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
