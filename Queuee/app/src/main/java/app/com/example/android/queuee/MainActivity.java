@@ -20,9 +20,10 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
     private static String androidID = "";
+
     private ArrayList<String> queue;
     private Firebase mRef;
-    private TextView mTextViewShowNext;
+    private Button mQueueStartButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +36,8 @@ public class MainActivity extends Activity {
         // Get unique ID for Google Accounts
         androidID = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
-        // Setup Buttons
-        Button mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
-
+        // Setup Start Button
+        mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
         mQueueStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,8 +45,11 @@ public class MainActivity extends Activity {
                 if(queue == null) {
                     queue = new ArrayList<String>();
                 }
-                queue.add(androidID);
-                mRef.setValue(queue);
+                // If not already in queue
+                if(queue.indexOf(androidID) == -1) {
+                    queue.add(androidID);
+                    mRef.setValue(queue);
+                }
             }
         });
 
@@ -67,7 +70,6 @@ public class MainActivity extends Activity {
 
     @Override
     public void onStart() {
-
         super.onStart();
     }
 
@@ -79,21 +81,28 @@ public class MainActivity extends Activity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Boolean isNext = false;
+
+                TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
+
                 if(dataSnapshot.getValue() == null){
                     queue = null;
-                    isNext = true;
+                    mTextViewShowNext.setText("No Queue");
+                    mQueueStartButton.setEnabled(true);
                 }
                 else {
                     queue = (ArrayList<String>) dataSnapshot.getValue();
-                    if (androidID.equals(queue.get(0))) {
-                        isNext = true;
-                    }
-                }
+                    int index = queue.indexOf(androidID);
 
-                if(isNext){
-                    TextView mTextViewShowNext = (TextView) findViewById(R.id.textViewShowNext);
-                    mTextViewShowNext.setText("next");
+                    if (index == 0) {           // Next
+                        mTextViewShowNext.setText("Your Turn!");
+                        mQueueStartButton.setEnabled(false);
+                    } else if (index == -1) {   // Not in Queue
+                        mTextViewShowNext.setText("Not in queue");
+                        mQueueStartButton.setEnabled(true);
+                    } else {                    // In Queue
+                        mTextViewShowNext.setText("Wait, Position: " + Integer.toString(index));
+                        mQueueStartButton.setEnabled(false);
+                    }
                 }
             }
 
