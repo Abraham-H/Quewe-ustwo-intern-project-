@@ -34,8 +34,6 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
     private static String androidID = "";
-
-
     private WifiManager wifi;
     private static final int REQUEST_ENABLE_BT = 1234;
     private ArrayList<String> queue;
@@ -50,33 +48,19 @@ public class MainActivity extends Activity {
         setupFirebase();
         androidID = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
-        // Setup Start Button
         mQueueStartButton = (Button) findViewById(R.id.queueStartButton);
         mQueueStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create queue and populate
-                if (queue == null) {
-                    queue = new ArrayList<String>();
-                }
-                // If not already in queue
-                if (queue.indexOf(androidID) == -1) {
-                    queue.add(androidID);
-                    mRef.setValue(queue);
-                }
+                createAndPopulateQ();
             }
         });
 
-        // Setup Next Button
         Button mQueueNextButton = (Button) findViewById(R.id.queueNextButton);
         mQueueNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Remove Queue Entry
-                if (queue != null) {
-                    queue.remove(0);
-                    mRef.setValue(queue);
-                }
+                removeQEntry();
             }
         });
     }
@@ -87,25 +71,22 @@ public class MainActivity extends Activity {
         super.onStart();
     }
 
-    public void checkBluetoothWifi(){
-        wifi=(WifiManager)getSystemService(Context.WIFI_SERVICE);
+    public void checkBluetoothWifi() {
+        wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         android.net.NetworkInfo datac = cm
                 .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-
         if ((wifi != null || datac != null) || !mBluetoothAdapter.isEnabled()) {
-            enableBluetoothWifi();
+            setupDialog();
+        } else {
+            //Bluetooth/wifi is enabled
         }
-            else
-            {
-                //Bluetooth/wifi is enabled
-            }
     }
 
-    public void enableBluetoothWifi(){
+    public void setupDialog() {
 
         AlertDialog.Builder myDialog = MyDialog.create(this, getLayoutInflater(), "Title", "Content");
         myDialog.setPositiveButton("No", new DialogInterface.OnClickListener() {
@@ -115,16 +96,18 @@ public class MainActivity extends Activity {
         })
                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
-                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-
-                            wifi=(WifiManager)getSystemService(Context.WIFI_SERVICE);
-                            wifi.setWifiEnabled(true);
-
+                        enableWifiBluetooth();
                         dialog.cancel();
                     }
                 }).show();
+    }
+
+    public void enableWifiBluetooth() {
+        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+        wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifi.setWifiEnabled(true);
     }
 
     public void setupFirebase() {
@@ -199,6 +182,24 @@ public class MainActivity extends Activity {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(1, mBuilder.build());
+    }
+
+    public void removeQEntry() {
+        if (queue != null) {
+            queue.remove(0);
+            mRef.setValue(queue);
+        }
+    }
+
+    public void createAndPopulateQ() {
+
+        if (queue == null) {
+            queue = new ArrayList<String>();
+        }
+        if (queue.indexOf(androidID) == -1) {
+            queue.add(androidID);
+            mRef.setValue(queue);
+        }
     }
 
     @Override
