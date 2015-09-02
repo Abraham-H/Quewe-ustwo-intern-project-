@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.audiofx.Visualizer;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -127,6 +128,10 @@ public class MainActivity extends Activity {
     }
 
     public void setupFirebase() {
+
+        queue.addNextListener(new ValueEventListener(){
+            Visualizer.OnDataCaptureListener
+        })
 
         Firebase.setAndroidContext(this);
         mRef = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
