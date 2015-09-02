@@ -1,13 +1,18 @@
 package app.com.example.android.queuee;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -29,6 +34,9 @@ public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
     private static String androidID = "";
 
+
+    private WifiManager wifi;
+    private static final int REQUEST_ENABLE_BT = 1234;
     private ArrayList<String> queue;
     private Firebase mRef;
     private Button mQueueStartButton;
@@ -38,10 +46,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Setup Firebase
         setupFirebase();
-
-        // Get unique ID for Google Accounts
         androidID = android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
         // Setup Start Button
@@ -50,11 +55,11 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // Create queue and populate
-                if(queue == null) {
+                if (queue == null) {
                     queue = new ArrayList<String>();
                 }
                 // If not already in queue
-                if(queue.indexOf(androidID) == -1) {
+                if (queue.indexOf(androidID) == -1) {
                     queue.add(androidID);
                     mRef.setValue(queue);
                 }
@@ -77,10 +82,51 @@ public class MainActivity extends Activity {
 
     @Override
     public void onStart() {
+        checkBluetoothWifi();
         super.onStart();
     }
 
-    public void setupFirebase(){
+    public void checkBluetoothWifi(){
+        wifi=(WifiManager)getSystemService(Context.WIFI_SERVICE);
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        android.net.NetworkInfo datac = cm
+                .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+
+        if ((wifi != null || datac != null) || !mBluetoothAdapter.isEnabled()) {
+            enableBluetoothWifi();
+        }
+            else
+            {
+                //Bluetooth/wifi is enabled
+            }
+    }
+
+    public void enableBluetoothWifi(){
+
+        AlertDialog.Builder myDialog = MyDialog.create(this, getLayoutInflater(), "Title", "Content");
+        myDialog.setPositiveButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                MainActivity.this.finish();
+            }
+        })
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+                            wifi=(WifiManager)getSystemService(Context.WIFI_SERVICE);
+                            wifi.setWifiEnabled(true);
+
+                        dialog.cancel();
+                    }
+                }).show();
+    }
+
+    public void setupFirebase() {
 
         Firebase.setAndroidContext(this);
         mRef = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
@@ -94,7 +140,6 @@ public class MainActivity extends Activity {
 
                 int avgWaitInMins = 2;
                 queue = (ArrayList<String>) dataSnapshot.getValue();
-                int qWaitTimeInMins = queue.indexOf(androidID) * avgWaitInMins;
 
                 if (dataSnapshot.getValue() == null) {
                     queue = null;
@@ -105,12 +150,14 @@ public class MainActivity extends Activity {
 
                     if (index == 0) {           // Next
                         mTextViewShowNext.setText("Your Turn!");
+                        mTextViewShowWaitTime.setText("Your wait time is up!");
                         sendBasicNotification();
                         mQueueStartButton.setEnabled(false);
                     } else if (index == -1) {   // Not in Queue
                         mTextViewShowNext.setText("Not in queue");
                         mQueueStartButton.setEnabled(true);
                     } else {                    // In Queue
+                        int qWaitTimeInMins = queue.indexOf(androidID) * avgWaitInMins;
                         mTextViewShowNext.setText("Your position in q is: " + Integer.toString(index));
                         mTextViewShowWaitTime.setText("Your wait time: " + Integer.toString(qWaitTimeInMins) + " Mins");
                         mQueueStartButton.setEnabled(false);
@@ -125,8 +172,7 @@ public class MainActivity extends Activity {
         });
     }
 
-    private void sendBasicNotification()
-    {
+    private void sendBasicNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setAutoCancel(true);
         mBuilder.setContentTitle("You are next in queue!");
@@ -144,11 +190,9 @@ public class MainActivity extends Activity {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
 
-
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         mNotificationManager.notify(1, mBuilder.build());
     }
 
@@ -170,7 +214,6 @@ public class MainActivity extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
