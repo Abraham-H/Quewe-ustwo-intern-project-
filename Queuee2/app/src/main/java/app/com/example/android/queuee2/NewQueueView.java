@@ -23,7 +23,7 @@ public class NewQueueView extends Activity {
 //        queue.get(0);
 //        queue.pop();
 //        queue.clear();
-//        queue.indexOfUserByID("some_id");
+//        queue.indexOfUserByID("some_id"); --> Probably not necessary
 
         //  Here's how to set up a listener
 
