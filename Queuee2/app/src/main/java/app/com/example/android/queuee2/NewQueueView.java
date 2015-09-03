@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.User;
 
 public class NewQueueView extends Activity {
 
+    private ImageButton startQImgButton;
     private static String TAG = NewQueueView.class.getSimpleName();
 
     @Override
@@ -17,11 +20,20 @@ public class NewQueueView extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_queue_view);
 
+        ImageButton startQImageButton=(ImageButton)findViewById(R.id.startQimageButton);
+        startQImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeSrcOfImageButton();
+                addUserToQ();
+            }
+        });
+
         // Some quick examples of how to use the queue system
 
-        Queue queue = Queue.createQueue(this);
+        //Queue queue = Queue.createQueue(this);
 //        User user = new User(Queue.androidID);
-        queue.add(new User("1"));
+      //  queue.add(new User("1"));
 
 //        Queue queue = Queue.createQueue();
 //        User user = new User(Queue.androidID);
@@ -52,6 +64,17 @@ public class NewQueueView extends Activity {
 //        -b
     }
 
+    public void changeSrcOfImageButton()
+    {
+        ImageButton startQImageButton=(ImageButton)findViewById(R.id.startQimageButton);
+        startQImageButton.setImageResource(R.drawable.button_transformed_state);
+    }
+
+    public void addUserToQ(){
+        Queue queue = Queue.createQueue(this);
+        queue.add(new User(queue.androidID));
+    }
+    
     @Override
     protected void onStart(){
         super.onStart();
