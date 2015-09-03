@@ -5,7 +5,6 @@ package app.com.example.android.queuee2.model;
  */
 public class User {
     private String id;
-    private String name;
 
     public User(String id){
         this.id = id;

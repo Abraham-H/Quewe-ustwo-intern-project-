@@ -22,6 +22,8 @@ public class NewQueueView extends Activity {
 //        queue.add(new User("whatever_user_id"));
 //        queue.get(0);
 //        queue.pop();
+//        queue.clear();
+//        queue.indexOfUserByID("some_id");
 
         //  Here's how to set up a listener
 

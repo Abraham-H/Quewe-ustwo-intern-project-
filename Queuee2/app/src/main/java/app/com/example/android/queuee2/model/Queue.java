@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class Queue {
 
     public static String androidID;
-    
+
     private Context ctx;
     private static String TAG = Queue.class.getSimpleName();
     private ArrayList<User> queue = new ArrayList<>();
