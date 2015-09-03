@@ -38,7 +38,7 @@ public class Queue {
         setQueueEventInQueue(queueEventInQueue);
         setQueueEventNotInQueue(queueEventNotInQueue);
         this.ctx = ctx;
-        androidID = android.provider.Settings.Secure.getString(ctx.getContentResolver(),
+        androidID = android.provider.Settings.Secure.getString(this.ctx.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
         setupFirebase();
     }
