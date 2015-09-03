@@ -16,15 +16,15 @@ import java.util.HashMap;
  */
 public class Queue {
 
-    private static String androidID;
+    public static String androidID;
+    
+    private Context ctx;
     private static String TAG = Queue.class.getSimpleName();
     private ArrayList<User> queue = new ArrayList<>();
     private QueueEventListener queueEventNoQueue;
     private QueueEventListener queueEventNext;
     private QueueEventListener queueEventInQueue;
     private QueueEventListener queueEventNotInQueue;
-    private Context ctx;
-
     private Firebase firebaseRef;
 
 
@@ -58,32 +58,12 @@ public class Queue {
     }
 
     public void setupFirebase() {
-        // TODO: FIX!
         Firebase.setAndroidContext(this.ctx);
         firebaseRef = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
         firebaseRef.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Object firebaseData = dataSnapshot.getValue();
-
-                if (firebaseData == null) {
-                    queue.clear();
-                    queueEventNoQueue.run(-1);
-                } else {
-                    queue = dataSnapshotToQueue((ArrayList<HashMap<String, String>>) dataSnapshot.getValue());
-                    switch (indexOfUserByID(queue, androidID)) {
-                        case 0:
-                            queueEventNext.run(0);
-                            break;
-                        case -1:
-                            queueEventNotInQueue.run(-1);
-                            break;
-                        default:
-                            queueEventInQueue.run(indexOfUserByID(queue,androidID));
-                            break;
-                    }
-                }
+                runListeners(dataSnapshot.getValue());
             }
 
             @Override
@@ -93,7 +73,27 @@ public class Queue {
         });
     }
 
-    public static ArrayList<User> dataSnapshotToQueue(ArrayList<HashMap<String,String>> dataSnapshot){
+    private void runListeners(Object firebaseData){
+        if (firebaseData == null) {
+            queue.clear();
+            queueEventNoQueue.run(-1);
+        } else {
+            queue = parseFirebaseData((ArrayList<HashMap<String, String>>) firebaseData);
+            switch (indexOfUserByID(androidID)) {
+                case 0:
+                    queueEventNext.run(0);
+                    break;
+                case -1:
+                    queueEventNotInQueue.run(-1);
+                    break;
+                default:
+                    queueEventInQueue.run(indexOfUserByID(androidID));
+                    break;
+            }
+        }
+    }
+
+    private static ArrayList<User> parseFirebaseData(ArrayList<HashMap<String,String>> dataSnapshot){
         ArrayList<User> resultQueue = new ArrayList<>();
         for (int i = dataSnapshot.size()-1; i >= 0; i--) {
             resultQueue.add(new User(dataSnapshot.get(i).get("id")));
@@ -101,10 +101,12 @@ public class Queue {
         return resultQueue;
     }
 
-    public static int indexOfUserByID(ArrayList<User> queue,String id){
+    public int indexOfUserByID(String id){
         for (int i = 0; i < queue.size(); i++){
-            if(queue.get(i).getId().equals(id)){
-                return i;
+            if(queue.get(i) != null) {
+                if (queue.get(i).getId().equals(id)) {
+                    return i;
+                }
             }
         }
         return -1;
@@ -129,6 +131,10 @@ public class Queue {
             return removedUser;
         }
         return null;
+    }
+
+    public void clear(){
+        firebaseRef.setValue(null);
     }
 
     public void setQueueEventNoQueue(QueueEventListener queueEventNoQueue) {

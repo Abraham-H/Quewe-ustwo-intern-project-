@@ -1,17 +1,9 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-
-import app.com.example.android.queuee2.model.Queue;
-import app.com.example.android.queuee2.model.Queue.QueueEventListener;
-import app.com.example.android.queuee2.model.User;
 
 public class NewQueueView extends Activity {
 
