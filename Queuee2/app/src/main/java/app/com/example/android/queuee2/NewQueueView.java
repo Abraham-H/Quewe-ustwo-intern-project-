@@ -35,7 +35,7 @@ public class NewQueueView extends Activity {
 
 //        queue.setQueueEventInQueue(new QueueEventListener() {
 //            @Override
-//            public void run() {
+//            public void run(int index) {
 //              // Code in here!!
 //            }
 //        });

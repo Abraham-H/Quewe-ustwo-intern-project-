@@ -24,7 +24,7 @@ public class TestQueueModel extends AndroidTestCase {
 
             assertEquals("first", queue.get(0).getId());
         } catch(Exception e){
-
+            fail();
         }
     }
 }

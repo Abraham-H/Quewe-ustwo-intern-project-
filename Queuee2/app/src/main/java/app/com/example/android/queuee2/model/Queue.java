@@ -11,14 +11,12 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import app.com.example.android.queuee2.NewQueueView;
-
 /**
  * Created by bkach on 9/2/15.
  */
 public class Queue {
 
-    public static String androidID;
+    private static String androidID;
     private static String TAG = Queue.class.getSimpleName();
     private ArrayList<User> queue = new ArrayList<>();
     private QueueEventListener queueEventNoQueue;
@@ -48,8 +46,8 @@ public class Queue {
     public static Queue createQueue(Context ctx){
         QueueEventListener defaultListener = (new QueueEventListener() {
             @Override
-            public void run() {
-                Log.v(TAG, "Empty Listener");
+            public void run(int index) {
+                Log.v(TAG, "Empty Listener, Index: " + Integer.toString(index));
             }
         });
         return new Queue(defaultListener,
@@ -71,18 +69,18 @@ public class Queue {
 
                 if (firebaseData == null) {
                     queue.clear();
-                    queueEventNoQueue.run();
+                    queueEventNoQueue.run(-1);
                 } else {
                     queue = dataSnapshotToQueue((ArrayList<HashMap<String, String>>) dataSnapshot.getValue());
                     switch (indexOfUserByID(queue, androidID)) {
                         case 0:
-                            queueEventNext.run();
+                            queueEventNext.run(0);
                             break;
                         case -1:
-                            queueEventNotInQueue.run();
+                            queueEventNotInQueue.run(-1);
                             break;
                         default:
-                            queueEventInQueue.run();
+                            queueEventInQueue.run(indexOfUserByID(queue,androidID));
                             break;
                     }
                 }
@@ -150,7 +148,7 @@ public class Queue {
     }
 
     public interface QueueEventListener {
-        void run();
+        void run(int index);
     }
 
 }
