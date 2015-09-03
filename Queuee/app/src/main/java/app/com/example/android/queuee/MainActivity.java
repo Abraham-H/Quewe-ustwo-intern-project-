@@ -106,7 +106,7 @@ public class MainActivity extends Activity {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 
-        wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifi = (WifiManager) getSystemService(Context.WIF3I_SERVICE);
         wifi.setWifiEnabled(true);
     }
 

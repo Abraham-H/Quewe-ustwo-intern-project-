@@ -20,8 +20,20 @@ public class NewQueueView extends Activity {
         // Some quick examples of how to use the queue system
 
         Queue queue = Queue.createQueue(this);
-//        User user = new User(Queue.androidID);
-        queue.add(new User("1"));
+        User user1 = new User(Queue.androidID);
+        queue.add(user1);
+        User user = queue.pop();
+        queue.add(user1);
+        User user2 = queue.pop();
+        queue.add(user1);
+        User user3 = queue.pop();
+        queue.add(user1);
+        User user4 = queue.pop();
+        queue.add(user1);
+        User user5 = queue.pop();
+        queue.add(user1);
+        queue.add(user1);
+        System.out.println(user.getId());
 
 //        Queue queue = Queue.createQueue();
 //        User user = new User(Queue.androidID);
