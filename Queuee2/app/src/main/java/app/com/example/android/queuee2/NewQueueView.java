@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import app.com.example.android.queuee2.model.Queue;
+import app.com.example.android.queuee2.model.User;
+
 public class NewQueueView extends Activity {
 
     private static String TAG = NewQueueView.class.getSimpleName();
@@ -15,6 +18,10 @@ public class NewQueueView extends Activity {
         setContentView(R.layout.activity_new_queue_view);
 
         // Some quick examples of how to use the queue system
+
+        Queue queue = Queue.createQueue(this);
+//        User user = new User(Queue.androidID);
+        queue.add(new User("1"));
 
 //        Queue queue = Queue.createQueue();
 //        User user = new User(Queue.androidID);
