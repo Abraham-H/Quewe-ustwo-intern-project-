@@ -1,69 +1,42 @@
 package app.com.example.android.queuee2;
+import app.com.example.android.queuee2.model.Queue;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
-import app.com.example.android.queuee2.model.Queue;
-import app.com.example.android.queuee2.model.User;
 
 public class NewQueueView extends Activity {
 
     private static String TAG = NewQueueView.class.getSimpleName();
+    private ImageButton addToQueueImageButton;
+    private Queue queue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_queue_view);
 
-        // Some quick examples of how to use the queue system
-
-        Queue queue = Queue.createQueue(this);
-        User user1 = new User(Queue.androidID);
-        queue.add(user1);
-        User user = queue.pop();
-        queue.add(user1);
-        User user2 = queue.pop();
-        queue.add(user1);
-        User user3 = queue.pop();
-        queue.add(user1);
-        User user4 = queue.pop();
-        queue.add(user1);
-        User user5 = queue.pop();
-        queue.add(user1);
-        queue.add(user1);
-        System.out.println(user.getId());
-
-//        Queue queue = Queue.createQueue();
-//        User user = new User(Queue.androidID);
-//        queue.add(user);
-//        queue.add(new User("whatever_user_id"));
-//        queue.get(0);
-//        queue.pop();
-//        queue.clear();
-//        queue.indexOfUserByID("some_id"); --> Probably not necessary
-
-        //  Here's how to set up a listener
-
-//        queue.setQueueEventInQueue(new QueueEventListener() {
-//            @Override
-//            public void run(int index) {
-//              // Code in here!!
-//            }
-//        });
-
-//        There are four types of listeners:
-
-//          setQueueEventNoQueue
-//          setQueueEventInQueue
-//          setQueueEventNext
-//          setQueueEventNotInQueue
-
-//        Have fun!
-//        -b
+        queue = Queue.createQueue(this);
+        populateView();
     }
 
+    private void populateView() {
+        addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
+        addToQueueImageButton.setOnClickListener((v) -> {
+            changeSrcOfImageButton();
+            queue.add();
+        });
+    }
+
+    private void changeSrcOfImageButton() {
+        addToQueueImageButton.setImageResource(R.drawable.button_transformed_state);
+    }
+    
     @Override
     protected void onStart(){
         super.onStart();
@@ -87,7 +60,6 @@ public class NewQueueView extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

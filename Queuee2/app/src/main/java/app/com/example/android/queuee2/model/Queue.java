@@ -45,12 +45,9 @@ public class Queue {
     }
 
     public static Queue createQueue(Context ctx){
-        QueueEventListener defaultListener = (new QueueEventListener() {
-            @Override
-            public void run(int index) {
-                Log.v(TAG, "Empty Listener, Index: " + Integer.toString(index));
-            }
-        });
+        QueueEventListener defaultListener = (i) -> {
+                Log.v(TAG, "Empty Listener, Index: " + Integer.toString(i));
+            };
         return new Queue(defaultListener,
                          defaultListener,
                          defaultListener,
@@ -142,6 +139,10 @@ public class Queue {
     public void add(User user){
         queue.add(user);
         firebaseRef.setValue(queue);
+    }
+
+    public void add(){
+        this.add(new User(this.androidID));
     }
 
     public User get(int i){
