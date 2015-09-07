@@ -34,7 +34,6 @@ public class Queue {
     private boolean checkingConnectivity;
     private boolean lastConnectivityStatus;
 
-
     public Queue(QueueEventListener queueEventNoQueue, QueueEventListener queueEventNext,
                  QueueEventListener queueEventInQueue, QueueEventListener queueEventNotInQueue,
                  ConnectivityListener queueConnectivityEvent, Context ctx) {

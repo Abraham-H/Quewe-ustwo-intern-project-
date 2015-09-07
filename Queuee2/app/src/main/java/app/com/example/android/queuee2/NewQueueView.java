@@ -31,10 +31,6 @@ public class NewQueueView extends Activity {
         addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
         addToQueueImageButton.setOnClickListener((v) -> {
             changeSrcOfImageButton();
-
-            Intent i = new Intent(this, InQueueView.class);
-            i.putExtra("User",new User(Queue.androidID));
-            startActivity(i);
             queue.add();
         });
     }
