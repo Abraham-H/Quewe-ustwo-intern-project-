@@ -9,6 +9,7 @@ public class User {
     public User(String id){
         this.id = id;
     }
+    public User() { this.id = Queue.androidID; }
     public void setId(String id){
         this.id = id;
     }

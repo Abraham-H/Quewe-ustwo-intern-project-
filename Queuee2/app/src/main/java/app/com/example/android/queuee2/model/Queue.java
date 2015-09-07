@@ -3,14 +3,13 @@ package app.com.example.android.queuee2.model;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.util.Log;
 
-import com.android.internal.util.Predicate;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,81 +28,98 @@ public class Queue {
     private QueueEventListener queueEventNext;
     private QueueEventListener queueEventInQueue;
     private QueueEventListener queueEventNotInQueue;
-    private QueueEventListener queueEventNoInternet;
-    private Firebase firebaseRef;
+    private ConnectivityListener queueConnectivityEvent;
+    private Firebase mFirebase;
+    private Handler mHandler;
+    private boolean checkingConnectivity;
+    private boolean lastConnectivityStatus;
 
 
     public Queue(QueueEventListener queueEventNoQueue, QueueEventListener queueEventNext,
                  QueueEventListener queueEventInQueue, QueueEventListener queueEventNotInQueue,
-                 QueueEventListener queueEventNoInternet, Context ctx) {
+                 ConnectivityListener queueConnectivityEvent, Context ctx) {
         setQueueEventNoQueue(queueEventNoQueue);
         setQueueEventNext(queueEventNext);
         setQueueEventInQueue(queueEventInQueue);
         setQueueEventNotInQueue(queueEventNotInQueue);
-        setQueueEventNoInternet(queueEventNoInternet);
+        setQueueConnectivityEvent(queueConnectivityEvent);
         this.ctx = ctx;
         androidID = android.provider.Settings.Secure.getString(this.ctx.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
-        checkConnectivity();
+        launchConnectivityDaemon();
         setupFirebase();
     }
 
     public static Queue createQueue(Context ctx){
-        QueueEventListener defaultListener = (i) -> {
-                Log.v(TAG, "Empty Listener, Index: " + Integer.toString(i));
-            };
-        return new Queue(defaultListener,
-                         defaultListener,
-                         defaultListener,
-                         defaultListener,
-                         defaultListener,
+        QueueEventListener defaultQueueListener = (i) -> {
+            Log.v(TAG, "Empty Listener, Index: " + Integer.toString(i));
+        };
+        ConnectivityListener defaultConnectivityListner = (status) -> {
+            Log.v(TAG, "Empty Listener, Connected: " + Boolean.toString(status));
+        };
+        return new Queue(defaultQueueListener,
+                         defaultQueueListener,
+                         defaultQueueListener,
+                         defaultQueueListener,
+                         defaultConnectivityListner,
                          ctx);
     }
 
-    public void checkConnectivity() {
-        Runnable checkConnectivity = () -> {
-            Log.d(TAG, "checkConnectivity ");
+    public void launchConnectivityDaemon() {
+        checkingConnectivity = true;
+        lastConnectivityStatus = true;
+        mHandler = new Handler();
+        new Thread(connectivityDaemon()).start();
+    }
+
+    public Runnable connectivityDaemon() {
+        return () -> {
+            while (checkingConnectivity) {
+                try {
+                    Thread.sleep(1000);
+                    mHandler.post(() -> {
+                        boolean status = isOnline();
+                        if (status != lastConnectivityStatus){
+                            queueConnectivityEvent.run(status);
+                            lastConnectivityStatus = status;
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e(TAG, "launchConnectivityDaemon Error: " + e.toString(),e);
+                }
+            }
         };
-        new Thread(checkConnectivity).start();
-        Log.d(TAG, "here!");
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void setupFirebase() {
         Firebase.setAndroidContext(this.ctx);
-        firebaseRef = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
+        mFirebase = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
         setupFirebaseListeners((DataSnapshot dataSnapshot) -> {
-            ArrayList<HashMap<String,String>> al = new ArrayList<HashMap<String, String>>();
-            al.add((HashMap<String,String>) dataSnapshot.getValue());
+            ArrayList<HashMap<String, String>> al = new ArrayList<HashMap<String, String>>();
+            al.add((HashMap<String, String>) dataSnapshot.getValue());
             runListeners(al);
         });
     }
 
     public void setupFirebaseListeners(DataSnapshotLambda listener) {
-        firebaseRef.addChildEventListener(new ChildEventListener() {
+        mFirebase.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                listener.run(dataSnapshot);
-            }
-
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                listener.run(dataSnapshot);
-            }
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                listener.run(dataSnapshot);
-            }
-
+            public void onChildRemoved(DataSnapshot dataSnapshot) {listener.run(dataSnapshot);}
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                listener.run(dataSnapshot);
-            }
-
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.e(TAG, firebaseError.toString());
-            }
+            public void onCancelled(FirebaseError firebaseError) {Log.e(TAG, firebaseError.toString());}
         });
     }
 
@@ -136,6 +152,10 @@ public class Queue {
         return resultQueue;
     }
 
+    public int getIndex(){
+        return indexOfUserByID(androidID);
+    }
+
     public int indexOfUserByID(String id){
         for (int i = 0; i < queue.size(); i++){
             if(queue.get(i) != null) {
@@ -147,16 +167,10 @@ public class Queue {
         return -1;
     }
 
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) this.ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
     public void add(User user){
         queue.add(user);
-        firebaseRef.setValue(queue);
+        Log.d(TAG, "add " + user.getId());
+        mFirebase.setValue(queue);
     }
 
     public void add(){
@@ -173,14 +187,14 @@ public class Queue {
     public User pop(){
         if(!queue.isEmpty()) {
             User removedUser = queue.remove(0);
-            firebaseRef.setValue(queue);
+            mFirebase.setValue(queue);
             return removedUser;
         }
         return null;
     }
 
     public void clear(){
-        firebaseRef.setValue(null);
+        mFirebase.setValue(null);
     }
 
     public void setQueueEventNoQueue(QueueEventListener queueEventNoQueue) {
@@ -199,16 +213,12 @@ public class Queue {
         this.queueEventNotInQueue = queueEventNotInQueue;
     }
 
-    public void setQueueEventNoInternet(QueueEventListener queueEventNoInternet) {
-        this.queueEventNoInternet = queueEventNotInQueue;
+    public void setQueueConnectivityEvent(ConnectivityListener queueConnectivityEvent) {
+        this.queueConnectivityEvent = queueConnectivityEvent;
     }
 
-    public interface QueueEventListener {
-        void run(int index);
-    }
-
-    public interface DataSnapshotLambda {
-        void run(DataSnapshot dataSnapshot);
-    }
+    public interface QueueEventListener {void run(int index);}
+    public interface DataSnapshotLambda {void run(DataSnapshot dataSnapshot);}
+    public interface ConnectivityListener {void run(boolean isConnected);}
 
 }

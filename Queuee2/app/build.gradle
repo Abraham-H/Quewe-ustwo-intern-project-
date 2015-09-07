@@ -27,9 +27,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    retrolambda{
-        jdk System.getenv("JAVA8_HOME")
-    }
+}
+
+retrolambda{
+    jdk System.getenv("JAVA8_HOME")
 }
 
 dependencies {
