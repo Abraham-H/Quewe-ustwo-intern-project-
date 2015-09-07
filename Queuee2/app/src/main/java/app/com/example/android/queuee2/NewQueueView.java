@@ -21,7 +21,6 @@ public class NewQueueView extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_queue_view);
-
         queue = Queue.createQueue(this);
         queue.indexOfUserByID(Queue.androidID);
         populateView();
@@ -31,8 +30,15 @@ public class NewQueueView extends Activity {
         addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
         addToQueueImageButton.setOnClickListener((v) -> {
             changeSrcOfImageButton();
+            launchInQueueView();
             queue.add();
+
         });
+    }
+
+    private void launchInQueueView(){
+        Intent intent = new Intent(this, InQueueView.class);
+        startActivity(intent);
     }
 
     private void changeSrcOfImageButton() {

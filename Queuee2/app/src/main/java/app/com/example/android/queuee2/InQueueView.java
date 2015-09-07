@@ -19,13 +19,21 @@ public class InQueueView extends Activity {
 
     private TextView positionInQueueTextView;
     private TextView timeEstimationTextView;
+    private Queue queue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_queue_view);
         populateView();
+    }
 
-        super.onCreate(savedInstanceState);
+    @Override
+    protected void onStart(){
+        super.onStart();
+        queue = Queue.createQueue(this);
+        displayQueuePosition();
     }
 
     private void populateView() {
@@ -33,9 +41,9 @@ public class InQueueView extends Activity {
         timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
     }
 
-    @Override
-    protected void onStart(){
-        super.onStart();
+    private void displayQueuePosition(){
+        queue.getIndex();
+        positionInQueueTextView.setText(Integer.toString(queue.getIndex()));
     }
 
     @Override
