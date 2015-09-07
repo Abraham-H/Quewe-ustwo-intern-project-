@@ -23,12 +23,12 @@ public class Queue {
 
     private Context ctx;
     private static String TAG = Queue.class.getSimpleName();
-    private ArrayList<User> queue = new ArrayList<>();
-    private QueueEventListener queueEventNoQueue;
-    private QueueEventListener queueEventNext;
-    private QueueEventListener queueEventInQueue;
-    private QueueEventListener queueEventNotInQueue;
-    private ConnectivityListener queueConnectivityEvent;
+    private ArrayList<User> mQueue = new ArrayList<>();
+    private QueueEventListener mQueueEventNoQueue;
+    private QueueEventListener mQueueEventNext;
+    private QueueEventListener mQueueEventInQueue;
+    private QueueEventListener mQueueEventNotInQueue;
+    private ConnectivityListener mQueueConnectivityEvent;
     private Firebase mFirebase;
     private Handler mHandler;
     private boolean checkingConnectivity;
@@ -40,7 +40,7 @@ public class Queue {
         setQueueEventNoQueue(queueEventNoQueue);
         setQueueEventNext(queueEventNext);
         setQueueEventInQueue(queueEventInQueue);
-        setQueueEventNotInQueue(queueEventNotInQueue);
+        setmQueueEventNotInQueue(queueEventNotInQueue);
         setQueueConnectivityEvent(queueConnectivityEvent);
         this.ctx = ctx;
         androidID = android.provider.Settings.Secure.getString(this.ctx.getContentResolver(),
@@ -79,7 +79,7 @@ public class Queue {
                     mHandler.post(() -> {
                         boolean status = isOnline();
                         if (status != lastConnectivityStatus){
-                            queueConnectivityEvent.run(status);
+                            mQueueConnectivityEvent.run(status);
                             lastConnectivityStatus = status;
                         }
                     });
@@ -124,20 +124,20 @@ public class Queue {
 
     private void runListeners(Object firebaseData){
         if (firebaseData == null) {
-            queue.clear();
-            queueEventNoQueue.run(-1);
+            mQueue.clear();
+            mQueueEventNoQueue.run(-1);
         } else {
             //noinspection unchecked
-            queue = parseFirebaseData((ArrayList<HashMap<String, String>>) firebaseData);
+            mQueue = parseFirebaseData((ArrayList<HashMap<String, String>>) firebaseData);
             switch (indexOfUserByID(androidID)) {
                 case 0:
-                    queueEventNext.run(0);
+                    mQueueEventNext.run(0);
                     break;
                 case -1:
-                    queueEventNotInQueue.run(-1);
+                    mQueueEventNotInQueue.run(-1);
                     break;
                 default:
-                    queueEventInQueue.run(indexOfUserByID(androidID));
+                    mQueueEventInQueue.run(indexOfUserByID(androidID));
                     break;
             }
         }
@@ -156,9 +156,9 @@ public class Queue {
     }
 
     public int indexOfUserByID(String id){
-        for (int i = 0; i < queue.size(); i++){
-            if(queue.get(i) != null) {
-                if (queue.get(i).getId().equals(id)) {
+        for (int i = 0; i < mQueue.size(); i++){
+            if(mQueue.get(i) != null) {
+                if (mQueue.get(i).getId().equals(id)) {
                     return i;
                 }
             }
@@ -167,9 +167,9 @@ public class Queue {
     }
 
     public void add(User user){
-        queue.add(user);
+        mQueue.add(user);
         Log.d(TAG, "add " + user.getId());
-        mFirebase.setValue(queue);
+        mFirebase.setValue(mQueue);
     }
 
     public void add(){
@@ -177,16 +177,16 @@ public class Queue {
     }
 
     public User get(int i){
-        if(!queue.isEmpty()){
-            return queue.get(i);
+        if(!mQueue.isEmpty()){
+            return mQueue.get(i);
         }
         return null;
     }
 
     public User pop(){
-        if(!queue.isEmpty()) {
-            User removedUser = queue.remove(0);
-            mFirebase.setValue(queue);
+        if(!mQueue.isEmpty()) {
+            User removedUser = mQueue.remove(0);
+            mFirebase.setValue(mQueue);
             return removedUser;
         }
         return null;
@@ -197,23 +197,23 @@ public class Queue {
     }
 
     public void setQueueEventNoQueue(QueueEventListener queueEventNoQueue) {
-        this.queueEventNoQueue = queueEventNoQueue;
+        this.mQueueEventNoQueue = queueEventNoQueue;
     }
 
     public void setQueueEventInQueue(QueueEventListener queueEventInQueue) {
-        this.queueEventInQueue = queueEventInQueue;
+        this.mQueueEventInQueue = queueEventInQueue;
     }
 
     public void setQueueEventNext(QueueEventListener queueEventNext) {
-        this.queueEventNext = queueEventNext;
+        this.mQueueEventNext = queueEventNext;
     }
 
-    public void setQueueEventNotInQueue(QueueEventListener queueEventNotInQueue) {
-        this.queueEventNotInQueue = queueEventNotInQueue;
+    public void setmQueueEventNotInQueue(QueueEventListener mQueueEventNotInQueue) {
+        this.mQueueEventNotInQueue = mQueueEventNotInQueue;
     }
 
     public void setQueueConnectivityEvent(ConnectivityListener queueConnectivityEvent) {
-        this.queueConnectivityEvent = queueConnectivityEvent;
+        this.mQueueConnectivityEvent = queueConnectivityEvent;
     }
 
     public interface QueueEventListener {void run(int index);}

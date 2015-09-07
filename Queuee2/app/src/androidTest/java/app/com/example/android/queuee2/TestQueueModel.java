@@ -1,7 +1,6 @@
 package app.com.example.android.queuee2;
 
 import android.test.AndroidTestCase;
-import android.util.Log;
 
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.User;
@@ -64,7 +63,7 @@ public class TestQueueModel extends AndroidTestCase {
             queue.add(new User("two"));
             queue.add(new User("three"));
             Thread.sleep((long) 1000);
-            queue.setQueueEventNotInQueue(new Queue.QueueEventListener() {
+            queue.setmQueueEventNotInQueue(new Queue.QueueEventListener() {
                 @Override
                 public void run(int index) {
                     assertEquals(-1, index);
