@@ -1,6 +1,8 @@
 package app.com.example.android.queuee2.model;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.android.internal.util.Predicate;
@@ -27,21 +29,22 @@ public class Queue {
     private QueueEventListener queueEventNext;
     private QueueEventListener queueEventInQueue;
     private QueueEventListener queueEventNotInQueue;
+    private QueueEventListener queueEventNoInternet;
     private Firebase firebaseRef;
 
 
-    public Queue(QueueEventListener queueEventNoQueue,
-                 QueueEventListener queueEventNext,
-                 QueueEventListener queueEventInQueue,
-                 QueueEventListener queueEventNotInQueue,
-                 Context ctx) {
+    public Queue(QueueEventListener queueEventNoQueue, QueueEventListener queueEventNext,
+                 QueueEventListener queueEventInQueue, QueueEventListener queueEventNotInQueue,
+                 QueueEventListener queueEventNoInternet, Context ctx) {
         setQueueEventNoQueue(queueEventNoQueue);
         setQueueEventNext(queueEventNext);
         setQueueEventInQueue(queueEventInQueue);
         setQueueEventNotInQueue(queueEventNotInQueue);
+        setQueueEventNoInternet(queueEventNoInternet);
         this.ctx = ctx;
         androidID = android.provider.Settings.Secure.getString(this.ctx.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
+        checkConnectivity();
         setupFirebase();
     }
 
@@ -53,7 +56,16 @@ public class Queue {
                          defaultListener,
                          defaultListener,
                          defaultListener,
+                         defaultListener,
                          ctx);
+    }
+
+    public void checkConnectivity() {
+        Runnable checkConnectivity = () -> {
+            Log.d(TAG, "checkConnectivity ");
+        };
+        new Thread(checkConnectivity).start();
+        Log.d(TAG, "here!");
     }
 
     public void setupFirebase() {
@@ -69,15 +81,29 @@ public class Queue {
     public void setupFirebaseListeners(DataSnapshotLambda listener) {
         firebaseRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                listener.run(dataSnapshot);
+            }
+
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                listener.run(dataSnapshot);
+            }
+
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {listener.run(dataSnapshot);}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                listener.run(dataSnapshot);
+            }
+
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                listener.run(dataSnapshot);
+            }
+
             @Override
-            public void onCancelled(FirebaseError firebaseError) {Log.e(TAG, firebaseError.toString());}
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e(TAG, firebaseError.toString());
+            }
         });
     }
 
@@ -119,6 +145,13 @@ public class Queue {
             }
         }
         return -1;
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void add(User user){
@@ -164,6 +197,10 @@ public class Queue {
 
     public void setQueueEventNotInQueue(QueueEventListener queueEventNotInQueue) {
         this.queueEventNotInQueue = queueEventNotInQueue;
+    }
+
+    public void setQueueEventNoInternet(QueueEventListener queueEventNoInternet) {
+        this.queueEventNoInternet = queueEventNotInQueue;
     }
 
     public interface QueueEventListener {
