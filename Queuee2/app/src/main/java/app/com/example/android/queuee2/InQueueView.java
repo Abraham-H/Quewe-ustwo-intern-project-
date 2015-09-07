@@ -1,48 +1,41 @@
 package app.com.example.android.queuee2;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.User;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
+/**
+ * Created by Abraham on 9/7/2015.
+ */
+public class InQueueView extends Activity {
 
-
-public class NewQueueView extends Activity {
-
-    private static String TAG = NewQueueView.class.getSimpleName();
-    private ImageButton addToQueueImageButton;
-    private Queue queue;
+    private TextView positionInQueueTextView;
+    private TextView timeEstimationTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_queue_view);
-
-        queue = Queue.createQueue(this);
-        queue.indexOfUserByID(Queue.androidID);
+        setContentView(R.layout.activity_in_queue_view);
         populateView();
+
+        super.onCreate(savedInstanceState);
     }
 
     private void populateView() {
-        addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
-        addToQueueImageButton.setOnClickListener((v) -> {
-            changeSrcOfImageButton();
-
-            Intent i = new Intent(this, InQueueView.class);
-            i.putExtra("User",new User(Queue.androidID));
-            startActivity(i);
-            queue.add();
-        });
+        positionInQueueTextView = (TextView)findViewById(R.id.position_in_queue_text_view);
+        timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
+        Bundle bundle = getIntent().getExtras();
+        User user = bundle.getParcelable("User");
+        positionInQueueTextView.setText(user.getId());
     }
 
-    private void changeSrcOfImageButton() {
-        addToQueueImageButton.setImageResource(R.drawable.button_transformed_state);
-    }
-    
     @Override
     protected void onStart(){
         super.onStart();
@@ -69,3 +62,4 @@ public class NewQueueView extends Activity {
         return super.onOptionsItemSelected(item);
     }
 }
+
