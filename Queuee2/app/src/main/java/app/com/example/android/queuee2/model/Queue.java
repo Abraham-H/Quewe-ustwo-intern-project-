@@ -3,6 +3,7 @@ package app.com.example.android.queuee2.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.internal.util.Predicate;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -58,42 +59,26 @@ public class Queue {
     public void setupFirebase() {
         Firebase.setAndroidContext(this.ctx);
         firebaseRef = new Firebase("https://burning-torch-3063.firebaseio.com/queue");
-        firebaseRef.addChildEventListener(new ChildEventListener() {
-              @Override
-              public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                  ArrayList<HashMap<String,String>> al = new ArrayList<HashMap<String, String>>();
-                  al.add((HashMap<String,String>) dataSnapshot.getValue());
-                  runListeners(al);
-              }
-
-              @Override
-              public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-              }
-
-              @Override
-              public void onChildRemoved(DataSnapshot dataSnapshot) {
-              }
-
-              @Override
-              public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-              }
-
-              @Override
-              public void onCancelled(FirebaseError firebaseError) {
-                  Log.e(TAG, firebaseError.toString());
-              }
+        setupFirebaseListeners((DataSnapshot dataSnapshot) -> {
+            ArrayList<HashMap<String,String>> al = new ArrayList<HashMap<String, String>>();
+            al.add((HashMap<String,String>) dataSnapshot.getValue());
+            runListeners(al);
         });
-//        firebaseRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                runListeners(dataSnapshot.getValue());
-//            }
-//
-//            @Override
-//            public void onCancelled(FirebaseError firebaseError) {
-//                Log.e(TAG, firebaseError.toString());
-//                    }
-//                });
+    }
+
+    public void setupFirebaseListeners(DataSnapshotLambda listener) {
+        firebaseRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {listener.run(dataSnapshot);}
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {listener.run(dataSnapshot);}
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {Log.e(TAG, firebaseError.toString());}
+        });
     }
 
     private void runListeners(Object firebaseData){
@@ -183,6 +168,10 @@ public class Queue {
 
     public interface QueueEventListener {
         void run(int index);
+    }
+
+    public interface DataSnapshotLambda {
+        void run(DataSnapshot dataSnapshot);
     }
 
 }
