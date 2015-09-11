@@ -1,48 +1,55 @@
 package app.com.example.android.queuee2;
 import app.com.example.android.queuee2.model.Queue;
-import app.com.example.android.queuee2.model.User;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
-
+import android.widget.TextView;
 
 public class NewQueueView extends Activity {
 
     private static String TAG = NewQueueView.class.getSimpleName();
     private ImageButton addToQueueImageButton;
+    private TextView numInLineTextView;
     private Queue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_queue_view);
-        queue = Queue.createQueue(this);
-        queue.indexOfUserByID(Queue.androidID);
+
         populateView();
+        createQueue();
+    }
+
+    private void createQueue(){
+        queue = new Queue(this);
+        queue.onLoadData(() -> {
+            addToQueueImageButton.setEnabled(true);
+            numInLineTextView.setText(
+                    Integer.toString(queue.length()) + " people in line.");
+        });
+        queue.bindService();
     }
 
     private void populateView() {
         addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
+        numInLineTextView = (TextView)findViewById(R.id.num_in_line_textView);
+        addToQueueImageButton.setEnabled(false);
         addToQueueImageButton.setOnClickListener((v) -> {
-            changeSrcOfImageButton();
-            launchInQueueView();
             queue.add();
-
+            addToQueueImageButton.setImageResource(R.drawable.button_transformed_state);
+            launchInQueueView();
+            addToQueueImageButton.setImageResource(R.drawable.button_normal_state);
         });
     }
 
     private void launchInQueueView(){
         Intent intent = new Intent(this, InQueueView.class);
         startActivity(intent);
-    }
-
-    private void changeSrcOfImageButton() {
-        addToQueueImageButton.setImageResource(R.drawable.button_transformed_state);
     }
     
     @Override

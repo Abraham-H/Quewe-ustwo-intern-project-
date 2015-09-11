@@ -1,14 +1,18 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import app.com.example.android.queuee2.model.FirebaseService;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.User;
 
@@ -17,8 +21,10 @@ import app.com.example.android.queuee2.model.User;
  */
 public class InQueueView extends Activity {
 
+    private final static String TAG = InQueueView.class.getSimpleName();
+
     private TextView positionInQueueTextView;
-    private TextView timeEstimationTextView;
+    private Button snoozeButton;
     private Queue queue;
 
 
@@ -32,18 +38,40 @@ public class InQueueView extends Activity {
     @Override
     protected void onStart(){
         super.onStart();
-        queue = Queue.createQueue(this);
-        displayQueuePosition();
     }
 
     private void populateView() {
         positionInQueueTextView = (TextView)findViewById(R.id.position_in_queue_text_view);
-        timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
+        snoozeButton = (Button)findViewById(R.id.snooze_button);
+        snoozeButton.setEnabled(false);
+        snoozeButton.setOnClickListener((v) -> queue.moveBack(2));
+        loadQueue();
     }
 
-    private void displayQueuePosition(){
-        queue.getIndex();
-        positionInQueueTextView.setText(Integer.toString(queue.getIndex()));
+    private void loadQueue(){
+        queue = new Queue(this);
+        queue.onLoadData(
+                () -> {
+                    snoozeButton.setEnabled(true);
+
+                    // Initial set text
+                    positionInQueueTextView.setText(Integer.toString(queue.getIndex()));
+                    // If changed set text
+                    queue.setQueueEventInQueue(index ->
+                            positionInQueueTextView.setText(Integer.toString(queue.getIndex())));
+                    queue.setQueueEventNext(index ->
+                            positionInQueueTextView.setText("You're Next!")
+                    );
+                }
+        );
+        queue.bindService();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        queue.remove();
+        queue.unbindService();
     }
 
     @Override

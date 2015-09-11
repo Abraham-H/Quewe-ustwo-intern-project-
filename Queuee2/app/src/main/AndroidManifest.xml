@@ -25,6 +25,8 @@
             android:name=".InQueueView"
             android:label="@string/app_name" >
         </activity>
+
+        <service android:name=".model.FirebaseService" />
     </application>
 
 </manifest>
