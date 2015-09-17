@@ -36,7 +36,13 @@ public class HerokuApiClient {
                 @Path("queueId") String queueId,
                 @Path("userId") String userId
         );
-        @GET("/dequeue")
-        Observable<JsonElement> dequeue();
+        @GET("/pop")
+        Observable<JsonElement> pop();
+
+        @GET("/remove/{queueId}/{userId}")
+        Observable<JsonElement> remove(
+                @Path("queueId") String queueId,
+                @Path("userId") String userId
+        );
     }
-}
+}//EOF HerokuApiClient
