@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +20,11 @@
             </intent-filter>
         </activity>
 
-        <!--<service android:name=".model.FirebaseService" />-->
+        <!-- <service android:name=".model.FirebaseService" /> -->
+        <activity
+            android:name=".InQueueActivity"
+            android:label="@string/title_activity_in_queue" >
+        </activity>
     </application>
 
 </manifest>

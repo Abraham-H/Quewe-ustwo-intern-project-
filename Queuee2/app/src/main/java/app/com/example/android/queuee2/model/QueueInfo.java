@@ -3,7 +3,7 @@ package app.com.example.android.queuee2.model;
 /**
  * Created by bkach on 9/2/15.
  */
-public class Queue {
+public class QueueInfo {
 
     public int getPosition() {
         return position;

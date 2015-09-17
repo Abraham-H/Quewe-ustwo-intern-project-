@@ -1,12 +1,11 @@
 package app.com.example.android.queuee2;
 import app.com.example.android.queuee2.model.HerokuApiClient;
-import app.com.example.android.queuee2.model.Queue;
-import retrofit.client.Response;
-import rx.Observable;
+import app.com.example.android.queuee2.model.QueueInfo;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +23,7 @@ public class NewQueueActivity extends Activity {
     private TextView numInLineTextView;
     private TextView dequeueTextView;
     private TextView userAddedTextView;
-    private Queue queue;
+    private QueueInfo queueInfo;
     private HerokuApiClient.HerokuService herokuService;
     private static String androidId;
     private Gson gson;
@@ -32,7 +31,7 @@ public class NewQueueActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_queue_view);
+        setContentView(R.layout.activity_new_queue);
         herokuService = HerokuApiClient.getHerokuService();
         setAndroidId();
         gson= new Gson();
@@ -41,7 +40,7 @@ public class NewQueueActivity extends Activity {
     }
 
     private void setQueue(){
-        queue = new Queue();
+        queueInfo = new QueueInfo();
     }
 
     private void onHerokuAddUser(JsonElement herokuData){
@@ -49,17 +48,10 @@ public class NewQueueActivity extends Activity {
         userAddedTextView.setText(response.getMessage());
     }
 
-    private void getQueuePositionInfo(){
-        herokuService.info("queue", androidId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onHerokuRecieved, this::onHerokuError);
-    }
-
     private void onHerokuRecieved(JsonElement herokuData) {
         Gson gson = new Gson();
-        queue = gson.fromJson(herokuData,Queue.class);
-        numInLineTextView.setText(String.valueOf(queue.getSize()));
+        queueInfo = gson.fromJson(herokuData,QueueInfo.class);
+        numInLineTextView.setText(String.valueOf(queueInfo.getSize()));
     }
 
     private void onHerokuError(Throwable error){
@@ -75,9 +67,10 @@ public class NewQueueActivity extends Activity {
         addToQueueImageButton.setEnabled(true);
         addToQueueImageButton.setOnClickListener((v) -> {
             addUserToQueue();
+            launchInQueueView();
         });
     }
-    
+
     private void addUserToQueue(){
         herokuService.add("queue", androidId)
                 .subscribeOn(Schedulers.newThread())
@@ -100,6 +93,11 @@ public class NewQueueActivity extends Activity {
         private String message;
         public String getMessage() {return message;}
         public void setMessage(String message) {this.message = message;}
+    }
+
+    private void launchInQueueView(){
+        Intent intent = new Intent(this, InQueueActivity.class);
+        startActivity(intent);
     }
 
     private void setAndroidId(){
