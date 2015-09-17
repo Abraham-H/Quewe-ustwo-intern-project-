@@ -23,43 +23,40 @@ public class NewQueueActivity extends Activity {
     private ImageButton addToQueueImageButton;
     private TextView numInLineTextView;
     private TextView dequeueTextView;
+    private TextView userAddedTextView;
     private Queue queue;
     private HerokuApiClient.HerokuService herokuService;
     private static String androidId;
-
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_queue_view);
-        androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-
+        herokuService = HerokuApiClient.getHerokuService();
+        setAndroidId();
+        gson= new Gson();
         populateView();
-        getQueue();
+        setQueue();
     }
 
-    private void getQueue(){
+    private void setQueue(){
         queue = new Queue();
+    }
 
-        herokuService = HerokuApiClient.getHerokuService();
+    private void onHerokuAddUser(JsonElement herokuData){
+        Response response  = gson.fromJson(herokuData, Response.class);
+        userAddedTextView.setText(response.getMessage());
+    }
 
-        herokuService.dequeue()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((herokuData) -> {
-                    Gson gson2 = new Gson();
-                    Response response = gson2.fromJson(herokuData, Response.class);
-                    dequeueTextView.setText(response.getMessage());
-                },(e) -> Log.d(TAG, "dequeue " + e.getLocalizedMessage()));
-
-        herokuService.info("queue",androidId)
+    private void getQueuePositionInfo(){
+        herokuService.info("queue", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onHerokuRecieved, this::onHerokuError);
     }
 
-    private void onHerokuRecieved(JsonElement herokuData){
+    private void onHerokuRecieved(JsonElement herokuData) {
         Gson gson = new Gson();
         queue = gson.fromJson(herokuData,Queue.class);
         numInLineTextView.setText(String.valueOf(queue.getSize()));
@@ -73,8 +70,29 @@ public class NewQueueActivity extends Activity {
         addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
         numInLineTextView = (TextView)findViewById(R.id.num_in_line_textView);
         dequeueTextView = (TextView)findViewById(R.id.deqeue_view);
-        addToQueueImageButton.setEnabled(false);
-        addToQueueImageButton.setOnClickListener((v) -> {});
+        userAddedTextView = (TextView)findViewById(R.id.userAddedTextView);
+
+        addToQueueImageButton.setEnabled(true);
+        addToQueueImageButton.setOnClickListener((v) -> {
+            addUserToQueue();
+        });
+    }
+    
+    private void addUserToQueue(){
+        herokuService.add("queue", androidId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onHerokuAddUser);
+    }
+
+    private void removeUserFromQueue(){
+        herokuService.dequeue()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((herokuData) -> {
+                    Response response = gson.fromJson(herokuData, Response.class);
+                    dequeueTextView.setText(response.getMessage());
+                },(e) -> Log.d(TAG, "dequeue " + e.getLocalizedMessage()));
     }
 
     private static class Response{
@@ -83,7 +101,12 @@ public class NewQueueActivity extends Activity {
         public String getMessage() {return message;}
         public void setMessage(String message) {this.message = message;}
     }
-    
+
+    private void setAndroidId(){
+        androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+    }
+
     @Override
     protected void onStart(){
         super.onStart();
