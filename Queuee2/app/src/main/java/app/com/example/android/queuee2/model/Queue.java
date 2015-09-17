@@ -1,121 +1,132 @@
 package app.com.example.android.queuee2.model;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Handler;
-import android.os.IBinder;
-import android.util.Log;
-
 /**
  * Created by bkach on 9/2/15.
  */
 public class Queue {
 
-    public static String androidID;
-    public boolean loadedAndBound = false;
-
-    private Context ctx;
-    private static String TAG = Queue.class.getSimpleName();
-    private Runnable loadedAndBoundListener;
-    private Handler mHandler;
-
-    FirebaseService mService;
-
-    public Queue(Context ctx) {
-        this.ctx = ctx;
-        androidID = android.provider.Settings.Secure.getString(this.ctx.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-        mHandler = new Handler();
+    public int getPosition() {
+        return position;
     }
 
-    public void bindService(){
-        Intent intent = new Intent(this.ctx, FirebaseService.class);
-        intent.setAction(Integer.toString(android.os.Process.myPid()));
-        this.ctx.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    public void setPosition(int position) {
+        this.position = position;
     }
 
-    public void unbindService(){
-        this.ctx.unbindService(mConnection);
+    public int getSize() {
+        return size;
     }
 
-    private void checkDataLoaded(){
-        new Thread( () -> {
-            while (!loadedAndBound) {
-                try {
-                    if(mService.dataLoaded){
-                        loadedAndBound = true;
-                        mHandler.post(() -> {
-                            loadedAndBoundListener.run();
-                        });
-                    }
-                    Thread.sleep(100);
-                } catch (Exception e) {
-                    Log.e(TAG, "CheckDataLoaded Error: " + e.toString(),e);
-                }
-            }
-        } ).start();
+    public void setSize(int size) {
+        this.size = size;
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            FirebaseService.FirebaseServiceBinder binder = (FirebaseService.FirebaseServiceBinder) service;
-            mService = binder.getService();
-            checkDataLoaded();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-        }
-    };
-
-    public int getIndex(){
-        return mService.getIndex();
-    }
-
-    public void add(){
-        mService.add(new User(androidID));
-    }
-
-    public void remove(){
-        mService.remove(new User(androidID));
-    }
-
-    public int length(){
-        return mService.queueLength();
-    }
-
-    public void moveBack(int pos){
-        mService.moveBack(new User(androidID), pos);
-    }
-
-
-    public void setQueueEventNoQueue(QueueEventListener queueEventNoQueue) {
-        mService.setQueueEventNoQueue(queueEventNoQueue);
-    }
-
-    public void setQueueEventInQueue(QueueEventListener queueEventInQueue) {
-        mService.setQueueEventInQueue(queueEventInQueue);
-    }
-
-    public void setQueueEventNext(QueueEventListener queueEventNext) {
-        mService.setQueueEventNext(queueEventNext);
-    }
-
-    public void setQueueEventNotInQueue(QueueEventListener mQueueEventNotInQueue) {
-        mService.setQueueEventNotInQueue(mQueueEventNotInQueue);
-    }
-
-    public void onLoadData(Runnable loadedAndBoundListener) {
-        this.loadedAndBoundListener = loadedAndBoundListener;
-    }
-
-    public interface QueueEventListener {void run(int index);}
+    private int position;
+    private int size;
 
 }
+
+//public static String androidID;
+//    public boolean loadedAndBound = false;
+//
+//    private Context ctx;
+//    private static String TAG = Queue.class.getSimpleName();
+//    private Runnable loadedAndBoundListener;
+//    private Handler mHandler;
+//
+//    FirebaseService mService;
+//
+//    public Queue(Context ctx) {
+//        this.ctx = ctx;
+//        androidID = android.provider.Settings.Secure.getString(this.ctx.getContentResolver(),
+//                android.provider.Settings.Secure.ANDROID_ID);
+//        mHandler = new Handler();
+//    }
+//
+//    public void bindService(){
+//        Intent intent = new Intent(this.ctx, FirebaseService.class);
+//        intent.setAction(Integer.toString(android.os.Process.myPid()));
+//        this.ctx.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//    }
+//
+//    public void unbindService(){
+//        this.ctx.unbindService(mConnection);
+//    }
+//
+//    private void checkDataLoaded(){
+//        new Thread( () -> {
+//            while (!loadedAndBound) {
+//                try {
+//                    if(mService.dataLoaded){
+//                        loadedAndBound = true;
+//                        mHandler.post(() -> {
+//                            loadedAndBoundListener.run();
+//                        });
+//                    }
+//                    Thread.sleep(100);
+//                } catch (Exception e) {
+//                    Log.e(TAG, "CheckDataLoaded Error: " + e.toString(),e);
+//                }
+//            }
+//        } ).start();
+//    }
+//
+//    private ServiceConnection mConnection = new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName className,
+//                                       IBinder service) {
+//            FirebaseService.FirebaseServiceBinder binder = (FirebaseService.FirebaseServiceBinder) service;
+//            mService = binder.getService();
+//            checkDataLoaded();
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName arg0) {
+//        }
+//    };
+//
+//    public int getIndex(){
+//        return mService.getIndex();
+//    }
+//
+//    public void add(){
+//        mService.add(new User(androidID));
+//    }
+//
+//    public void remove(){
+//        mService.remove(new User(androidID));
+//    }
+//
+//    public int length(){
+//        return mService.queueLength();
+//    }
+//
+//    public void moveBack(int pos){
+//        mService.moveBack(new User(androidID), pos);
+//    }
+//
+//
+//    public void setQueueEventNoQueue(QueueEventListener queueEventNoQueue) {
+//        mService.setQueueEventNoQueue(queueEventNoQueue);
+//    }
+//
+//    public void setQueueEventInQueue(QueueEventListener queueEventInQueue) {
+//        mService.setQueueEventInQueue(queueEventInQueue);
+//    }
+//
+//    public void setQueueEventNext(QueueEventListener queueEventNext) {
+//        mService.setQueueEventNext(queueEventNext);
+//    }
+//
+//    public void setQueueEventNotInQueue(QueueEventListener mQueueEventNotInQueue) {
+//        mService.setQueueEventNotInQueue(mQueueEventNotInQueue);
+//    }
+//
+//    public void onLoadData(Runnable loadedAndBoundListener) {
+//        this.loadedAndBoundListener = loadedAndBoundListener;
+//    }
+//
+//    public interface QueueEventListener {void run(int index);}
 
 
 //    public static Queue createQueue(Context ctx){

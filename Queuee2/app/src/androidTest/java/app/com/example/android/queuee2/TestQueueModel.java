@@ -3,7 +3,6 @@ package app.com.example.android.queuee2;
 import android.test.AndroidTestCase;
 
 import app.com.example.android.queuee2.model.Queue;
-import app.com.example.android.queuee2.model.User;
 
 /**
  * Created by bkach on 9/2/15.

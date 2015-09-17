@@ -24,4 +24,13 @@
         android:layout_above="@+id/add_to_queue_image_button"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No Info Recieved"
+        android:id="@+id/deqeue_view"
+        android:layout_below="@+id/add_to_queue_image_button"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
