@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 import com.google.gson.Gson;
+
+import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
 import app.com.example.android.queuee2.model.Response;
 import rx.android.schedulers.AndroidSchedulers;
@@ -21,6 +23,7 @@ public class InQueueActivity extends Activity {
     private Response.QueueData queueData;
     private TextView popFromQueueTextView;
     private TextView queuePositionTextView;
+    private FirebaseListener firebaseListener;
     private Gson gson;
 
     @Override
@@ -30,6 +33,7 @@ public class InQueueActivity extends Activity {
         setInstanceVariables();
         instantiateViews();
         updateViewsWithServerData();
+        setupFirebaseListener();
     }
 
     private void instantiateViews() {
@@ -57,8 +61,24 @@ public class InQueueActivity extends Activity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
                     queueData = gson.fromJson(herokuData, Response.QueueData.class);
-                    queuePositionTextView.setText(String.valueOf(queueData.getSize()));
+                    queuePositionTextView.setText(String.valueOf(queueData.getPosition()));
                 }, this::onHerokuError);
+    }
+
+    public void setupFirebaseListener(){
+        firebaseListener = new FirebaseListener(this,this::updateViewsWithServerData);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        herokuService.remove("queue",androidId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((herokuData) -> {
+                    Log.d(TAG, "onBackPressed : " +
+                            gson.fromJson(herokuData, Response.Message.class).getMessage());
+                });
     }
 
     private void popUserFromQueue(){
@@ -68,7 +88,7 @@ public class InQueueActivity extends Activity {
                 .subscribe((herokuData) -> {
                     Response.Message response = gson.fromJson(herokuData, Response.Message.class);
                     popFromQueueTextView.setText(response.getMessage());
-                }, (e) -> Log.d(TAG, "pop " + e.getLocalizedMessage()));
+                }, this::onHerokuError);
     }
 
     private void onHerokuError(Throwable error){
