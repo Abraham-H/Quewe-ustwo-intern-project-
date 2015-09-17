@@ -1,6 +1,6 @@
 package app.com.example.android.queuee2;
 import app.com.example.android.queuee2.model.HerokuApiClient;
-import app.com.example.android.queuee2.model.QueueInfo;
+import app.com.example.android.queuee2.model.Response;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -23,7 +23,7 @@ public class NewQueueActivity extends Activity {
     private TextView numInLineTextView;
     private TextView dequeueTextView;
     private TextView userAddedTextView;
-    private QueueInfo queueInfo;
+    private Response.QueueData queueData;
     private HerokuApiClient.HerokuService herokuService;
     private static String androidId;
     private Gson gson;
@@ -40,18 +40,18 @@ public class NewQueueActivity extends Activity {
     }
 
     private void setQueue(){
-        queueInfo = new QueueInfo();
+        queueData = new Response.QueueData();
     }
 
     private void onHerokuAddUser(JsonElement herokuData){
-        Response response  = gson.fromJson(herokuData, Response.class);
+        Response.Message response  = gson.fromJson(herokuData, Response.Message.class);
         userAddedTextView.setText(response.getMessage());
     }
 
     private void onHerokuRecieved(JsonElement herokuData) {
         Gson gson = new Gson();
-        queueInfo = gson.fromJson(herokuData,QueueInfo.class);
-        numInLineTextView.setText(String.valueOf(queueInfo.getSize()));
+        queueData = gson.fromJson(herokuData,Response.QueueData.class);
+        numInLineTextView.setText(String.valueOf(queueData.getSize()));
     }
 
     private void onHerokuError(Throwable error){
@@ -76,23 +76,6 @@ public class NewQueueActivity extends Activity {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onHerokuAddUser);
-    }
-
-    private void removeUserFromQueue(){
-        herokuService.dequeue()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((herokuData) -> {
-                    Response response = gson.fromJson(herokuData, Response.class);
-                    dequeueTextView.setText(response.getMessage());
-                },(e) -> Log.d(TAG, "dequeue " + e.getLocalizedMessage()));
-    }
-
-    private static class Response{
-        public Response(String message){setMessage(message);}
-        private String message;
-        public String getMessage() {return message;}
-        public void setMessage(String message) {this.message = message;}
     }
 
     private void launchInQueueView(){

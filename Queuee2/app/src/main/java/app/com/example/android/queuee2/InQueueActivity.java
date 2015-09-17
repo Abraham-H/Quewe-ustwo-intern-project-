@@ -6,14 +6,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import app.com.example.android.queuee2.model.HerokuApiClient;
-import app.com.example.android.queuee2.model.QueueInfo;
+import app.com.example.android.queuee2.model.Response;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -22,18 +21,21 @@ public class InQueueActivity extends Activity {
     private static String TAG = InQueueActivity.class.getSimpleName();
     private HerokuApiClient.HerokuService herokuService;
     private static String androidId;
-    private QueueInfo queueInfoInfo;
-    private Button removeMeFromQueueButton ;
-
+    private Response.QueueData queueData;
+    private TextView removedFromQueueTextView;
+    private TextView queuePositionTextView;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_queue);
         herokuService = HerokuApiClient.getHerokuService();
+        populateView();
+        gson= new Gson();
         setAndroidId();
         setQueue();
-
+        loadQueuePositionInfo();
     }
 
     @Override
@@ -44,20 +46,29 @@ public class InQueueActivity extends Activity {
     }
 
     private void setQueue(){
-        queueInfoInfo = new QueueInfo();
+        queueData = new Response.QueueData();
     }
 
-    private void getQueuePositionInfo(){
+    private void loadQueuePositionInfo(){
         herokuService.info("queue", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onHerokuRecieved, this::onHerokuError);
+                .subscribe(this::onHerokuReceived, this::onHerokuError);
+    }
+    private void removeUserFromQueue(){
+        herokuService.dequeue()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((herokuData) -> {
+                    Response.Message response = gson.fromJson(herokuData, Response.Message.class);
+                    removedFromQueueTextView.setText(response.getMessage());
+                },(e) -> Log.d(TAG, "dequeue " + e.getLocalizedMessage()));
     }
 
-    private void onHerokuRecieved(JsonElement herokuData) {
+    private void onHerokuReceived(JsonElement herokuData) {
         Gson gson = new Gson();
-        queueInfoInfo = gson.fromJson(herokuData,QueueInfo.class);
-       // numInLineTextView.setText(String.valueOf(queue.getSize()));
+        queueData = gson.fromJson(herokuData,Response.QueueData.class);
+        queuePositionTextView.setText(String.valueOf(queueData.getSize()));
     }
 
     private void onHerokuError(Throwable error){
@@ -70,11 +81,13 @@ public class InQueueActivity extends Activity {
     }
 
     private void populateView() {
-        removeMeFromQueueButton = (Button)findViewById(R.id.add_to_queue_image_button);
+        removedFromQueueTextView = (TextView)findViewById(R.id.removedFromQueueTextView);
+        queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
 
+        Button removeMeFromQueueButton = (Button) findViewById(R.id.removeMeFromQueueButton);
         removeMeFromQueueButton.setEnabled(true);
         removeMeFromQueueButton.setOnClickListener((v) -> {
-
+            removeUserFromQueue();
         });
     }
 
