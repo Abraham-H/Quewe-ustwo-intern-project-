@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="# People In Line"
-        android:id="@+id/num_in_line_textView"
+        android:id="@+id/queuePositionTextView"
         android:layout_above="@+id/add_to_queue_image_button"
         android:layout_centerHorizontal="true" />
 
