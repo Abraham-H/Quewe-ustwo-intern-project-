@@ -35,7 +35,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Queue Position:"
         android:id="@+id/queuePositionTextView"
-        android:layout_below="@+id/popFromQueueTextView"
         android:layout_alignParentStart="true"
         android:layout_marginTop="48dp" />
 
