@@ -3,8 +3,6 @@ package app.com.example.android.queuee2;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 import com.google.gson.Gson;

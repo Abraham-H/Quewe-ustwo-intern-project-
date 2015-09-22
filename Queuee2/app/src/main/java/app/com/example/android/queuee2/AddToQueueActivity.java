@@ -10,9 +10,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -26,8 +26,9 @@ public class AddToQueueActivity extends Activity {
     private HerokuApiClient.HerokuService herokuService;
     private static String androidId;
     private Gson gson;
-    private FirebaseListener firebaseListener;
     private TextView queuePositionTextView;
+    private RelativeLayout splashLayout;
+    private ImageButton addToQueueImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +47,12 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void instantiateViews() {
-
-       ImageButton addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
+        addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
         queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
         userAddedTextView = (TextView)findViewById(R.id.userAddedTextView);
+        splashLayout = (RelativeLayout)findViewById(R.id.splashScreenLayout);
 
-        addToQueueImageButton.setEnabled(true);
+        addToQueueImageButton.setEnabled(false);
         addToQueueImageButton.setOnClickListener((v) -> {
             addUserToQueue();
             launchInQueueView();
@@ -80,6 +81,10 @@ public class AddToQueueActivity extends Activity {
                 .subscribe((herokuData) -> {
                     queueData = gson.fromJson(herokuData, Response.QueueData.class);
                     queuePositionTextView.setText(String.valueOf(queueData.getPosition()));
+
+                    addToQueueImageButton.setEnabled(true);
+                    splashLayout.setVisibility(View.GONE);
+
                 }, this::onHerokuError);
     }
 
@@ -89,7 +94,7 @@ public class AddToQueueActivity extends Activity {
     }
 
     public void setupFirebaseListener(){
-        firebaseListener = new FirebaseListener(this,this::updateViewsWithServerData);
+        FirebaseListener firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
     }
 
     @Override
