@@ -2,6 +2,7 @@ package app.com.example.android.queuee2;
 import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
 import app.com.example.android.queuee2.model.Response;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -58,7 +59,7 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void addUserToQueue(){
-        herokuService.add("queue", androidId)
+        herokuService.add("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onAddUser, this::onHerokuError);
@@ -73,7 +74,7 @@ public class AddToQueueActivity extends Activity {
         Log.d(TAG, "onHerokuError: " + error.getLocalizedMessage());
     }
     public void updateViewsWithServerData(){
-        herokuService.info("queue", androidId)
+        herokuService.info("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {

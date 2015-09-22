@@ -56,7 +56,7 @@ public class InQueueActivity extends Activity {
     }
 
     public void updateViewsWithServerData(){
-        herokuService.info("queue", androidId)
+        herokuService.info("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
@@ -72,17 +72,17 @@ public class InQueueActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        herokuService.remove("queue",androidId)
+        herokuService.remove("queue1",androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
                     Log.d(TAG, "onBackPressed : " +
                             gson.fromJson(herokuData, Response.Message.class).getMessage());
-                });
+                },this::onHerokuError);
     }
 
     private void popUserFromQueue(){
-        herokuService.pop()
+        herokuService.pop("queue1")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
