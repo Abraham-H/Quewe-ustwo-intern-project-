@@ -77,8 +77,10 @@ public class InQueueActivity extends Activity {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
-                    Response.Message userInfo = gson.fromJson(herokuData, Response.Message.class);
-                    queuePositionTextView.setText(userInfo.getMessage());
+                    Response response = gson.fromJson(herokuData, Response.class);
+                    queuePositionTextView.setText(Integer.toString(
+                            ((Double) response.getData()).intValue()
+                    ));
                 }, this::onHerokuError);
     }
 
@@ -94,7 +96,7 @@ public class InQueueActivity extends Activity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
                     Log.d(TAG, "onBackPressed : " +
-                            gson.fromJson(herokuData, Response.Message.class).getMessage());
+                            gson.fromJson(herokuData, Response.class).getMessage());
                 },this::onHerokuError);
     }
 
@@ -103,8 +105,8 @@ public class InQueueActivity extends Activity {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
-                    Response.Message response = gson.fromJson(herokuData, Response.Message.class);
-                    popFromQueueTextView.setText(response.getMessage());
+                    Response response = gson.fromJson(herokuData, Response.class);
+                    popFromQueueTextView.setText((String) response.getData());
                 }, this::onHerokuError);
     }
 
