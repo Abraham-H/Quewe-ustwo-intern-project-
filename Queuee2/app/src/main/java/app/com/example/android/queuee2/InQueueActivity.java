@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.gson.Gson;
 
@@ -21,6 +22,7 @@ public class InQueueActivity extends Activity {
     private Response.QueueData queueData;
     private TextView popFromQueueTextView;
     private TextView queuePositionTextView;
+    private ImageView waitingAnimationImageView;
     private FirebaseListener firebaseListener;
     private Gson gson;
 
@@ -37,6 +39,7 @@ public class InQueueActivity extends Activity {
     private void instantiateViews() {
         popFromQueueTextView = (TextView)findViewById(R.id.removedFromQueueTextView);
         queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
+
 
         Button popFromQueueButton = (Button) findViewById(R.id.popFromQueueButton);
         popFromQueueButton.setEnabled(true);
