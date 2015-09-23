@@ -22,30 +22,4 @@ public class Response {
         public String getMessage() {return message;}
         public void setMessage(String message) {this.message = message;}
     }
-
-    public static class QueueData {
-        private int position;
-        private int size;
-        private boolean error;
-        private String errorMessage;
-
-        public int getPosition() {
-            return position;
-        }
-        public void setPosition(int position) {
-            this.position = position;
-        }
-        public int getSize() {
-            return size;
-        }
-        public void setSize(int size) {
-            this.size = size;
-        }
-        public void setError(boolean error) {
-            this.error = error;
-        }
-        public void setErrorMessage(String errorMessage){
-            this.errorMessage = errorMessage;
-        }
-    }
 }

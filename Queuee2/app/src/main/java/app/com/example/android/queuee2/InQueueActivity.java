@@ -18,7 +18,6 @@ public class InQueueActivity extends Activity {
     private static String TAG = InQueueActivity.class.getSimpleName();
     private HerokuApiClient.HerokuService herokuService;
     private static String androidId;
-    private Response.QueueData queueData;
     private TextView popFromQueueTextView;
     private TextView queuePositionTextView;
     private FirebaseListener firebaseListener;
@@ -48,7 +47,6 @@ public class InQueueActivity extends Activity {
     private void setInstanceVariables(){
         herokuService = HerokuApiClient.getHerokuService();
         gson = new Gson();
-        queueData = new Response.QueueData();
         androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
     }
@@ -58,8 +56,8 @@ public class InQueueActivity extends Activity {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
-                    queueData = gson.fromJson(herokuData, Response.QueueData.class);
-                    queuePositionTextView.setText(String.valueOf(queueData.getPosition()));
+                    Response.Message userInfo = gson.fromJson(herokuData, Response.Message.class);
+                    queuePositionTextView.setText(userInfo.getMessage());
                 }, this::onHerokuError);
     }
 

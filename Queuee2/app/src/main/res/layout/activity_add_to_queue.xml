@@ -1,11 +1,31 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".NewQueueView">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".NewQueueView"
+    android:weightSum="1">
 
+    <TextView
+        android:layout_width="172dp"
+        android:layout_height="wrap_content"
+        style="@style/welcome_text_style"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/welcome_text"
+        android:id="@+id/welcome_text_view"
+        android:layout_weight="0.75" />
 
+    <TextView
+        android:layout_width="258dp"
+        android:layout_height="wrap_content"
+        style="@style/normal_text_style"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/num_in_queue_textview"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.21" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -13,53 +33,6 @@
         android:id="@+id/add_to_queue_image_button"
         android:src="@drawable/button_selector"
         android:background="@null"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-         />
+        android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="# People In Line"
-        android:id="@+id/queuePositionTextView"
-        android:layout_above="@+id/add_to_queue_image_button"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="No Info Recieved"
-        android:id="@+id/deqeue_view"
-        android:layout_below="@+id/add_to_queue_image_button"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/userAddedTextView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <RelativeLayout
-        android:id="@+id/splashScreenLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:background="#FFFFFF"
-        android:layout_alignParentStart="true">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Splash Screen!"
-            android:id="@+id/splashScreenTextView"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

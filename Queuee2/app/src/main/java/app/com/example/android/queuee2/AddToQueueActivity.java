@@ -8,9 +8,12 @@ import rx.schedulers.Schedulers;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,17 +21,16 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class AddToQueueActivity extends Activity {
 
     private static String TAG = AddToQueueActivity.class.getSimpleName();
-    private TextView userAddedTextView;
-    private Response.QueueData queueData;
     private HerokuApiClient.HerokuService herokuService;
     private static String androidId;
     private Gson gson;
-    private TextView queuePositionTextView;
-    private RelativeLayout splashLayout;
-    private ImageButton addToQueueImageButton;
+    private TextView numInQueueTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class AddToQueueActivity extends Activity {
         setContentView(R.layout.activity_add_to_queue);
         setInstanceVariables();
         instantiateViews();
+        updateViewsWithServerData();
         setupFirebaseListener();
     }
 
@@ -47,12 +50,11 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void instantiateViews() {
-        addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
-        queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
-        userAddedTextView = (TextView)findViewById(R.id.userAddedTextView);
-        splashLayout = (RelativeLayout)findViewById(R.id.splashScreenLayout);
+        TextView welcomeTextView = (TextView)findViewById(R.id.welcome_text_view);
+        welcomeTextView.setLineSpacing(0.0f,0.8f);
 
-        addToQueueImageButton.setEnabled(false);
+        numInQueueTextView = (TextView)findViewById(R.id.num_in_queue_textview);
+        ImageButton addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
         addToQueueImageButton.setOnClickListener((v) -> {
             addUserToQueue();
             launchInQueueView();
@@ -63,38 +65,33 @@ public class AddToQueueActivity extends Activity {
         herokuService.add("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onAddUser, this::onHerokuError);
-    }
-
-    private void onAddUser(JsonElement herokuData){
-        Response.Message response  = gson.fromJson(herokuData, Response.Message.class);
-        userAddedTextView.setText(response.getMessage());
+                .subscribe((herokuData) -> {
+                    Response.Message response  = gson.fromJson(herokuData, Response.Message.class);
+                }, this::onHerokuError);
     }
 
     private void onHerokuError(Throwable error){
         Log.d(TAG, "onHerokuError: " + error.getLocalizedMessage());
     }
+
+    public void setupFirebaseListener(){
+        FirebaseListener firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
+    }
+
     public void updateViewsWithServerData(){
-        herokuService.info("queue1", androidId)
+        herokuService.info("queue1")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
-                    queueData = gson.fromJson(herokuData, Response.QueueData.class);
-                    queuePositionTextView.setText(String.valueOf(queueData.getPosition()));
-
-                    addToQueueImageButton.setEnabled(true);
-                    splashLayout.setVisibility(View.GONE);
-
+                    ArrayList<String> queue = gson.fromJson(herokuData, ArrayList.class);
+                    String noun = queue.size() == 1 ? " person" : " people";
+                    numInQueueTextView.setText(String.valueOf(queue.size()) +  noun + " in the queue");
                 }, this::onHerokuError);
     }
 
     private void launchInQueueView(){
         Intent intent = new Intent(this, InQueueActivity.class);
         startActivity(intent);
-    }
-
-    public void setupFirebaseListener(){
-        FirebaseListener firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
     }
 
     @Override
