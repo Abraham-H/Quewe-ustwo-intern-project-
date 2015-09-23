@@ -26,10 +26,20 @@ public class HerokuApiClient {
     }
 
     public interface HerokuService {
+        @GET("/add/{queueId}")
+        Observable<JsonElement> add(
+                @Path("queueId") String queueId
+        );
         @GET("/add/{queueId}/{userId}")
         Observable<JsonElement> add(
                 @Path("queueId") String queueId,
                 @Path("userId") String userId
+        );
+        @GET("/info")
+        Observable<JsonElement> info();
+        @GET("/info/{queueId}")
+        Observable<JsonElement> info(
+                @Path("queueId") String queueId
         );
         @GET("/info/{queueId}/{userId}")
         Observable<JsonElement> info(
@@ -42,6 +52,11 @@ public class HerokuApiClient {
         );
         @GET("/remove/{queueId}/{userId}")
         Observable<JsonElement> remove(
+                @Path("queueId") String queueId,
+                @Path("userId") String userId
+        );
+        @GET("/snooze/{queueId}/{userId}")
+        Observable<JsonElement> snooze(
                 @Path("queueId") String queueId,
                 @Path("userId") String userId
         );
