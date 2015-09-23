@@ -1,15 +1,21 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.gson.Gson;
 
 import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
 import app.com.example.android.queuee2.model.Response;
+import app.com.example.android.queuee2.utils.ImageUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -20,6 +26,8 @@ public class InQueueActivity extends Activity {
     private static String androidId;
     private TextView popFromQueueTextView;
     private TextView queuePositionTextView;
+    private ImageView waitingAnimationImageView;
+    private AnimationDrawable waitingAnimationDrawable;
     private FirebaseListener firebaseListener;
     private Gson gson;
 
@@ -42,6 +50,19 @@ public class InQueueActivity extends Activity {
         popFromQueueButton.setOnClickListener((v) -> {
             popUserFromQueue();
         });
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+        waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
+        waitingAnimationImageView.setImageBitmap(
+                ImageUtils.decodeSampledBitmapFromResource(getResources(),
+                        R.drawable.waiting_img1, 100, 100));
+       // waitingAnimationDrawable = (AnimationDrawable) waitingAnimationImageView.getBackground();
+       // waitingAnimationDrawable.start();
+
+        super.onWindowFocusChanged(hasFocus);
     }
 
     private void setInstanceVariables(){
