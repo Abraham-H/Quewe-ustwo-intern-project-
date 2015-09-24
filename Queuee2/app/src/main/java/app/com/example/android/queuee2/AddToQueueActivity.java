@@ -1,7 +1,9 @@
 package app.com.example.android.queuee2;
+import app.com.example.android.queuee2.model.BeaconListener;
 import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
 import app.com.example.android.queuee2.model.Response;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import android.app.Activity;
@@ -11,6 +13,8 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.estimote.sdk.Beacon;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 
@@ -18,6 +22,7 @@ public class AddToQueueActivity extends Activity {
 
     private static String TAG = AddToQueueActivity.class.getSimpleName();
     private HerokuApiClient.HerokuService herokuService;
+    private BeaconListener beaconListener;
     private static String androidId;
     private Gson gson;
     private TextView numInQueueTextView;
@@ -31,6 +36,7 @@ public class AddToQueueActivity extends Activity {
         instantiateViews();
         updateViewsWithServerData();
         setupFirebaseListener();
+        setupBeaconListener();
     }
 
     private void setInstanceVariables() {
@@ -73,11 +79,20 @@ public class AddToQueueActivity extends Activity {
                 });
     }
 
-    public void setupFirebaseListener(){
+    private void setupFirebaseListener(){
         FirebaseListener firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
     }
 
-    public void updateViewsWithServerData() {
+    private void setupBeaconListener() {
+        Observable<String> observable = new BeaconListener(this).getObservable();
+        observable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> Toast.makeText(this, data, Toast.LENGTH_SHORT).show(),
+                        error -> Log.d(TAG, "EstimoteBeacon error:" + error.getMessage()));
+    }
+
+    private void updateViewsWithServerData() {
         herokuService.info("queue1")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

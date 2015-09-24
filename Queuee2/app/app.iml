@@ -51,7 +51,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/debug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/res/drawable/add_to_queue_button_not_pressed" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/assets" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/aidl" isTestSource="false" />
@@ -72,6 +71,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/estimote-sdk/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.0.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
@@ -89,14 +89,15 @@
       <excludeFolder url="file://$MODULE_DIR$/build/retrolambda" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 23 Platform (1)" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="jackson-databind-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="tubesock-0.0.11" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.0.14" level="project" />
-    <orderEntry type="library" exported="" name="firebase-client-jvm-2.2.3" level="project" />
     <orderEntry type="library" exported="" name="jackson-annotations-2.2.2" level="project" />
+    <orderEntry type="library" exported="" name="firebase-client-jvm-2.2.3" level="project" />
+    <orderEntry type="library" exported="" name="estimote-sdk-" level="project" />
     <orderEntry type="library" exported="" name="rxandroid-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-client-android-2.2.3" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.9.0" level="project" />
