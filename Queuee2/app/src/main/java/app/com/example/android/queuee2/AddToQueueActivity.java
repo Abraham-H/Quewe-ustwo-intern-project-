@@ -101,7 +101,7 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void toastError(String message) {
-        Log.d(TAG, "Error :" + message);
+        Log.d(TAG, "Error: " + message);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 

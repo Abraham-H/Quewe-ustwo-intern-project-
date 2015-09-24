@@ -101,15 +101,15 @@ public class InQueueActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        removeCurrentUser();
+        cancelAction();
     }
 
     private void cancelAction(){
+        firebaseListener.disconnectListener();
         removeCurrentUser();
-        Context context = getApplicationContext();
         CharSequence text = "Cancel has been tapped! You have been removed";
         int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
+        Toast toast = Toast.makeText(this, text, duration);
         toast.show();
     }
 
@@ -120,12 +120,11 @@ public class InQueueActivity extends Activity {
                 .subscribe((herokuData) -> {
                     Response response = gson.fromJson(herokuData, Response.class);
                     popFromQueueTextView.setText((String) response.getData());
-
-                }, this::onHerokuError);
+                }, throwable -> Log.d(TAG, "removeCurrentUser "));
     }
 
     private void toastError(String message) {
-        Log.d(TAG, "Error :" + message);
+        Log.d(TAG, "Error: " + message);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
