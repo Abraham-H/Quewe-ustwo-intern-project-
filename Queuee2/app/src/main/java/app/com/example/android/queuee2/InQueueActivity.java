@@ -48,11 +48,6 @@ public class InQueueActivity extends Activity {
         setupFirebaseListener();
     }
 
-    private void instantiateViews() {
-        queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
-        waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
-    }
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         prepareAnimation();
@@ -66,6 +61,11 @@ public class InQueueActivity extends Activity {
                 android.provider.Settings.Secure.ANDROID_ID);
     }
 
+    private void instantiateViews() {
+        queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
+        waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
+    }
+
     public void updateViewsWithServerData(){
         herokuService.info("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
@@ -75,7 +75,17 @@ public class InQueueActivity extends Activity {
                     queuePositionTextView.setText(Integer.toString(
                             ((Double) response.getData()).intValue()
                     ));
-                }, this::onHerokuError);
+                }, throwable -> {
+                    Response.Error error = Response.getError(throwable);
+                    switch (error.getStatus()) {
+                        case 404: // Not in the queue
+                            toastError(error.getMessage());
+                            break;
+                        case 400: // Queue Not Found
+                            toastError(error.getMessage());
+                            break;
+                    }
+                });
     }
 
     public void setupFirebaseListener(){
@@ -113,9 +123,10 @@ public class InQueueActivity extends Activity {
 
                 }, this::onHerokuError);
     }
-    
-    private void onHerokuError(Throwable error) {
-        Log.d(TAG, "onHerokuError: " + error.getLocalizedMessage());
+
+    private void toastError(String message) {
+        Log.d(TAG, "Error :" + message);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

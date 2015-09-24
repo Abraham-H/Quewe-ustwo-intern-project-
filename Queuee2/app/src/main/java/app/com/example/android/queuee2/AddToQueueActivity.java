@@ -52,7 +52,7 @@ public class AddToQueueActivity extends Activity {
         });
     }
 
-    private void addUserToQueue(){
+    private void addUserToQueue() {
         herokuService.add("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -77,7 +77,7 @@ public class AddToQueueActivity extends Activity {
         FirebaseListener firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
     }
 
-    public void updateViewsWithServerData(){
+    public void updateViewsWithServerData() {
         herokuService.info("queue1")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
