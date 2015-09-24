@@ -113,6 +113,22 @@ public class InQueueActivity extends Activity {
 
                 }, this::onHerokuError);
     }
+
+    private void checkCurrentUserPosition(){
+        herokuService.info("queue1", androidId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((herokuData) -> {
+                    Response response = gson.fromJson(herokuData, Response.class);
+                    popFromQueueTextView.setText((String) response.getData());
+                    if(response.getData() == "0"){
+
+                    }
+                }, this::onHerokuError);
+
+
+    }
+
     
     private void onHerokuError(Throwable error) {
         Log.d(TAG, "onHerokuError: " + error.getLocalizedMessage());
