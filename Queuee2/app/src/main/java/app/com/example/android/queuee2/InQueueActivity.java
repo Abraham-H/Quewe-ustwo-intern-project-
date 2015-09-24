@@ -48,11 +48,6 @@ public class InQueueActivity extends Activity {
         setupFirebaseListener();
     }
 
-    private void instantiateViews() {
-        queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
-        waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
-    }
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         prepareAnimation();
@@ -66,6 +61,11 @@ public class InQueueActivity extends Activity {
                 android.provider.Settings.Secure.ANDROID_ID);
     }
 
+    private void instantiateViews() {
+        queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
+        waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
+    }
+
     public void updateViewsWithServerData(){
         herokuService.info("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
@@ -75,7 +75,17 @@ public class InQueueActivity extends Activity {
                     queuePositionTextView.setText(Integer.toString(
                             ((Double) response.getData()).intValue()
                     ));
-                }, this::onHerokuError);
+                }, throwable -> {
+                    Response.Error error = Response.getError(throwable);
+                    switch (error.getStatus()) {
+                        case 404: // Not in the queue
+                            toastError(error.getMessage());
+                            break;
+                        case 400: // Queue Not Found
+                            toastError(error.getMessage());
+                            break;
+                    }
+                });
     }
 
     public void setupFirebaseListener(){
@@ -91,15 +101,15 @@ public class InQueueActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        removeCurrentUser();
+        cancelAction();
     }
 
     private void cancelAction(){
+        firebaseListener.disconnectListener();
         removeCurrentUser();
-        Context context = getApplicationContext();
         CharSequence text = "Cancel has been tapped! You have been removed";
         int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
+        Toast toast = Toast.makeText(this, text, duration);
         toast.show();
     }
 
@@ -110,28 +120,12 @@ public class InQueueActivity extends Activity {
                 .subscribe((herokuData) -> {
                     Response response = gson.fromJson(herokuData, Response.class);
                     popFromQueueTextView.setText((String) response.getData());
-
-                }, this::onHerokuError);
+                }, throwable -> Log.d(TAG, "removeCurrentUser "));
     }
 
-    private void checkCurrentUserPosition(){
-        herokuService.info("queue1", androidId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((herokuData) -> {
-                    Response response = gson.fromJson(herokuData, Response.class);
-                    popFromQueueTextView.setText((String) response.getData());
-                    if(response.getData() == "0"){
-
-                    }
-                }, this::onHerokuError);
-
-
-    }
-
-    
-    private void onHerokuError(Throwable error) {
-        Log.d(TAG, "onHerokuError: " + error.getLocalizedMessage());
+    private void toastError(String message) {
+        Log.d(TAG, "Error: " + message);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -27,6 +27,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    sourceSets {
+        main {
+            res {
+                srcDir 'src/main/res/drawable/add_to_queue_button_not_pressed/'
+            }
+        }
+    }
 }
 
 retrolambda{

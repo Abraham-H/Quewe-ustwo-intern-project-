@@ -14,6 +14,7 @@ public class FirebaseListener {
 
     Firebase fRef;
     Runnable onChange;
+    ValueEventListener eventListener;
 
     public FirebaseListener(Context ctx, Runnable onChange) {
         Firebase.setAndroidContext(ctx);
@@ -23,7 +24,7 @@ public class FirebaseListener {
     }
 
     private void setupListener() {
-        fRef.addValueEventListener(new ValueEventListener() {
+        eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 onChange.run();
@@ -33,7 +34,12 @@ public class FirebaseListener {
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
+        };
+        fRef.addValueEventListener(eventListener);
+    }
+
+    public void disconnectListener() {
+        fRef.removeEventListener(eventListener);
     }
 
     private void setOnChange(Runnable onChange) {
