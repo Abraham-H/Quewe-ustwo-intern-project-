@@ -17,6 +17,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -31,6 +32,7 @@ public class AddToQueueActivity extends Activity {
     private static String androidId;
     private Gson gson;
     private TextView numInQueueTextView;
+    private ImageButton addToQueueImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +54,9 @@ public class AddToQueueActivity extends Activity {
     private void instantiateViews() {
         TextView welcomeTextView = (TextView)findViewById(R.id.welcome_text_view);
         welcomeTextView.setLineSpacing(0.0f,0.8f);
-
         numInQueueTextView = (TextView)findViewById(R.id.num_in_queue_textview);
-        ImageButton addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
+        addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
+        addToQueueImageButton.setEnabled(false);
         addToQueueImageButton.setOnClickListener((v) -> {
             addUserToQueue();
             launchInQueueView();
@@ -66,12 +68,15 @@ public class AddToQueueActivity extends Activity {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
-                    Response.Message response  = gson.fromJson(herokuData, Response.Message.class);
+                    Response response = gson.fromJson(herokuData, Response.class);
+                    toastError(response);
                 }, this::onHerokuError);
     }
 
     private void onHerokuError(Throwable error){
         Log.d(TAG, "onHerokuError: " + error.getLocalizedMessage());
+        toastError(
+                new Response("Heroku Error: " + error.getLocalizedMessage(),true));
     }
 
     public void setupFirebaseListener(){
@@ -83,15 +88,31 @@ public class AddToQueueActivity extends Activity {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
-                    ArrayList<String> queue = gson.fromJson(herokuData, ArrayList.class);
-                    String noun = queue.size() == 1 ? " person" : " people";
-                    numInQueueTextView.setText(String.valueOf(queue.size()) +  noun + " in the queue");
+                    Response response = gson.fromJson(herokuData, Response.class);
+                    if(response.isError()){
+                        if(response.getMessage().equals("Queue does not exist")){
+                            numInQueueTextView.setText("Queue not open");
+                        }
+                    } else {
+                        ArrayList<String> queue = (ArrayList<String>) response.getData();
+                        String noun = queue.size() == 1 ? " person" : " people";
+                        numInQueueTextView.setText(String.valueOf(queue.size()) + noun + " in the queue");
+                        addToQueueImageButton.setEnabled(true);
+                    }
+
                 }, this::onHerokuError);
     }
 
     private void launchInQueueView(){
         Intent intent = new Intent(this, InQueueActivity.class);
         startActivity(intent);
+    }
+
+    private void toastError(Response response) {
+        if (response.isError()) {
+            Toast.makeText(AddToQueueActivity.this,
+                    response.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
