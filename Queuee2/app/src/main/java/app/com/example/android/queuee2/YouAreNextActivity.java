@@ -1,11 +1,18 @@
-package app.com.example.android.queuee2.model;
+package app.com.example.android.queuee2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import app.com.example.android.queuee2.R;
+import com.google.gson.Gson;
+
+import app.com.example.android.queuee2.model.HerokuApiClient;
 
 public class YouAreNextActivity extends Activity {
 
@@ -13,6 +20,27 @@ public class YouAreNextActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_you_are_next);
+        setInstanceVariables();
+        instantiateViews();
+    }
+
+    private void setInstanceVariables(){
+
+    }
+
+    private void instantiateViews() {
+
+        Button finishedShoppingButton = (Button)findViewById(R.id.finished_shopping_button);
+        finishedShoppingButton.setEnabled(true);
+        finishedShoppingButton.setOnClickListener((v) -> {
+            launchThankYouActivity();
+        });
+    }
+
+    private void launchThankYouActivity(){
+        Intent intent = new Intent(this, ThankYouActivity.class);
+        startActivity(intent);
+
     }
 
     @Override

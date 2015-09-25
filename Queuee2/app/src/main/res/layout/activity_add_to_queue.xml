@@ -12,7 +12,6 @@
         android:layout_width="172dp"
         android:layout_height="wrap_content"
         style="@style/welcome_text_style"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/welcome_text"
         android:id="@+id/welcome_text_view"
         android:layout_weight="0.75" />

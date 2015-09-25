@@ -33,6 +33,14 @@
             android:name=".model.YouAreNextActivity"
             android:label="@string/title_activity_you_are_next" >
         </activity>
+        <activity
+            android:name=".YouAreNextActivity"
+            android:label="@string/title_activity_you_are_next" >
+        </activity>
+        <activity
+            android:name=".YouAreNext"
+            android:label="@string/title_activity_you_are_next" >
+        </activity>
     </application>
 
 </manifest>

@@ -59,7 +59,7 @@ public class AddToQueueActivity extends Activity {
                 .subscribe((herokuData) -> {
                     Response response = gson.fromJson(herokuData, Response.class);
                     Log.d(TAG, "addUserToQueue response:" + response.getMessage());
-                    launchInQueueView();
+                    launchInQueueActivity();
                 }, (throwable) -> {
                     Response.Error error = Response.getError(throwable);
                     switch (error.getStatus()) {
@@ -95,7 +95,7 @@ public class AddToQueueActivity extends Activity {
                 });
     }
 
-    private void launchInQueueView(){
+    private void launchInQueueActivity(){
         Intent intent = new Intent(this, InQueueActivity.class);
         startActivity(intent);
     }

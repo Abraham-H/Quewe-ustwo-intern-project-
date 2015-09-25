@@ -2,6 +2,7 @@ package app.com.example.android.queuee2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -50,7 +51,7 @@ public class InQueueActivity extends Activity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        prepareAnimation();
+        prepareAndRunAnimation();
         super.onWindowFocusChanged(hasFocus);
     }
 
@@ -72,6 +73,11 @@ public class InQueueActivity extends Activity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((herokuData) -> {
                     Response response = gson.fromJson(herokuData, Response.class);
+
+                    if( ((Double) response.getData()).intValue()==0){
+                        launchYouAreNextActivity();
+                    }
+
                     queuePositionTextView.setText(Integer.toString(
                             ((Double) response.getData()).intValue()
                     ));
@@ -92,7 +98,7 @@ public class InQueueActivity extends Activity {
         firebaseListener = new FirebaseListener(this,this::updateViewsWithServerData);
     }
 
-    private void prepareAnimation(){
+    private void prepareAndRunAnimation(){
         waitingAnimationImageView.setBackgroundResource(R.drawable.waiting_animation);
         waitingAnimationDrawable = (AnimationDrawable) waitingAnimationImageView.getBackground();
         waitingAnimationDrawable.start();
@@ -121,6 +127,11 @@ public class InQueueActivity extends Activity {
                     Response response = gson.fromJson(herokuData, Response.class);
                     popFromQueueTextView.setText((String) response.getData());
                 }, throwable -> Log.d(TAG, "removeCurrentUser "));
+    }
+
+    private void launchYouAreNextActivity(){
+        Intent intent = new Intent(this, YouAreNextActivity.class);
+        startActivity(intent);
     }
 
     private void toastError(String message) {
