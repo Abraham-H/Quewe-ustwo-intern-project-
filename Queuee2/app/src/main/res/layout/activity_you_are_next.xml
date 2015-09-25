@@ -8,7 +8,7 @@
 
     <TextView
         android:text="@string/you_are_next_text"
-        style="@style/welcome_text_style"
+        style="@style/header_text_style"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
@@ -24,5 +24,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="70dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/normal_text_style"
+        android:text="@string/directions_text"
+        android:id="@+id/directionsTextView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
