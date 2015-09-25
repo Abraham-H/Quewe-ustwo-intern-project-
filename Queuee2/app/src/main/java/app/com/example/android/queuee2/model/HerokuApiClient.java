@@ -26,8 +26,6 @@ public class HerokuApiClient {
     }
 
     public interface HerokuService {
-        @GET("/")
-        Observable<JsonElement> test();
         @GET("/add/{queueId}")
         Observable<JsonElement> add(
                 @Path("queueId") String queueId

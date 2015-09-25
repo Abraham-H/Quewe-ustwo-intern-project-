@@ -14,19 +14,21 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.estimote.sdk.Beacon;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 import java.util.ArrayList;
 
 public class AddToQueueActivity extends Activity {
 
     private static String TAG = AddToQueueActivity.class.getSimpleName();
     private HerokuApiClient.HerokuService herokuService;
-    private BeaconListener beaconListener;
+    private BeaconListener mBeaconListener;
     private static String androidId;
     private Gson gson;
     private TextView numInQueueTextView;
     private ImageButton addToQueueImageButton;
+    private static final int REQUEST_ENABLE_BT = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +37,13 @@ public class AddToQueueActivity extends Activity {
         setInstanceVariables();
         instantiateViews();
         updateViewsWithServerData();
-        setupFirebaseListener();
-        setupBeaconListener();
+        connectFirebaseListener();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        connectBeaconListener();
     }
 
     private void setInstanceVariables() {
@@ -62,9 +69,10 @@ public class AddToQueueActivity extends Activity {
         herokuService.add("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((herokuData) -> {
-                    Response response = gson.fromJson(herokuData, Response.class);
-                    Log.d(TAG, "addUserToQueue response:" + response.getMessage());
+                .map(this::jsonToResponse)
+                .subscribe((response) -> {
+                    Log.d(TAG, response.getMessage());
+                    disconnectBeaconListener();
                     launchInQueueActivity();
                 }, (throwable) -> {
                     Response.Error error = Response.getError(throwable);
@@ -79,17 +87,31 @@ public class AddToQueueActivity extends Activity {
                 });
     }
 
-    private void setupFirebaseListener(){
+    private Response jsonToResponse(JsonElement data) {
+        return gson.fromJson(data, Response.class);
+    }
+
+    private void connectFirebaseListener(){
         FirebaseListener firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
     }
 
-    private void setupBeaconListener() {
-        Observable<String> observable = new BeaconListener(this).getObservable();
-        observable
+    private void connectBeaconListener() {
+        mBeaconListener = new BeaconListener(this);
+        Observable<String> beaconObservable = mBeaconListener.getObservable();
+        beaconObservable
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> Toast.makeText(this, data, Toast.LENGTH_SHORT).show(),
-                        error -> Log.d(TAG, "EstimoteBeacon error:" + error.getMessage()));
+                .subscribe(uuid -> {
+                    Log.d(TAG, "setupBeaconListener :" + uuid);
+                    Toast.makeText(this, "PING!", Toast.LENGTH_SHORT).show();
+                    addUserToQueue();
+                }, error -> {
+                    Log.d(TAG, "EstimoteBeacon error:" + error.getMessage());
+                });
+    }
+
+    private void disconnectBeaconListener() {
+        mBeaconListener.disconnect();
     }
 
     private void updateViewsWithServerData() {
@@ -104,7 +126,7 @@ public class AddToQueueActivity extends Activity {
                     addToQueueImageButton.setEnabled(true);
                 }, throwable -> {
                     Response.Error error = Response.getError(throwable);
-                    if (error.getStatus() == 404) {
+                    if (error.getStatus() == 404) { // Queue not found
                         toastError(error.getMessage());
                     }
                 });
@@ -120,8 +142,15 @@ public class AddToQueueActivity extends Activity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onStart(){
-        super.onStart();
+    @Override // Bluetooth Dialogue callback
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Bluetooth turning on, please wait...", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Bluetooth Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
+
 }
