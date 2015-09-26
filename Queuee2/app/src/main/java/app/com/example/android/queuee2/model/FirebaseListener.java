@@ -20,26 +20,30 @@ public class FirebaseListener {
         Firebase.setAndroidContext(ctx);
         fRef = new Firebase("https://burning-torch-3063.firebaseio.com/");
         setOnChange(onChange);
-        setupListener();
     }
 
-    private void setupListener() {
-        eventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                onChange.run();
-            }
+    public void connectListener() {
+        if (eventListener == null) {
+            eventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    onChange.run();
+                }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
 
-            }
-        };
-        fRef.addValueEventListener(eventListener);
+                }
+            };
+            fRef.addValueEventListener(eventListener);
+        }
     }
 
     public void disconnectListener() {
-        fRef.removeEventListener(eventListener);
+        if (eventListener != null) {
+            fRef.removeEventListener(eventListener);
+            eventListener = null;
+        }
     }
 
     private void setOnChange(Runnable onChange) {

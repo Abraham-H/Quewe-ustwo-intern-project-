@@ -1,6 +1,7 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ public class ThankYouActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thank_you);
+
     }
 
     @Override
@@ -18,6 +20,13 @@ public class ThankYouActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_thank_you, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent a = new Intent(this,AddToQueueActivity.class);
+        a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(a);
     }
 
     @Override

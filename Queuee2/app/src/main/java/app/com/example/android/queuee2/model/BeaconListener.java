@@ -27,6 +27,7 @@ public class BeaconListener {
 
     private BeaconManager mBeaconManager;
     private BroadcastReceiver mReciever;
+    private boolean mRecieverRegistered;
     private Activity mActivity;
     private static final String TAG = BeaconListener.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
@@ -37,24 +38,29 @@ public class BeaconListener {
     public BeaconListener(Activity activity){
         this.mActivity = activity;
         mBeaconManager = new BeaconManager(activity);
+        mRecieverRegistered = false;
         mObservable = Observable.create(subscriber -> checkBluetooth(subscriber));
     }
 
-    private void checkBluetooth(Subscriber <? super String> subscriber){
-        mReciever = createBroadcastReceiver(subscriber);
-        if (!mBeaconManager.hasBluetooth()) {
+    private void checkBluetooth(Subscriber <? super String> subscriber) {
+        if (mBeaconManager.hasBluetooth()) {
+            registerReciever(subscriber);
+            if (mBeaconManager.isBluetoothEnabled()) {
+                connectToService();
+                findBeacon(subscriber);
+            } else {
+                requestBluetooth();
+            }
+        } else {
             Toast.makeText(mActivity, "Device does not have Bluetooth Low Energy", Toast.LENGTH_LONG).show();
             subscriber.onError(new Exception("myException"));
-            return;
         }
-        if (!mBeaconManager.isBluetoothEnabled()) {
-            mActivity.registerReceiver(mReciever, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-            requestBluetooth();
-        } else {
-            connectToService();
-            findBeacon(subscriber);
-            mActivity.registerReceiver(mReciever, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-        }
+    }
+
+    private void registerReciever(Subscriber <? super String> subscriber){
+        mRecieverRegistered = true;
+        mReciever = createBroadcastReceiver(subscriber);
+        mActivity.registerReceiver(mReciever, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
 
     private void requestBluetooth(){
@@ -75,15 +81,15 @@ public class BeaconListener {
 
     private void findBeacon(Subscriber <? super String> subscriber){
         mBeaconManager.setRangingListener(
-            (Region region, final List<Beacon> beacons) -> {
-                if (beacons.size() > 0) {
-                    Beacon beacon = beacons.get(0);
-                    if(Utils.computeAccuracy(beacon) < 0.1) {
-                        subscriber.onNext(beacon.getProximityUUID());
-                        mBeaconManager.disconnect();
+                (Region region, final List<Beacon> beacons) -> {
+                    if (beacons.size() > 0) {
+                        Beacon beacon = beacons.get(0);
+                        if (Utils.computeAccuracy(beacon) < 0.1) {
+                            subscriber.onNext(beacon.getProximityUUID());
+                            mBeaconManager.disconnect();
+                        }
                     }
                 }
-            }
         );
     }
 
@@ -117,8 +123,23 @@ public class BeaconListener {
     }
 
     public void disconnect(){
-        mBeaconManager.disconnect();
-        mActivity.unregisterReceiver(mReciever);
+        if (mBeaconManager != null) {
+            mBeaconManager.disconnect();
+            stopRanging();
+        }
+        if (mRecieverRegistered) {
+            mActivity.unregisterReceiver(mReciever);
+            mRecieverRegistered = false;
+        }
+    }
+
+    public void stopRanging() {
+        try {
+            mBeaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
+        } catch (RemoteException e) {
+            Toast.makeText(mActivity, "Cannot stop ranging, something terrible happened", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Cannot stop ranging", e);
+        }
     }
 
     public Observable<String> getObservable() {

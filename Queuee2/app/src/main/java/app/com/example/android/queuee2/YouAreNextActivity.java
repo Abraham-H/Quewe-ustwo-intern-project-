@@ -13,8 +13,14 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import app.com.example.android.queuee2.model.HerokuApiClient;
+import app.com.example.android.queuee2.model.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class YouAreNextActivity extends Activity {
+
+    private static String androidId;
+    private HerokuApiClient.HerokuService mHerokuService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +28,16 @@ public class YouAreNextActivity extends Activity {
         setContentView(R.layout.activity_you_are_next);
         setInstanceVariables();
         instantiateViews();
+        checkIfInQueue();
     }
 
     private void setInstanceVariables(){
-
+        mHerokuService = HerokuApiClient.getHerokuService();
+        androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
     }
 
     private void instantiateViews() {
-
         Button finishedShoppingButton = (Button)findViewById(R.id.finished_shopping_button);
         finishedShoppingButton.setEnabled(true);
         finishedShoppingButton.setOnClickListener((v) -> {
@@ -37,31 +45,40 @@ public class YouAreNextActivity extends Activity {
         });
     }
 
+    private void checkIfInQueue() {
+        mHerokuService.info("queue1", androidId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(Utils::jsonToResponse)
+                .subscribe((response) -> {
+                    checkIfInQueue();
+                }, throwable -> {
+                    Response.Error error = Response.getError(throwable);
+                    switch (error.getStatus()) {
+                        case 404: // Not in the queue
+                            backToAddToQueueActivity();
+                            break;
+                        case 400: // Queue Not Found
+                            backToAddToQueueActivity();
+                            break;
+                    }
+                });
+    }
+
+    public void backToAddToQueueActivity() {
+        Intent a = new Intent(this,AddToQueueActivity.class);
+        a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(a);
+    }
+
+    @Override
+    public void onBackPressed(){
+
+    }
+
     private void launchThankYouActivity(){
         Intent intent = new Intent(this, ThankYouActivity.class);
         startActivity(intent);
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_you_are_next, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

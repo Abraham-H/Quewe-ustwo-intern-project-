@@ -1,25 +1,16 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
@@ -37,16 +28,16 @@ public class InQueueActivity extends Activity {
     private ImageView waitingAnimationImageView;
     private AnimationDrawable waitingAnimationDrawable;
     private FirebaseListener firebaseListener;
-    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getActionBar().hide();
         setContentView(R.layout.activity_in_queue);
         setInstanceVariables();
         instantiateViews();
         updateViewsWithServerData();
-        setupFirebaseListener();
+        createFirebaseListener();
     }
 
     @Override
@@ -57,7 +48,6 @@ public class InQueueActivity extends Activity {
 
     private void setInstanceVariables(){
         herokuService = HerokuApiClient.getHerokuService();
-        gson = new Gson();
         androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
     }
@@ -71,16 +61,16 @@ public class InQueueActivity extends Activity {
         herokuService.info("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((herokuData) -> {
-                    Response response = gson.fromJson(herokuData, Response.class);
-
-                    if( ((Double) response.getData()).intValue()==0){
+                .map(Utils::jsonToResponse)
+                .subscribe((response) -> {
+                    int position = ((Double) response.getData()).intValue() + 1;
+                    if (position == 1) {
+//                        Utils.postNotification(this, "You're Next!");
                         launchYouAreNextActivity();
+                    } else {
+                        firebaseListener.connectListener();
+                        queuePositionTextView.setText(Integer.toString(position));
                     }
-
-                    queuePositionTextView.setText(Integer.toString(
-                            ((Double) response.getData()).intValue()
-                    ));
                 }, throwable -> {
                     Response.Error error = Response.getError(throwable);
                     switch (error.getStatus()) {
@@ -94,7 +84,7 @@ public class InQueueActivity extends Activity {
                 });
     }
 
-    public void setupFirebaseListener(){
+    public void createFirebaseListener(){
         firebaseListener = new FirebaseListener(this,this::updateViewsWithServerData);
     }
 
@@ -106,30 +96,37 @@ public class InQueueActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         cancelAction();
     }
 
     private void cancelAction(){
         firebaseListener.disconnectListener();
         removeCurrentUser();
-        CharSequence text = "Cancel has been tapped! You have been removed";
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(this, text, duration);
-        toast.show();
     }
 
     private void removeCurrentUser(){
         herokuService.remove("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((herokuData) -> {
-                    Response response = gson.fromJson(herokuData, Response.class);
-                    popFromQueueTextView.setText((String) response.getData());
-                }, throwable -> Log.d(TAG, "removeCurrentUser "));
+                .map(Utils::jsonToResponse)
+                .subscribe((response) -> {
+                    Toast.makeText(this, "Removed from queue", Toast.LENGTH_SHORT).show();
+                    finish();
+                }, throwable -> {
+                    Response.Error error = Response.getError(throwable);
+                    switch (error.getStatus()) {
+                        case 404: // Not in the queue
+                            toastError(error.getMessage());
+                            break;
+                        case 400: // Queue Not Found
+                            toastError(error.getMessage());
+                            break;
+                    }
+                });
     }
 
     private void launchYouAreNextActivity(){
+        firebaseListener.disconnectListener();
         Intent intent = new Intent(this, YouAreNextActivity.class);
         startActivity(intent);
     }

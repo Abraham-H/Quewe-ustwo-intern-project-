@@ -6,11 +6,8 @@ import app.com.example.android.queuee2.model.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,18 +15,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-
 import java.util.ArrayList;
 
 public class AddToQueueActivity extends Activity {
 
     private static String TAG = AddToQueueActivity.class.getSimpleName();
     private HerokuApiClient.HerokuService herokuService;
+    private FirebaseListener firebaseListener;
     private BeaconListener mBeaconListener;
     private static String androidId;
-    private Gson gson;
     private TextView numInQueueTextView;
     private ImageButton addToQueueImageButton;
     private static final int REQUEST_ENABLE_BT = 1234;
@@ -37,24 +31,32 @@ public class AddToQueueActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getActionBar().hide();
         setContentView(R.layout.activity_add_to_queue);
         setInstanceVariables();
         instantiateViews();
-        updateViewsWithServerData();
-        connectFirebaseListener();
     }
 
     @Override
     protected void onStart(){
         super.onStart();
         connectBeaconListener();
+        connectFirebaseListener();
+        updateViewsWithServerData();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        disconnectBeaconListener();
+        disconnectFirebaseListener();
     }
 
     private void setInstanceVariables() {
         herokuService = HerokuApiClient.getHerokuService();
         androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
-        gson = new Gson();
+        firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
     }
 
     private void instantiateViews() {
@@ -66,7 +68,6 @@ public class AddToQueueActivity extends Activity {
         addToQueueImageButton.setEnabled(false);
         addToQueueImageButton.setOnClickListener((v) -> {
             addUserToQueue();
-            Utils.postNotification(this,"This is your notification msg");
         });
     }
 
@@ -74,10 +75,9 @@ public class AddToQueueActivity extends Activity {
         herokuService.add("queue1", androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(this::jsonToResponse)
+                .map(Utils::jsonToResponse)
                 .subscribe((response) -> {
                     Log.d(TAG, response.getMessage());
-                    disconnectBeaconListener();
                     launchInQueueActivity();
                 }, (throwable) -> {
                     Response.Error error = Response.getError(throwable);
@@ -89,15 +89,8 @@ public class AddToQueueActivity extends Activity {
                             toastError(error.getMessage());
                             break;
                     }
+//                    connectBeaconListener();
                 });
-    }
-
-    private Response jsonToResponse(JsonElement data) {
-        return gson.fromJson(data, Response.class);
-    }
-
-    private void connectFirebaseListener(){
-        FirebaseListener firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
     }
 
     private void connectBeaconListener() {
@@ -119,25 +112,41 @@ public class AddToQueueActivity extends Activity {
         mBeaconListener.disconnect();
     }
 
+    private void connectFirebaseListener(){
+        firebaseListener.connectListener();
+    }
+
+    private void disconnectFirebaseListener() {
+        firebaseListener.disconnectListener();
+    }
+
     private void updateViewsWithServerData() {
         herokuService.info("queue1")
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(herokuData -> {
-                    Response response = gson.fromJson(herokuData, Response.class);
+                .map(Utils::jsonToResponse)
+                .subscribe(response -> {
                     ArrayList<String> queue = (ArrayList<String>) response.getData();
-                    String noun = queue.size() == 1 ? " person" : " people";
-                    numInQueueTextView.setText(String.valueOf(queue.size()) + noun + " in the queue");
-                    addToQueueImageButton.setEnabled(true);
+                    if (queue.contains(androidId)) {
+                        Toast.makeText(this, "Already in Queue", Toast.LENGTH_SHORT).show();
+                        launchInQueueActivity();
+                    } else {
+                        String noun = queue.size() == 1 ? " person" : " people";
+                        numInQueueTextView.setText(String.valueOf(queue.size()) + noun + " in the queue" +
+                                "\nScanning for beacons...");
+                        addToQueueImageButton.setEnabled(true);
+                    }
                 }, throwable -> {
                     Response.Error error = Response.getError(throwable);
                     if (error.getStatus() == 404) { // Queue not found
-                        toastError(error.getMessage());
+                        numInQueueTextView.setText("Queue Closed");
                     }
                 });
     }
 
     private void launchInQueueActivity(){
+        disconnectBeaconListener();
+        disconnectFirebaseListener();
         Intent intent = new Intent(this, InQueueActivity.class);
         startActivity(intent);
     }
