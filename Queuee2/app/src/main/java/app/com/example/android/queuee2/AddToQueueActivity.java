@@ -1,12 +1,7 @@
 package app.com.example.android.queuee2;
 import app.com.example.android.queuee2.model.BeaconListener;
-import app.com.example.android.queuee2.model.FirebaseListener;
-import app.com.example.android.queuee2.model.HerokuApiClient;
+import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
-import app.com.example.android.queuee2.utils.Utils;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,16 +18,14 @@ public class AddToQueueActivity extends Activity {
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
 
-    private HerokuApiClient.HerokuService herokuService;
-    private FirebaseListener firebaseListener;
     private BeaconListener mBeaconListener;
+    private Queue mQueue;
 
-    private TextView numInQueueTextView;
-    private ImageButton addToQueueImageButton;
+    private TextView mNumInQueueTextView;
+    private ImageButton mAddToQueueImageButton;
 
-    private static String androidId;
-    private String queueId;
-    private boolean queueFound;
+    private static String sAndroidId;
+    private String mQueueId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,140 +33,127 @@ public class AddToQueueActivity extends Activity {
         this.getActionBar().hide();
         setContentView(R.layout.activity_add_to_queue);
         setInstanceVariables();
-        instantiateViews();
+        setViews();
         connectBeaconListener();
-        connectFirebaseListener();
     }
 
     @Override
     protected void onPause(){
         super.onPause();
         disconnectBeaconListener();
-        disconnectFirebaseListener();
+        mQueue.disconnectChangeListener();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
         connectBeaconListener();
-        connectFirebaseListener();
-        updateViewsWithServerData();
+        mQueue.connectChangeListener();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mQueueId != null) {
+            mAddToQueueImageButton.setEnabled(false);
+            mNumInQueueTextView.setText("No Queue Found");
+            connectBeaconListener();
+        } else{
+            finish();
+        }
     }
 
     private void setInstanceVariables() {
-        herokuService = HerokuApiClient.getHerokuService();
-        androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
+        sAndroidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
-        firebaseListener = new FirebaseListener(this, this::updateViewsWithServerData);
-        queueFound = false;
+        mBeaconListener = new BeaconListener(this);
+        mQueue = new Queue(this);
     }
 
-    private void instantiateViews() {
+    private void setViews() {
         TextView welcomeTextView = (TextView)findViewById(R.id.welcome_text_view);
         welcomeTextView.setLineSpacing(0.0f,0.8f);
 
-        numInQueueTextView = (TextView)findViewById(R.id.num_in_queue_textview);
-        addToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
-        addToQueueImageButton.setEnabled(false);
-        addToQueueImageButton.setOnClickListener(v -> addUserToQueue());
+        mNumInQueueTextView = (TextView)findViewById(R.id.num_in_queue_textview);
+        mAddToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
+        mAddToQueueImageButton.setEnabled(false);
+        mAddToQueueImageButton.setOnClickListener(v -> addUserToQueue());
     }
 
     private void addUserToQueue() {
-        herokuService.add(queueId, androidId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Utils::jsonToResponse)
-                .subscribe((response) -> {
-                    Log.d(TAG, response.getMessage());
-                    launchInQueueActivity();
-                }, (throwable) -> {
-                    Response.Error error = Response.getError(throwable);
-                    switch (error.getStatus()) {
-                        case 409: // Already in queue
-                            toastError(error.getMessage());
-                            break;
-                        case 404: // Queue Not Found
-                            toastError(error.getMessage());
-                            break;
-                    }
-//                    connectBeaconListener();
-                });
+        mQueue.addUserToQueue(mQueueId, sAndroidId,
+                this::onUserAdded, this::onUserAddedError);
+    }
+
+    private void onUserAdded(Response response) {
+        Log.d(TAG, response.getMessage());
+        mQueue.disconnectChangeListener();
+        launchActivity(InQueueActivity.class);
+    }
+
+    private void onUserAddedError(Throwable throwable) {
+        Response.Error error = Response.getError(throwable);
+        switch (error.getStatus()) {
+            case 409: // Already in queue
+                toastError(error.getMessage());
+                break;
+            case 404: // Queue Not Found
+                toastError(error.getMessage());
+                break;
+        }
     }
 
     private void connectBeaconListener() {
-        mBeaconListener = new BeaconListener(this);
-        Observable<String> beaconObservable = mBeaconListener.getObservable();
-        beaconObservable
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onBeaconFound, this::onBeaconError);
+        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError);
     }
 
     private void onBeaconFound(String uuid) {
         Log.d(TAG, "setupBeaconListener :" + uuid);
         Toast.makeText(this, "Found Beacon", Toast.LENGTH_SHORT).show();
         // TODO: associate this with a beacon
-        queueId = "queue1";
-        addToQueueImageButton.setEnabled(true);
-        queueFound = true;
-        updateViewsWithServerData();
+        // b9407f30-f5f8-466e-aff9-25556b57fe6d - UUID
+        mQueueId = "queue2";
+        mAddToQueueImageButton.setEnabled(true);
+
+        mQueue.setQueueId(mQueueId);
+        mQueue.disconnectChangeListener();
+        mQueue.setChangeListener(this::onChange, this::onChangeError);
     }
 
     private void onBeaconError(Throwable throwable) {
         Log.d(TAG, "EstimoteBeacon error:" + throwable.getMessage());
     }
 
+
     private void disconnectBeaconListener() {
         mBeaconListener.disconnect();
     }
 
-    private void connectFirebaseListener(){
-        firebaseListener.connectListener();
-    }
-
-    private void disconnectFirebaseListener() {
-        firebaseListener.disconnectListener();
-    }
-
-    private void updateViewsWithServerData() {
-        if (queueFound) {
-            herokuService.info(queueId)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map(Utils::jsonToResponse)
-                    .subscribe(this::onGetQueue,this::onGetQueueError);
-        } else{
-            numInQueueTextView.setText("No Queue Found");
-        }
-    }
-
-    private void onGetQueue(Response response) {
+    private void onChange(Response response) {
         ArrayList<String> queue = (ArrayList<String>) response.getData();
-        if (queue.contains(androidId)) {
+        if (queue.contains(sAndroidId)) {
             Toast.makeText(this, "Already in Queue", Toast.LENGTH_SHORT).show();
-            launchInQueueActivity();
+            if (queue.indexOf(sAndroidId) == 0) {
+                launchActivity(YouAreNextActivity.class);
+            } else {
+                launchActivity(InQueueActivity.class);
+            }
         } else {
             String noun = queue.size() == 1 ? " person" : " people";
-            numInQueueTextView.setText(String.valueOf(queue.size()) + noun + " in the queue" +
-                    "\nScanning for beacons...");
-            addToQueueImageButton.setEnabled(true);
+            mNumInQueueTextView.setText(String.valueOf(queue.size()) + noun + " in " + mQueueId);
+            mAddToQueueImageButton.setEnabled(true);
         }
     }
 
-    private void onGetQueueError(Throwable throwable) {
+    private void onChangeError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
-            numInQueueTextView.setText("Queue Closed");
+            mNumInQueueTextView.setText("Queue Closed");
         }
     }
 
-    private void launchInQueueActivity(){
-        disconnectBeaconListener();
-        disconnectFirebaseListener();
-
-
-        Intent intent = new Intent(this, InQueueActivity.class);
-        intent.putExtra("queueId", queueId);
+    private void launchActivity(Class toActivityClass) {
+        Intent intent = new Intent(this, toActivityClass);
+        intent.putExtra("queueId", mQueueId);
         startActivity(intent);
     }
 
@@ -192,5 +172,4 @@ public class AddToQueueActivity extends Activity {
             }
         }
     }
-
 }

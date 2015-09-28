@@ -20,6 +20,9 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by bkach on 9/24/15.
@@ -41,10 +44,13 @@ public class BeaconListener {
         this.mActivity = activity;
         mBeaconManager = new BeaconManager(activity);
         mRecieverRegistered = false;
-        mObservable = Observable.create(subscriber -> {
-            mSubscriber = subscriber;
-            checkBluetooth();
-        });
+    }
+
+    public void connect(Action1<String> onSuccess, Action1<Throwable> onFailure){
+        createObservable()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onSuccess, onFailure);
     }
 
     private void checkBluetooth() {
@@ -63,9 +69,11 @@ public class BeaconListener {
     }
 
     private void registerReciever(){
-        mRecieverRegistered = true;
-        mReciever = createBroadcastReceiver();
-        mActivity.registerReceiver(mReciever, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        if(mReciever == null) {
+            mReciever = createBroadcastReceiver();
+            mActivity.registerReceiver(mReciever, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+            mRecieverRegistered = true;
+        }
     }
 
     private void requestBluetooth(){
@@ -146,7 +154,11 @@ public class BeaconListener {
         }
     }
 
-    public Observable<String> getObservable() {
+    public Observable<String> createObservable() {
+        mObservable = Observable.create(subscriber -> {
+            mSubscriber = subscriber;
+            checkBluetooth();
+        });
         return mObservable;
     }
 }

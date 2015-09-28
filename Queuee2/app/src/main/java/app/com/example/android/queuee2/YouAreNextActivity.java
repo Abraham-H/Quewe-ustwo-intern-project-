@@ -96,7 +96,6 @@ public class YouAreNextActivity extends Activity {
     public void backToAddToQueueActivity() {
         Intent intent = new Intent(this,AddToQueueActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("queueId", queueId);
         startActivity(intent);
     }
 
@@ -107,6 +106,7 @@ public class YouAreNextActivity extends Activity {
 
     private void launchThankYouActivity(View v){
         Intent intent = new Intent(this, ThankYouActivity.class);
+        intent.putExtra("queueId", queueId);
         startActivity(intent);
 
     }

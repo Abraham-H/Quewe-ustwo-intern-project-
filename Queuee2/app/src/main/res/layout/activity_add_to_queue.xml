@@ -22,6 +22,7 @@
         style="@style/normal_text_style"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/num_in_queue_textview"
+        android:text="No Queue Found"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.21" />
 

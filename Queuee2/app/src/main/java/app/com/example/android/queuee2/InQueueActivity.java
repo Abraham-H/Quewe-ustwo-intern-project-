@@ -1,8 +1,6 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -93,11 +91,12 @@ public class InQueueActivity extends Activity {
                         {
                             launchYouAreNextActivity();
                         } else {
-                            Notification.postNotification(this, YouAreNextActivity.class, "You're Next!");
+                            Notification.youAreNextNotification(this, YouAreNextActivity.class, queueId, "You're Next!");
                         }
                     } else {
                         firebaseListener.connectListener();
-                        queuePositionTextView.setText(String.valueOf(position-1) + " people ahead of you");
+                        String noun = position-1 == 1 ? " person" : " people";
+                        queuePositionTextView.setText(String.valueOf(position-1) + " " + noun + " ahead of you");
                     }
                 }, throwable -> {
                     Response.Error error = Response.getError(throwable);
