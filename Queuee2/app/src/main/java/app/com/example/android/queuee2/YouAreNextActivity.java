@@ -1,57 +1,85 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
-
+import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
 import app.com.example.android.queuee2.model.Response;
+import app.com.example.android.queuee2.utils.Notification;
+import app.com.example.android.queuee2.utils.Utils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class YouAreNextActivity extends Activity {
 
     private static String androidId;
+    private static final String TAG = YouAreNextActivity.class.getSimpleName();
     private HerokuApiClient.HerokuService mHerokuService;
+    private FirebaseListener firebaseListener;
+    private String queueId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getActionBar().hide();
         setContentView(R.layout.activity_you_are_next);
         setInstanceVariables();
         instantiateViews();
+        connectFirebaseListener();
         checkIfInQueue();
+        removeNotification();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disconnectFirebaseListener();
+    }
+
+    private void connectFirebaseListener(){
+        firebaseListener.connectListener();
+    }
+
+    private void disconnectFirebaseListener() {
+        firebaseListener.disconnectListener();
+    }
+
+    private void removeNotification(){
+        if (Notification.ACTIVE_NOTIFICATION_ID != 0) {
+            NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(Notification.ACTIVE_NOTIFICATION_ID);
+        }
     }
 
     private void setInstanceVariables(){
         mHerokuService = HerokuApiClient.getHerokuService();
         androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
+        firebaseListener = new FirebaseListener(this, this::checkIfInQueue);
+        queueId = getIntent().getStringExtra("queueId");
     }
 
     private void instantiateViews() {
         Button finishedShoppingButton = (Button)findViewById(R.id.finished_shopping_button);
         finishedShoppingButton.setEnabled(true);
-        finishedShoppingButton.setOnClickListener((v) -> {
-            launchThankYouActivity();
-        });
+        finishedShoppingButton.setOnClickListener(this::launchThankYouActivity);
     }
 
     private void checkIfInQueue() {
-        mHerokuService.info("queue1", androidId)
+        mHerokuService.info(queueId, androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(Utils::jsonToResponse)
                 .subscribe((response) -> {
-                    checkIfInQueue();
+                    Log.d(TAG,"still in queue..");
                 }, throwable -> {
                     Response.Error error = Response.getError(throwable);
                     switch (error.getStatus()) {
@@ -66,9 +94,10 @@ public class YouAreNextActivity extends Activity {
     }
 
     public void backToAddToQueueActivity() {
-        Intent a = new Intent(this,AddToQueueActivity.class);
-        a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(a);
+        Intent intent = new Intent(this,AddToQueueActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("queueId", queueId);
+        startActivity(intent);
     }
 
     @Override
@@ -76,7 +105,7 @@ public class YouAreNextActivity extends Activity {
 
     }
 
-    private void launchThankYouActivity(){
+    private void launchThankYouActivity(View v){
         Intent intent = new Intent(this, ThankYouActivity.class);
         startActivity(intent);
 

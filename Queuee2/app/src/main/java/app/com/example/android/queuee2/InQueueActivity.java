@@ -1,6 +1,8 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
 import app.com.example.android.queuee2.model.Response;
+import app.com.example.android.queuee2.utils.Notification;
+import app.com.example.android.queuee2.utils.Utils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -22,11 +26,11 @@ public class InQueueActivity extends Activity {
 
     private static String TAG = InQueueActivity.class.getSimpleName();
     private HerokuApiClient.HerokuService herokuService;
+    private boolean activityVisible;
     private static String androidId;
-    private TextView popFromQueueTextView;
+    private String queueId;
     private TextView queuePositionTextView;
     private ImageView waitingAnimationImageView;
-    private AnimationDrawable waitingAnimationDrawable;
     private FirebaseListener firebaseListener;
 
     @Override
@@ -41,6 +45,24 @@ public class InQueueActivity extends Activity {
     }
 
     @Override
+    protected void onStart(){
+        super.onStart();
+        activityVisible = true;
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        activityVisible = false;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        activityVisible = true;
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         prepareAndRunAnimation();
         super.onWindowFocusChanged(hasFocus);
@@ -50,6 +72,8 @@ public class InQueueActivity extends Activity {
         herokuService = HerokuApiClient.getHerokuService();
         androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
+        activityVisible = true;
+        queueId = getIntent().getStringExtra("queueId");
     }
 
     private void instantiateViews() {
@@ -58,18 +82,22 @@ public class InQueueActivity extends Activity {
     }
 
     public void updateViewsWithServerData(){
-        herokuService.info("queue1", androidId)
+        herokuService.info(queueId, androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(Utils::jsonToResponse)
                 .subscribe((response) -> {
                     int position = ((Double) response.getData()).intValue() + 1;
                     if (position == 1) {
-//                        Utils.postNotification(this, "You're Next!");
-                        launchYouAreNextActivity();
+                        if(activityVisible)
+                        {
+                            launchYouAreNextActivity();
+                        } else {
+                            Notification.postNotification(this, YouAreNextActivity.class, "You're Next!");
+                        }
                     } else {
                         firebaseListener.connectListener();
-                        queuePositionTextView.setText(Integer.toString(position));
+                        queuePositionTextView.setText(String.valueOf(position-1) + " people ahead of you");
                     }
                 }, throwable -> {
                     Response.Error error = Response.getError(throwable);
@@ -90,7 +118,7 @@ public class InQueueActivity extends Activity {
 
     private void prepareAndRunAnimation(){
         waitingAnimationImageView.setBackgroundResource(R.drawable.waiting_animation);
-        waitingAnimationDrawable = (AnimationDrawable) waitingAnimationImageView.getBackground();
+        AnimationDrawable waitingAnimationDrawable = (AnimationDrawable) waitingAnimationImageView.getBackground();
         waitingAnimationDrawable.start();
     }
 
@@ -105,7 +133,7 @@ public class InQueueActivity extends Activity {
     }
 
     private void removeCurrentUser(){
-        herokuService.remove("queue1", androidId)
+        herokuService.remove(queueId, androidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(Utils::jsonToResponse)
@@ -128,6 +156,7 @@ public class InQueueActivity extends Activity {
     private void launchYouAreNextActivity(){
         firebaseListener.disconnectListener();
         Intent intent = new Intent(this, YouAreNextActivity.class);
+        intent.putExtra("queueId", queueId);
         startActivity(intent);
     }
 

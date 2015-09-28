@@ -3,44 +3,86 @@ package app.com.example.android.queuee2;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import app.com.example.android.queuee2.model.FirebaseListener;
+import app.com.example.android.queuee2.model.HerokuApiClient;
+import app.com.example.android.queuee2.model.Response;
+import app.com.example.android.queuee2.utils.Utils;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class ThankYouActivity extends Activity {
+
+    private static String androidId;
+    private static final String TAG = ThankYouActivity.class.getSimpleName();
+    private HerokuApiClient.HerokuService mHerokuService;
+    private FirebaseListener firebaseListener;
+    private String queueId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getActionBar().hide();
         setContentView(R.layout.activity_thank_you);
-
+        setInstanceVariables();
+        connectFirebaseListener();
+        checkIfInQueue();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_thank_you, menu);
-        return true;
+    protected void onDestroy() {
+        super.onDestroy();
+        disconnectFirebaseListener();
+    }
+
+    private void setInstanceVariables(){
+        mHerokuService = HerokuApiClient.getHerokuService();
+        androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+        firebaseListener = new FirebaseListener(this, this::checkIfInQueue);
+        queueId = getIntent().getStringExtra("queueId");
+    }
+
+    private void connectFirebaseListener(){
+        firebaseListener.connectListener();
+    }
+
+    private void disconnectFirebaseListener() {
+        firebaseListener.disconnectListener();
+    }
+
+    private void checkIfInQueue() {
+        mHerokuService.info(queueId, androidId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(Utils::jsonToResponse)
+                .subscribe((response) -> {
+                    Log.d(TAG, "still in queue..");
+                }, throwable -> {
+                    Response.Error error = Response.getError(throwable);
+                    switch (error.getStatus()) {
+                        case 404: // Not in the queue
+                            backToAddToQueueActivity();
+                            break;
+                        case 400: // Queue Not Found
+                            backToAddToQueueActivity();
+                            break;
+                    }
+                });
+    }
+
+    public void backToAddToQueueActivity() {
+        Intent intent = new Intent(this,AddToQueueActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override
     public void onBackPressed(){
-        Intent a = new Intent(this,AddToQueueActivity.class);
-        a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(a);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
