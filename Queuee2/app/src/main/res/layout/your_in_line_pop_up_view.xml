@@ -20,6 +20,7 @@
 
     <Button
         android:id="@+id/inLinePopUpOkButton"
+        android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"
         android:text="@string/ok_text"
         android:layout_width="wrap_content"

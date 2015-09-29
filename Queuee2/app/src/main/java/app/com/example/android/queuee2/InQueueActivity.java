@@ -2,13 +2,16 @@ package app.com.example.android.queuee2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,8 @@ public class InQueueActivity extends Activity {
 
     private TextView queuePositionTextView;
     private ImageView waitingAnimationImageView;
+    private RelativeLayout transparentLayout;
+    private RelativeLayout inQueueMainRelativeLayout;
 
     private Queue mQueue;
     private boolean activityVisible;
@@ -90,6 +95,26 @@ public class InQueueActivity extends Activity {
     private void setViews() {
         queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
         waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
+        configureTransparentLayout();
+
+        findViewById(R.id.inLinePopUpOkButton).setOnClickListener(v -> {
+            removeInQueuePopUp();
+            removeTransparentLayout();
+        });
+    }
+
+    private void configureTransparentLayout(){
+        transparentLayout = (RelativeLayout)findViewById(R.id.transparentRelativeLayer);
+        transparentLayout.setBackgroundColor(Color.BLUE);
+        transparentLayout.setAlpha((float) 0.1);
+    }
+
+    private void removeInQueuePopUp() {
+        findViewById(R.id.in_line_pop_up_view).setVisibility(View.GONE);
+    }
+
+    private void removeTransparentLayout(){
+        inQueueMainRelativeLayout.removeView(transparentLayout);
     }
 
     private void prepareAndRunAnimation(){

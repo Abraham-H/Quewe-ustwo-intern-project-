@@ -27,9 +27,4 @@
     <item android:drawable="@drawable/waiting_in_queue_animation_00024" android:duration="200" />
     <item android:drawable="@drawable/waiting_in_queue_animation_00025" android:duration="200" />
     <item android:drawable="@drawable/waiting_in_queue_animation_00026" android:duration="200" />
-
-
-
-
-
 </animation-list>

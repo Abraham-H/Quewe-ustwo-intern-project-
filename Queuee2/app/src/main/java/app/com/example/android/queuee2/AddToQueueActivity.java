@@ -83,13 +83,11 @@ public class AddToQueueActivity extends Activity {
     private void addUserToQueue() {
         mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError);
     }
-
     private void onUserAdded(Response response) {
         Log.d(TAG, response.getMessage());
         mQueue.disconnectChangeListener();
         launchActivity(InQueueActivity.class);
     }
-
     private void onUserAddedError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         switch (error.getStatus()) {
