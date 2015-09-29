@@ -33,6 +33,7 @@ public class BeaconListener {
     private boolean mRecieverRegistered;
     private boolean mBluetoothDenied;
     private boolean mConnecting;
+    private Beacon lastBeacon;
     private Activity mActivity;
     private static final String TAG = BeaconListener.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
@@ -103,7 +104,6 @@ public class BeaconListener {
         mBeaconManager.setRangingListener(
                 (Region region, final List<Beacon> beacons) -> {
                     if (beacons.size() > 0) {
-
                         Beacon beacon = beacons.get(0);
                         String uuid = beacon.getProximityUUID();
                         int minor = beacon.getMinor();
@@ -118,9 +118,10 @@ public class BeaconListener {
                                 queueId = "queue3";
                             }
                         }
-
-                        mSubscriber.onNext(queueId);
-                        mBeaconManager.disconnect();
+                        if (!beacon.equals(lastBeacon)) {
+                            lastBeacon = beacon;
+                            mSubscriber.onNext(queueId);
+                        }
                     }
                 }
         );

@@ -10,9 +10,6 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.estimote.sdk.Beacon;
-
 import java.util.ArrayList;
 
 public class AddToQueueActivity extends Activity {
@@ -22,14 +19,11 @@ public class AddToQueueActivity extends Activity {
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
-    private boolean mBluetoothDenied;
-
+    private boolean mIsBluetoothDenied;
+    private static String sAndroidId;
 
     private TextView mNumInQueueTextView;
     private ImageButton mAddToQueueImageButton;
-
-    private static String sAndroidId;
-    private String mQueueId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +35,13 @@ public class AddToQueueActivity extends Activity {
     }
 
     @Override
+    protected void onResume(){
+        super.onResume();
+        connectBeaconListener(mIsBluetoothDenied);
+        mQueue.connectChangeListener();
+    }
+
+    @Override
     protected void onPause(){
         super.onPause();
         disconnectBeaconListener();
@@ -48,29 +49,25 @@ public class AddToQueueActivity extends Activity {
     }
 
     @Override
-    protected void onResume(){
-        super.onResume();
-        connectBeaconListener(mBluetoothDenied);
-        mQueue.connectChangeListener();
-    }
-
-    @Override
     public void onBackPressed() {
-        if (mQueueId != null) {
+        String queueId = mQueue.getQueueId();
+        if (queueId != null) {
             mAddToQueueImageButton.setEnabled(false);
             mNumInQueueTextView.setText("No Queue Found");
-            connectBeaconListener(mBluetoothDenied);
+            connectBeaconListener(mIsBluetoothDenied);
+            // TODO: Note sure this is such a good idea
+            mQueue.setQueueId(null);
         } else{
             finish();
         }
     }
 
     private void setInstanceVariables() {
-        sAndroidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
         mBeaconListener = new BeaconListener(this);
         mQueue = new Queue(this);
-        mBluetoothDenied = false;
+        mIsBluetoothDenied = false;
+        sAndroidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
     }
 
     private void setViews() {
@@ -84,8 +81,7 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void addUserToQueue() {
-        mQueue.addUserToQueue(mQueueId, sAndroidId,
-                this::onUserAdded, this::onUserAddedError);
+        mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError);
     }
 
     private void onUserAdded(Response response) {
@@ -106,15 +102,14 @@ public class AddToQueueActivity extends Activity {
         }
     }
 
-    private void connectBeaconListener(boolean bluetoothDenied) {
-        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, bluetoothDenied);
+    private void connectBeaconListener(boolean isBluetoothDenied) {
+        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
     }
 
     private void onBeaconFound(String queueId) {
-        mQueueId = queueId;
-        mQueue.setQueueId(mQueueId);
+        mQueue.setQueueId(queueId);
         mQueue.disconnectChangeListener();
-        mQueue.setChangeListener(this::onChange, this::onChangeError);
+        mQueue.setChangeListener(this::changeListener);
         mAddToQueueImageButton.setEnabled(true);
     }
 
@@ -127,7 +122,11 @@ public class AddToQueueActivity extends Activity {
         mBeaconListener.disconnect();
     }
 
-    private void onChange(Response response) {
+    private void changeListener(){
+        mQueue.getQueue(this::onGetQueue,this::onGetQueueError);
+    }
+
+    private void onGetQueue(Response response) {
         ArrayList<String> queue = (ArrayList<String>) response.getData();
         if (queue.contains(sAndroidId)) {
             Toast.makeText(this, "Already in Queue", Toast.LENGTH_SHORT).show();
@@ -138,22 +137,22 @@ public class AddToQueueActivity extends Activity {
             }
         } else {
             String noun = queue.size() == 1 ? " person" : " people";
-            mNumInQueueTextView.setText(String.valueOf(queue.size()) + noun + " in " + mQueueId);
+            mNumInQueueTextView.setText(String.valueOf(queue.size()) + noun + " in " + mQueue.getQueueId());
             mAddToQueueImageButton.setEnabled(true);
         }
     }
 
-    private void onChangeError(Throwable throwable) {
+    private void onGetQueueError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
             mAddToQueueImageButton.setEnabled(false);
-            mNumInQueueTextView.setText(mQueueId + " Closed");
+            mNumInQueueTextView.setText(mQueue.getQueueId() + " Closed");
         }
     }
 
     private void launchActivity(Class toActivityClass) {
         Intent intent = new Intent(this, toActivityClass);
-        intent.putExtra("queueId", mQueueId);
+        intent.putExtra("queueId", mQueue.getQueueId());
         startActivity(intent);
     }
 
@@ -168,7 +167,7 @@ public class AddToQueueActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Bluetooth turning on, please wait...", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
-                mBluetoothDenied = true;
+                mIsBluetoothDenied = true;
                 Toast.makeText(this, "Bluetooth Denied", Toast.LENGTH_SHORT).show();
             }
         }

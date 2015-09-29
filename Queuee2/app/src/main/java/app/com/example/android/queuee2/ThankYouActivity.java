@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
+import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.utils.Utils;
 import rx.android.schedulers.AndroidSchedulers;
@@ -16,66 +17,57 @@ import rx.schedulers.Schedulers;
 
 public class ThankYouActivity extends Activity {
 
-    private static String androidId;
     private static final String TAG = ThankYouActivity.class.getSimpleName();
-    private HerokuApiClient.HerokuService mHerokuService;
-    private FirebaseListener firebaseListener;
-    private String queueId;
-
+    private Queue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getActionBar().hide();
         setContentView(R.layout.activity_thank_you);
-        setInstanceVariables();
-        connectFirebaseListener();
-        checkIfInQueue();
+        setQueue();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disconnectFirebaseListener();
+    protected void onResume() {
+        super.onResume();
+        mQueue.connectChangeListener();
     }
 
-    private void setInstanceVariables(){
-        mHerokuService = HerokuApiClient.getHerokuService();
-        androidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-        firebaseListener = new FirebaseListener(this, this::checkIfInQueue);
-        queueId = getIntent().getStringExtra("queueId");
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mQueue.disconnectChangeListener();
     }
 
-    private void connectFirebaseListener(){
-        firebaseListener.connectListener();
+    private void setQueue(){
+        mQueue = new Queue(this);
+        mQueue.setQueueId(getIntent().getStringExtra("queueId"));
+        mQueue.setChangeListener(this::changeListener);
     }
 
-    private void disconnectFirebaseListener() {
-        firebaseListener.disconnectListener();
+    private void changeListener() {
+        mQueue.getUser(this::onGetUser, this::onGetUserError);
     }
 
-    private void checkIfInQueue() {
-        mHerokuService.info(queueId, androidId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Utils::jsonToResponse)
-                .subscribe((response) -> {
-                    Log.d(TAG, "still in queue..");
-                }, throwable -> {
-                    Response.Error error = Response.getError(throwable);
-                    switch (error.getStatus()) {
-                        case 404: // Not in the queue
-                            backToAddToQueueActivity();
-                            break;
-                        case 400: // Queue Not Found
-                            backToAddToQueueActivity();
-                            break;
-                    }
-                });
+    private void onGetUser(Response response) {
+        Log.d(TAG, "onGetUser: Still in queue...");
+    }
+
+    private void onGetUserError(Throwable throwable) {
+        Response.Error error = Response.getError(throwable);
+        switch (error.getStatus()) {
+            case 404: // Not in the queue
+                backToAddToQueueActivity();
+                break;
+            case 400: // Queue Not Found
+                backToAddToQueueActivity();
+                break;
+        }
     }
 
     public void backToAddToQueueActivity() {
+        mQueue.disconnectChangeListener();
         Intent intent = new Intent(this,AddToQueueActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

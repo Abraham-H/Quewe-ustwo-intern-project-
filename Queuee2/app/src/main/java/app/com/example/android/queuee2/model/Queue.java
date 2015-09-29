@@ -16,26 +16,19 @@ public class Queue {
     private HerokuApiClient.HerokuService mHerokuService;
     private FirebaseListener mFirebaseListener;
     private Runnable mOnFirebaseChange;
-    private String queueId;
+    private static String sAndroidId;
+    private String mQueueId;
 
     public Queue(Activity activity) {
         this.mActivity = activity;
         mHerokuService = HerokuApiClient.getHerokuService();
+        sAndroidId = android.provider.Settings.Secure.getString(activity.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
     }
 
-    public void setQueueId(String queueId) {
-        this.queueId = queueId;
-    }
-
-    public void setChangeListener(Action1<Response> onSuccess,
-                                  Action1<Throwable> onFailure) {
-        if (queueId != null) {
-            this.mOnFirebaseChange = () ->
-                    mHerokuService.info(queueId)
-                            .subscribeOn(Schedulers.newThread())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .map(Utils::jsonToResponse)
-                            .subscribe(onSuccess, onFailure);
+    public void setChangeListener(Runnable callback) {
+        if (mQueueId != null) {
+            this.mOnFirebaseChange = callback::run;
             mFirebaseListener = new FirebaseListener(mActivity, mOnFirebaseChange);
             mFirebaseListener.connectListener();
         }
@@ -53,24 +46,44 @@ public class Queue {
         }
     }
 
-    public void addUserToQueue(String queueId, String androidId,
-                                Action1<Response> onSuccess,
-                                Action1<Throwable> onFailure) {
-        mHerokuService.add(queueId, androidId)
+    public void addUserToQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+        mHerokuService.add(mQueueId, sAndroidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(Utils::jsonToResponse)
                 .subscribe(onSuccess, onFailure);
     }
 
-    private void getQueue(String queueId, String androidId,
-                          Action1<Response> onSuccess,
-                          Action1<Throwable> onFailure) {
-        mHerokuService.info(queueId, androidId)
+    public void removeUserFromQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure){
+        mHerokuService.remove(mQueueId, sAndroidId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(Utils::jsonToResponse)
                 .subscribe(onSuccess, onFailure);
+    }
+
+    public void getQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+        mHerokuService.info(mQueueId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(Utils::jsonToResponse)
+                .subscribe(onSuccess, onFailure);
+    }
+
+    public void getUser(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+        mHerokuService.info(mQueueId, sAndroidId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(Utils::jsonToResponse)
+                .subscribe(onSuccess, onFailure);
+    }
+
+    public void setQueueId(String queueId) {
+        this.mQueueId = queueId;
+    }
+
+    public String getQueueId() {
+        return mQueueId;
     }
 
 }
