@@ -3,19 +3,21 @@
     package="app.com.example.android.queuee2" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--<uses-permission android:name="android.permission.BLUETOOTH"/>-->
+    <!-- <uses-permission android:name="android.permission.BLUETOOTH"/> -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".MyApplication"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".AddToQueueActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,7 +34,12 @@
         <activity
             android:name=".YouAreNextActivity"
             android:label="@string/title_activity_you_are_next" >
-        </activity>>
+        </activity>
+>
+        <activity
+            android:name=".Test"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

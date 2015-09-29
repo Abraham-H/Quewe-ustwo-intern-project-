@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Queuee2</string>
     <string name="hello_world">Hello world!</string>
+    <string name="ok_text">OK</string>
+    <string name="your_lined_up_text">OK</string>
+
     <string name="action_settings">Settings</string>
     <string name="welcome_text">Welcome to Queuee</string>
     <string name="cancel_text">Cancel</string>
@@ -10,4 +13,5 @@
     <string name="title_activity_in_queue">InQueueActivity</string>
     <string name="title_activity_thank_you">ThankYouActivity</string>
     <string name="title_activity_you_are_next">YouAreNextActivity</string>
+    <string name="title_activity_test">Test</string>
 </resources>
