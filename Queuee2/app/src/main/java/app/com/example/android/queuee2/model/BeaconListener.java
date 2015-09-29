@@ -13,13 +13,11 @@ import android.widget.Toast;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
-import com.estimote.sdk.Utils;
 
 import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -33,6 +31,8 @@ public class BeaconListener {
     private Subscriber mSubscriber;
     private BroadcastReceiver mReciever;
     private boolean mRecieverRegistered;
+    private boolean mBluetoothDenied;
+    private boolean mConnecting;
     private Activity mActivity;
     private static final String TAG = BeaconListener.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
@@ -46,11 +46,16 @@ public class BeaconListener {
         mRecieverRegistered = false;
     }
 
-    public void connect(Action1<String> onSuccess, Action1<Throwable> onFailure){
-        createObservable()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onSuccess, onFailure);
+    public void connect(Action1<String> onSuccess, Action1<Throwable> onFailure, boolean bluetoothDenied){
+        if (!mConnecting) {
+            mConnecting = true;
+            mBluetoothDenied = bluetoothDenied;
+            createObservable()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(onSuccess, onFailure);
+        }
+        mConnecting = false;
     }
 
     private void checkBluetooth() {
@@ -60,7 +65,9 @@ public class BeaconListener {
                 connectToService();
                 findBeacon();
             } else {
-                requestBluetooth();
+                if (!mBluetoothDenied) {
+                    requestBluetooth();
+                }
             }
         } else {
             Toast.makeText(mActivity, "Device does not have Bluetooth Low Energy", Toast.LENGTH_LONG).show();
@@ -69,7 +76,7 @@ public class BeaconListener {
     }
 
     private void registerReciever(){
-        if(mReciever == null) {
+        if(mReciever == null || !mRecieverRegistered) {
             mReciever = createBroadcastReceiver();
             mActivity.registerReceiver(mReciever, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
             mRecieverRegistered = true;
@@ -96,9 +103,24 @@ public class BeaconListener {
         mBeaconManager.setRangingListener(
                 (Region region, final List<Beacon> beacons) -> {
                     if (beacons.size() > 0) {
+
                         Beacon beacon = beacons.get(0);
-                            mSubscriber.onNext(beacon.getProximityUUID());
-                            mBeaconManager.disconnect();
+                        String uuid = beacon.getProximityUUID();
+                        int minor = beacon.getMinor();
+                        String queueId = null;
+
+                        if (uuid.equals("b9407f30-f5f8-466e-aff9-25556b57fe6d")) {
+                            if(minor == 1) {
+                                queueId = "queue1";
+                            } else if (minor == 2) {
+                                queueId = "queue2";
+                            } else if (minor == 3) {
+                                queueId = "queue3";
+                            }
+                        }
+
+                        mSubscriber.onNext(queueId);
+                        mBeaconManager.disconnect();
                     }
                 }
         );

@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.sdk.Beacon;
+
 import java.util.ArrayList;
 
 public class AddToQueueActivity extends Activity {
@@ -20,6 +22,8 @@ public class AddToQueueActivity extends Activity {
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
+    private boolean mBluetoothDenied;
+
 
     private TextView mNumInQueueTextView;
     private ImageButton mAddToQueueImageButton;
@@ -34,7 +38,6 @@ public class AddToQueueActivity extends Activity {
         setContentView(R.layout.activity_add_to_queue);
         setInstanceVariables();
         setViews();
-        connectBeaconListener();
     }
 
     @Override
@@ -47,7 +50,7 @@ public class AddToQueueActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
-        connectBeaconListener();
+        connectBeaconListener(mBluetoothDenied);
         mQueue.connectChangeListener();
     }
 
@@ -56,7 +59,7 @@ public class AddToQueueActivity extends Activity {
         if (mQueueId != null) {
             mAddToQueueImageButton.setEnabled(false);
             mNumInQueueTextView.setText("No Queue Found");
-            connectBeaconListener();
+            connectBeaconListener(mBluetoothDenied);
         } else{
             finish();
         }
@@ -67,6 +70,7 @@ public class AddToQueueActivity extends Activity {
                 android.provider.Settings.Secure.ANDROID_ID);
         mBeaconListener = new BeaconListener(this);
         mQueue = new Queue(this);
+        mBluetoothDenied = false;
     }
 
     private void setViews() {
@@ -102,21 +106,16 @@ public class AddToQueueActivity extends Activity {
         }
     }
 
-    private void connectBeaconListener() {
-        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError);
+    private void connectBeaconListener(boolean bluetoothDenied) {
+        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, bluetoothDenied);
     }
 
-    private void onBeaconFound(String uuid) {
-        Log.d(TAG, "setupBeaconListener :" + uuid);
-        Toast.makeText(this, "Found Beacon", Toast.LENGTH_SHORT).show();
-        // TODO: associate this with a beacon
-        // b9407f30-f5f8-466e-aff9-25556b57fe6d - UUID
-        mQueueId = "queue2";
-        mAddToQueueImageButton.setEnabled(true);
-
+    private void onBeaconFound(String queueId) {
+        mQueueId = queueId;
         mQueue.setQueueId(mQueueId);
         mQueue.disconnectChangeListener();
         mQueue.setChangeListener(this::onChange, this::onChangeError);
+        mAddToQueueImageButton.setEnabled(true);
     }
 
     private void onBeaconError(Throwable throwable) {
@@ -147,7 +146,8 @@ public class AddToQueueActivity extends Activity {
     private void onChangeError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
-            mNumInQueueTextView.setText("Queue Closed");
+            mAddToQueueImageButton.setEnabled(false);
+            mNumInQueueTextView.setText(mQueueId + " Closed");
         }
     }
 
@@ -168,6 +168,7 @@ public class AddToQueueActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Bluetooth turning on, please wait...", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
+                mBluetoothDenied = true;
                 Toast.makeText(this, "Bluetooth Denied", Toast.LENGTH_SHORT).show();
             }
         }
