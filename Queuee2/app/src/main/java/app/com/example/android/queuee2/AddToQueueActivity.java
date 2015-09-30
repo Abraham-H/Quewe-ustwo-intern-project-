@@ -64,7 +64,6 @@ public class AddToQueueActivity extends Activity {
         mAddToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
         mAddToQueueImageButton.setEnabled(false);
         mAddToQueueImageButton.setOnClickListener(v -> {
-            mAddToQueueImageButton.setImageResource(R.drawable.button_on);
             addUserToQueue();
         });
     }
@@ -77,6 +76,7 @@ public class AddToQueueActivity extends Activity {
         mQueue.disconnectChangeListener();
         launchActivity(InQueueActivity.class);
     }
+    
     private void onUserAddedError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         switch (error.getStatus()) {
@@ -97,7 +97,6 @@ public class AddToQueueActivity extends Activity {
         mQueue.setQueueId(queueId);
         mQueue.disconnectChangeListener();
         mQueue.setChangeListener(this::changeListener);
-        mAddToQueueImageButton.setEnabled(true);
     }
 
     private void onBeaconError(Throwable throwable) {
