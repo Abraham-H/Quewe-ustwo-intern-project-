@@ -1,6 +1,7 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -101,6 +103,22 @@ public class InQueueActivity extends Activity {
         findViewById(R.id.inLinePopUpOkButton).setOnClickListener(v -> {
             removeInQueuePopUp();
             removeTransparentLayout();
+
+            final Dialog inQueuePopUpDialog = new Dialog(this);
+
+            inQueuePopUpDialog.setContentView(R.layout.in_queue_pop_up_dialog);//Set content view
+            inQueuePopUpDialog.setTitle("Your lined up");
+
+            //TextView popUpText = (TextView) inQueuePopUpDialog.findViewById(R.id.popUpDialogTextView);
+            //popUpText.setText("You have been entered in the line");
+            ImageView popUpImageView = (ImageView) inQueuePopUpDialog.findViewById(R.id.popUpDialogImage);
+            popUpImageView.setImageResource(R.drawable.button_hold);
+
+            Button popUpButton = (Button) inQueuePopUpDialog.findViewById(R.id.dialogButtonOK);
+            popUpButton.setOnClickListener(z ->{
+                inQueuePopUpDialog.dismiss();
+            });
+            inQueuePopUpDialog.show();
         });
     }
 
