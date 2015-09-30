@@ -97,8 +97,6 @@ public class InQueueActivity extends Activity {
         queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
         waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
         PopUp.startInQueuePopUp(this);
-            popUpImageView.setImageResource(R.drawable.add_to_queue_default);
-
     }
 
     private void prepareAndRunAnimation(){
