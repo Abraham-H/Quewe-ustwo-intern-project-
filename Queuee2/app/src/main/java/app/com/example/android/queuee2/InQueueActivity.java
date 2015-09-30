@@ -112,7 +112,7 @@ public class InQueueActivity extends Activity {
             //TextView popUpText = (TextView) inQueuePopUpDialog.findViewById(R.id.popUpDialogTextView);
             //popUpText.setText("You have been entered in the line");
             ImageView popUpImageView = (ImageView) inQueuePopUpDialog.findViewById(R.id.popUpDialogImage);
-            popUpImageView.setImageResource(R.drawable.button_hold);
+            popUpImageView.setImageResource(R.drawable.add_to_queue_default);
 
             Button popUpButton = (Button) inQueuePopUpDialog.findViewById(R.id.dialogButtonOK);
             popUpButton.setOnClickListener(z ->{
