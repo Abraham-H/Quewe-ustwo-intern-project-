@@ -77,6 +77,7 @@ public class AddToQueueActivity extends Activity {
         mQueue.disconnectChangeListener();
         launchActivity(InQueueActivity.class);
     }
+    
     private void onUserAddedError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         switch (error.getStatus()) {
