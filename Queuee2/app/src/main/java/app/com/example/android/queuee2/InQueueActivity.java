@@ -20,6 +20,7 @@ import android.widget.Toast;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.utils.Notification;
+import app.com.example.android.queuee2.utils.PopUp;
 
 public class InQueueActivity extends Activity {
 
@@ -27,8 +28,6 @@ public class InQueueActivity extends Activity {
 
     private TextView queuePositionTextView;
     private ImageView waitingAnimationImageView;
-    private RelativeLayout transparentLayout;
-    private RelativeLayout inQueueMainRelativeLayout;
 
     private Queue mQueue;
     private boolean activityVisible;
@@ -97,43 +96,8 @@ public class InQueueActivity extends Activity {
     private void setViews() {
         queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
         waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
-        inQueueMainRelativeLayout = (RelativeLayout)findViewById(R.id.activityInQueueMainRelativeLayout);
-        configureTransparentLayout();
+        PopUp.startInQueuePopUp(this);
 
-        findViewById(R.id.inLinePopUpOkButton).setOnClickListener(v -> {
-            removeInQueuePopUp();
-            removeTransparentLayout();
-
-            final Dialog inQueuePopUpDialog = new Dialog(this);
-
-            inQueuePopUpDialog.setContentView(R.layout.in_queue_pop_up_dialog);//Set content view
-            inQueuePopUpDialog.setTitle("Your lined up");
-
-            //TextView popUpText = (TextView) inQueuePopUpDialog.findViewById(R.id.popUpDialogTextView);
-            //popUpText.setText("You have been entered in the line");
-            ImageView popUpImageView = (ImageView) inQueuePopUpDialog.findViewById(R.id.popUpDialogImage);
-            popUpImageView.setImageResource(R.drawable.button_hold);
-
-            Button popUpButton = (Button) inQueuePopUpDialog.findViewById(R.id.dialogButtonOK);
-            popUpButton.setOnClickListener(z ->{
-                inQueuePopUpDialog.dismiss();
-            });
-            inQueuePopUpDialog.show();
-        });
-    }
-
-    private void configureTransparentLayout(){
-        transparentLayout = (RelativeLayout)findViewById(R.id.transparentRelativeLayer);
-        transparentLayout.setBackgroundColor(Color.BLUE);
-        transparentLayout.setAlpha((float) 0.1);
-    }
-
-    private void removeInQueuePopUp() {
-        findViewById(R.id.in_line_pop_up_view).setVisibility(View.GONE);
-    }
-
-    private void removeTransparentLayout(){
-        inQueueMainRelativeLayout.removeView(transparentLayout);
     }
 
     private void prepareAndRunAnimation(){
