@@ -47,21 +47,7 @@ public class AddToQueueActivity extends Activity {
         disconnectBeaconListener();
         mQueue.disconnectChangeListener();
     }
-
-    @Override
-    public void onBackPressed() {
-        String queueId = mQueue.getQueueId();
-        if (queueId != null) {
-            mAddToQueueImageButton.setEnabled(false);
-            mNumInQueueTextView.setText("No Queue Found");
-            connectBeaconListener(mIsBluetoothDenied);
-            // TODO: Note sure this is such a good idea
-            mQueue.setQueueId(null);
-        } else{
-            finish();
-        }
-    }
-
+    
     private void setInstanceVariables() {
         mBeaconListener = new BeaconListener(this);
         mQueue = new Queue(this);
@@ -77,7 +63,10 @@ public class AddToQueueActivity extends Activity {
         mNumInQueueTextView = (TextView)findViewById(R.id.num_in_queue_textview);
         mAddToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
         mAddToQueueImageButton.setEnabled(false);
-        mAddToQueueImageButton.setOnClickListener(v -> addUserToQueue());
+        mAddToQueueImageButton.setOnClickListener(v -> {
+            mAddToQueueImageButton.setImageResource(R.drawable.button_on);
+            addUserToQueue();
+        });
     }
 
     private void addUserToQueue() {

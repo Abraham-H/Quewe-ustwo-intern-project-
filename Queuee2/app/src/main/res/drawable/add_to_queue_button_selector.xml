@@ -2,7 +2,7 @@
  <selector xmlns:android="http://schemas.android.com/apk/res/android">
      <item android:state_pressed="true"
            android:drawable="@drawable/button_hold" /> <!-- pressed -->
-     <item android:state_focused="true"
-           android:drawable="@drawable/button_off" /> <!-- focused -->
-     <item android:drawable="@drawable/button_on" /> <!-- default -->
+     <!--<item android:state_focused="true"-->
+           <!--android:drawable="@drawable/button_off" /> &lt;!&ndash; focused &ndash;&gt;-->
+     <item android:drawable="@drawable/button_off" /> <!-- default -->
  </selector>
