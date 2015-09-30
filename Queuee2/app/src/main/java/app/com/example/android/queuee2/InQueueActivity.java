@@ -95,6 +95,7 @@ public class InQueueActivity extends Activity {
     private void setViews() {
         queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
         waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
+        inQueueMainRelativeLayout = (RelativeLayout)findViewById(R.id.activityInQueueMainRelativeLayout);
         configureTransparentLayout();
 
         findViewById(R.id.inLinePopUpOkButton).setOnClickListener(v -> {
