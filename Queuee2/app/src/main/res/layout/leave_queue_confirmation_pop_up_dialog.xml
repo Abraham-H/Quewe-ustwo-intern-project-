@@ -24,13 +24,31 @@
         android:layout_toRightOf="@+id/popUpDialogImage"
         android:textColor="#FFF"/>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
     <Button
         android:id="@+id/dialogButtonOK"
         android:layout_gravity="center_horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="Ok"
+        android:text="OK"
         android:layout_marginTop="5dp"
         android:background="@android:color/transparent"
         android:layout_below="@+id/popUpDialogImage"/>
+
+    <Button
+        android:id="@+id/dialogButtonNo"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="NO"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/popUpDialogImage"/>
+    </LinearLayout>
+
 </LinearLayout>
