@@ -22,7 +22,7 @@ public class PopUp {
         //TextView popUpText = (TextView) inQueuePopUpDialog.findViewById(R.id.popUpDialogTextView);
         //popUpText.setText("You have been entered in the line");
         ImageView popUpImageView = (ImageView) inQueuePopUpDialog.findViewById(R.id.popUpDialogImage);
-        popUpImageView.setImageResource(R.drawable.add_to_queue_default);
+        popUpImageView.setImageResource(R.drawable.cancel_button);
 
         Button popUpButton = (Button) inQueuePopUpDialog.findViewById(R.id.dialogButtonOK);
         popUpButton.setOnClickListener(z -> {
@@ -32,24 +32,31 @@ public class PopUp {
         inQueuePopUpDialog.show();
     }
 
-    public void leaveQueueConfirmatioPopUp(){
+    public void leaveQueueConfirmatioPopUp(Context ctx){
+        Dialog inQueuePopUpDialog = new Dialog(ctx);
 
-//        inQueuePopUpDialog.setContentView(R.layout.leave_queue_confirmation_pop_up_dialog);//Set content view
-//        inQueuePopUpDialog.setTitle("Are you sure you want to leave");
-//
-//        //TextView popUpText = (TextView) inQueuePopUpDialog.findViewById(R.id.popUpDialogTextView);
-//        //popUpText.setText("You have been entered in the line");
-//        ImageView popUpImageView = (ImageView) inQueuePopUpDialog.findViewById(R.id.popUpDialogImage);
-//        popUpImageView.setImageResource(R.drawable.button_hold);
-//
-//        Button popUpButton = (Button) inQueuePopUpDialog.findViewById(R.id.dialogButtonOK);
-//        popUpButton.setOnClickListener(z -> {
-//                    inQueuePopUpDialog.dismiss();
-//                }
-//        );
-//
-//
-//        inQueuePopUpDialog.show();
-//
+        inQueuePopUpDialog.setContentView(R.layout.leave_queue_confirmation_pop_up_dialog);//Set content view
+        inQueuePopUpDialog.setTitle("Warning");
+
+        //TextView popUpText = (TextView) inQueuePopUpDialog.findViewById(R.id.popUpDialogTextView);
+        //popUpText.setText("You have been entered in the line");
+        ImageView popUpImageView = (ImageView) inQueuePopUpDialog.findViewById(R.id.popUpDialogImage);
+        popUpImageView.setImageResource(R.drawable.cancel_button);
+
+        Button yesPopUpButton = (Button) inQueuePopUpDialog.findViewById(R.id.dialogButtonOK);
+        yesPopUpButton.setOnClickListener(z -> {
+                    inQueuePopUpDialog.dismiss();
+                }
+        );
+
+        Button noPopUpButton = (Button) inQueuePopUpDialog.findViewById(R.id.dialogButtonOK);
+        noPopUpButton.setOnClickListener(z -> {
+                    inQueuePopUpDialog.dismiss();
+                }
+        );
+
+
+        inQueuePopUpDialog.show();
+
     }
 }
