@@ -87,9 +87,7 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void onBeaconFound(String queueId) {
-        mQueue.setQueueId(queueId);
-//        mQueue.disconnectChangeListener();
-        mQueue.setChangeListener(this::changeListener);
+        mQueue.setChangeListener(queueId, this::changeListener);
     }
 
     private void onBeaconError(Throwable throwable) {
