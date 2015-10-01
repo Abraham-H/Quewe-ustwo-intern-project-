@@ -2,6 +2,7 @@ package app.com.example.android.queuee2.model;
 
 import android.app.Activity;
 
+import app.com.example.android.queuee2.MyApplication;
 import app.com.example.android.queuee2.utils.Utils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -12,26 +13,26 @@ import rx.schedulers.Schedulers;
  */
 public class Queue {
 
-    private Activity mActivity;
     private HerokuApiClient.HerokuService mHerokuService;
     private FirebaseListener mFirebaseListener;
     private Runnable mOnFirebaseChange;
     private static String sAndroidId;
     private String mQueueId;
 
-    public Queue(Activity activity) {
-        this.mActivity = activity;
+    public Queue() {
         mHerokuService = HerokuApiClient.getHerokuService();
-        sAndroidId = android.provider.Settings.Secure.getString(activity.getContentResolver(),
+        sAndroidId = android.provider.Settings.Secure.getString(
+                MyApplication.getAppContext().getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
     }
 
-    public void setChangeListener(Runnable callback) {
-        if (mQueueId != null) {
-            this.mOnFirebaseChange = callback::run;
-            mFirebaseListener = new FirebaseListener(mActivity, mOnFirebaseChange);
-            mFirebaseListener.connectListener();
-        }
+    public void setChangeListener(String queueId, Runnable callback) {
+        // TODO: Set queueId here!
+        this.disconnectChangeListener();
+        this.mQueueId = queueId;
+        this.mOnFirebaseChange = callback::run;
+        mFirebaseListener = new FirebaseListener(mOnFirebaseChange);
+        mFirebaseListener.connectListener();
     }
 
     public void connectChangeListener(){
@@ -79,7 +80,12 @@ public class Queue {
     }
 
     public void setQueueId(String queueId) {
+        this.disconnectChangeListener();
         this.mQueueId = queueId;
+    }
+
+    public String getUserId() {
+        return sAndroidId;
     }
 
     public String getQueueId() {

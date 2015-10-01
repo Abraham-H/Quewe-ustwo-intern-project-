@@ -20,7 +20,6 @@ public class AddToQueueActivity extends Activity {
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
-    private static String sAndroidId;
 
     private TextView mNumInQueueTextView;
     private ImageButton mAddToQueueImageButton;
@@ -50,27 +49,21 @@ public class AddToQueueActivity extends Activity {
     
     private void setInstanceVariables() {
         mBeaconListener = new BeaconListener(this);
-        mQueue = new Queue(this);
+        mQueue = new Queue();
         mIsBluetoothDenied = false;
-        sAndroidId = android.provider.Settings.Secure.getString(this.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
     }
 
     private void setViews() {
-        TextView welcomeTextView = (TextView)findViewById(R.id.welcome_text_view);
-        welcomeTextView.setLineSpacing(0.0f,0.8f);
-
         mNumInQueueTextView = (TextView)findViewById(R.id.num_in_queue_textview);
         mAddToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
         mAddToQueueImageButton.setEnabled(false);
-        mAddToQueueImageButton.setOnClickListener(v -> {
-            addUserToQueue();
-        });
+        mAddToQueueImageButton.setOnClickListener(v -> addUserToQueue());
     }
 
     private void addUserToQueue() {
         mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError);
     }
+
     private void onUserAdded(Response response) {
         Log.d(TAG, response.getMessage());
         mQueue.disconnectChangeListener();
@@ -95,7 +88,7 @@ public class AddToQueueActivity extends Activity {
 
     private void onBeaconFound(String queueId) {
         mQueue.setQueueId(queueId);
-        mQueue.disconnectChangeListener();
+//        mQueue.disconnectChangeListener();
         mQueue.setChangeListener(this::changeListener);
     }
 
@@ -113,17 +106,21 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void onGetQueue(Response response) {
-        ArrayList<String> queue = (ArrayList<String>) response.getData();
-        if (queue.contains(sAndroidId)) {
+        ArrayList<String> queueData = (ArrayList<String>) response.getData();
+        // TODO: Queue contains user? (in queue class)
+        if (queueData.contains(mQueue.getUserId())) {
+            // TODO: SNACKBAR  INSTEAD
             Toast.makeText(this, "Already in Queue", Toast.LENGTH_SHORT).show();
-            if (queue.indexOf(sAndroidId) == 0) {
+            if (queueData.indexOf(mQueue.getUserId()) == 0) {
                 launchActivity(YouAreNextActivity.class);
             } else {
                 launchActivity(InQueueActivity.class);
             }
         } else {
-            String noun = queue.size() == 1 ? " person" : " people";
-            mNumInQueueTextView.setText(String.valueOf(queue.size()) + noun + " in " + mQueue.getQueueId());
+            String resultString  = String.valueOf(queueData.size()) +
+                    (queueData.size() == 1 ? " person" : " people")
+                    + " in " + mQueue.getQueueId();
+            mNumInQueueTextView.setText(resultString);
             mAddToQueueImageButton.setEnabled(true);
         }
     }

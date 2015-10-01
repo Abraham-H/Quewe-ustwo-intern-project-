@@ -7,6 +7,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import app.com.example.android.queuee2.MyApplication;
+
 /**
  * Created by bkach on 9/17/15.
  */
@@ -16,8 +18,8 @@ public class FirebaseListener {
     Runnable onChange;
     ValueEventListener eventListener;
 
-    public FirebaseListener(Context ctx, Runnable onChange) {
-        Firebase.setAndroidContext(ctx);
+    public FirebaseListener(Runnable onChange) {
+        Firebase.setAndroidContext(MyApplication.getAppContext());
         fRef = new Firebase("https://burning-torch-3063.firebaseio.com/");
         setOnChange(onChange);
     }

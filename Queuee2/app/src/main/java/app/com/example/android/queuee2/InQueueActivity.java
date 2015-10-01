@@ -56,7 +56,7 @@ public class InQueueActivity extends Activity {
     }
 
     private void setQueue(){
-        mQueue = new Queue(this);
+        mQueue = new Queue();
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
         mQueue.setChangeListener(this::changeListener);
     }
@@ -97,6 +97,12 @@ public class InQueueActivity extends Activity {
         queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
         waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
         PopUp.startInQueuePopUp(this);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        prepareAndRunAnimation();
+        super.onWindowFocusChanged(hasFocus);
     }
 
     private void prepareAndRunAnimation(){
@@ -142,12 +148,6 @@ public class InQueueActivity extends Activity {
     private void toastError(String message) {
         Log.d(TAG, "Error: " + message);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        prepareAndRunAnimation();
-        super.onWindowFocusChanged(hasFocus);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class YouAreNextActivity extends Activity {
     }
 
     private void setQueue(){
-        mQueue = new Queue(this);
+        mQueue = new Queue();
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
         mQueue.setChangeListener(this::changeListener);
     }

@@ -1,6 +1,7 @@
 package app.com.example.android.queuee2;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.facebook.stetho.Stetho;
 
@@ -9,9 +10,16 @@ import com.facebook.stetho.Stetho;
  */
 public class MyApplication extends Application {
 
+    private static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        MyApplication.context = getApplicationContext();
         Stetho.initializeWithDefaults(this);
+    }
+
+    public static Context getAppContext() {
+        return MyApplication.context;
     }
 }
