@@ -1,0 +1,15 @@
+diff a/Queuee2/app/src/main/java/app/com/example/android/queuee2/AddToQueueActivity.java b/Queuee2/app/src/main/java/app/com/example/android/queuee2/AddToQueueActivity.java	(rejected hunks)
+@@ -86,7 +86,13 @@
+      }
+  
+      private void onBeaconFound(String queueId) {
+++<<<<<<< HEAD
+ +        mQueue.setChangeListener(queueId, this::changeListener);
+++=======
++         mQueue.setQueueId(queueId);
++ //        mQueue.disconnectChangeListener();
++         mQueue.setChangeListener(this::changeListener);
+++>>>>>>> made it more mvc
+      }
+  
+      private void onBeaconError(Throwable throwable) {

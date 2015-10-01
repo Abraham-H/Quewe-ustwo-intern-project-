@@ -57,11 +57,7 @@ public class InQueueActivity extends Activity {
 
     private void setQueue(){
         mQueue = new Queue();
-        // TODO: GET RID OF THIS!
-        mQueue.setChangeListener(
-                (getIntent().getStringExtra("queueId") == null ? "queue2" :
-                        getIntent().getStringExtra("queueId"))
-                ,this::changeListener);
+        mQueue.setChangeListener(getIntent().getStringExtra("queueId"),this::changeListener);
     }
 
     private void changeListener(){
