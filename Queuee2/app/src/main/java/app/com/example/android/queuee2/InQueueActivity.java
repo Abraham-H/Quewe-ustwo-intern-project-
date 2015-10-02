@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.utils.Notification;
@@ -93,7 +95,20 @@ public class InQueueActivity extends Activity {
     }
 
     private void setViews() {
+        RelativeLayout cancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
+        cancelRelativeLayout.setOnClickListener(z -> {
+                    new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue);
+                }
+        );
         PopUp.startInQueuePopUp(this);
+    }
+
+    private void onYesLeaveQueue(){
+        removeFromQueue();
+    }
+
+    private void onNoLeaveQueue(){
+        
     }
 
     @Override
@@ -161,14 +176,4 @@ public class InQueueActivity extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_cancel:
-                removeFromQueue();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }
