@@ -27,7 +27,6 @@ public class AddToQueueActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getActionBar().hide();
         setContentView(R.layout.activity_add_to_queue);
         setInstanceVariables();
         setViews();

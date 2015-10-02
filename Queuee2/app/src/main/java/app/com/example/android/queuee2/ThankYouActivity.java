@@ -23,7 +23,6 @@ public class ThankYouActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getActionBar().hide();
         setContentView(R.layout.activity_thank_you);
         setQueue();
     }

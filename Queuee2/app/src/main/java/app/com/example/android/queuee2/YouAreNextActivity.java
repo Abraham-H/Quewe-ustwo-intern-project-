@@ -22,7 +22,6 @@ public class YouAreNextActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_you_are_next);
-        this.getActionBar().hide();
         setViews();
         setQueue();
         removeNotification();

@@ -46,5 +46,6 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.facebook.fresco:fresco:0.7.0+'
     compile 'com.facebook.stetho:stetho:1.2.0'
 }

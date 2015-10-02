@@ -5,23 +5,23 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import app.com.example.android.queuee2.dialog.InQueueDialog;
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
-import app.com.example.android.queuee2.utils.AnimationFrames;
-import app.com.example.android.queuee2.utils.AnimationsContainer;
 import app.com.example.android.queuee2.utils.Notification;
 import app.com.example.android.queuee2.utils.PopUp;
 
@@ -29,16 +29,12 @@ public class InQueueActivity extends Activity {
 
     private static String TAG = InQueueActivity.class.getSimpleName();
 
-    private TextView queuePositionTextView;
-    private ImageView waitingAnimationImageView;
-
     private Queue mQueue;
     private boolean activityVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getActionBar().hide();
         setContentView(R.layout.activity_in_queue);
         setQueue();
         setViews();
@@ -61,6 +57,7 @@ public class InQueueActivity extends Activity {
 
     private void setQueue(){
         mQueue = new Queue();
+        // TODO: GET RID OF THIS!
         mQueue.setChangeListener(
                 (getIntent().getStringExtra("queueId") == null ? "queue2" :
                         getIntent().getStringExtra("queueId"))
@@ -82,8 +79,8 @@ public class InQueueActivity extends Activity {
                         YouAreNextActivity.class, mQueue.getQueueId(), "You're Next!");
             }
         } else {
-            String noun = position-1 == 1 ? " person" : " people";
-            queuePositionTextView.setText(String.valueOf(position-1) + " " + noun + " ahead of you");
+            TextView queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
+            queuePositionTextView.setText(String.valueOf(position-1));
         }
     }
 
@@ -100,8 +97,6 @@ public class InQueueActivity extends Activity {
     }
 
     private void setViews() {
-        queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
-        waitingAnimationImageView = (ImageView)findViewById(R.id.waitingAnimationImageView);
         PopUp.startInQueuePopUp(this);
     }
 
@@ -112,12 +107,16 @@ public class InQueueActivity extends Activity {
     }
 
     private void prepareAndRunAnimation(){
-        AnimationsContainer.FramesSequenceAnimation animation = AnimationsContainer.getInstance().createAnim(
-                waitingAnimationImageView, AnimationFrames.waitingInQueue(),true);
-        animation.start();
-//        waitingAnimationImageView.setBackgroundResource(R.drawable.waiting_animation);
-//        AnimationDrawable waitingAnimationDrawable = (AnimationDrawable) waitingAnimationImageView.getBackground();
-//        waitingAnimationDrawable.start();
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+                .path(String.valueOf(R.drawable.waiting_inqueue_almost_there_big))
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+        .build();
+        SimpleDraweeView sdv = (SimpleDraweeView) findViewById(R.id.my_image_view);
+        sdv.setController(controller);
     }
 
     @Override
