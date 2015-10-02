@@ -109,13 +109,13 @@ public class InQueueActivity extends Activity {
     private void prepareAndRunAnimation(){
         Uri uri = new Uri.Builder()
                 .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
-                .path(String.valueOf(R.drawable.waiting_inqueue_almost_there_big))
+                .path(String.valueOf(R.drawable.waiting_animation))
                 .build();
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
                 .setAutoPlayAnimations(true)
         .build();
-        SimpleDraweeView sdv = (SimpleDraweeView) findViewById(R.id.my_image_view);
+        SimpleDraweeView sdv = (SimpleDraweeView) findViewById(R.id.waiting_animation);
         sdv.setController(controller);
     }
 

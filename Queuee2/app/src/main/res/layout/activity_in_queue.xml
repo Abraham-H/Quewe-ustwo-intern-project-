@@ -15,19 +15,21 @@
     </app.com.example.android.queuee2.CancelHeader>
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/my_image_view"
+            android:id="@+id/waiting_animation"
             android:layout_width="300sp"
             android:layout_height="300sp"
-            fresco:placeholderImage="@drawable/waiting_inqueue_almost_there_big"
+            fresco:placeholderImage="@drawable/waiting_animation"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 
         <TextView
             android:layout_width="wrap_content"
+            style="@style/normal_text_style"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Queue Position:"
             android:id="@+id/queuePositionTextView"
+            android:textSize="50sp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 
