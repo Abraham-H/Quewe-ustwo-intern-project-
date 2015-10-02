@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
+import app.com.example.android.queuee2.utils.AnimationFrames;
+import app.com.example.android.queuee2.utils.AnimationsContainer;
 import app.com.example.android.queuee2.utils.Notification;
 import app.com.example.android.queuee2.utils.PopUp;
 
@@ -57,7 +59,10 @@ public class InQueueActivity extends Activity {
 
     private void setQueue(){
         mQueue = new Queue();
-        mQueue.setChangeListener(getIntent().getStringExtra("queueId"),this::changeListener);
+        mQueue.setChangeListener(
+                (getIntent().getStringExtra("queueId") == null ? "queue2" :
+                        getIntent().getStringExtra("queueId"))
+                ,this::changeListener);
     }
 
     private void changeListener(){
@@ -105,9 +110,12 @@ public class InQueueActivity extends Activity {
     }
 
     private void prepareAndRunAnimation(){
-        waitingAnimationImageView.setBackgroundResource(R.drawable.waiting_animation);
-        AnimationDrawable waitingAnimationDrawable = (AnimationDrawable) waitingAnimationImageView.getBackground();
-        waitingAnimationDrawable.start();
+        AnimationsContainer.FramesSequenceAnimation animation = AnimationsContainer.getInstance().createAnim(
+                waitingAnimationImageView, AnimationFrames.waitingInQueue(),true);
+        animation.start();
+//        waitingAnimationImageView.setBackgroundResource(R.drawable.waiting_animation);
+//        AnimationDrawable waitingAnimationDrawable = (AnimationDrawable) waitingAnimationImageView.getBackground();
+//        waitingAnimationDrawable.start();
     }
 
     @Override
