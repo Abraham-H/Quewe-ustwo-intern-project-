@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import app.com.example.android.queuee2.dialog.InQueueDialog;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.utils.AnimationFrames;
@@ -41,6 +42,7 @@ public class InQueueActivity extends Activity {
         setContentView(R.layout.activity_in_queue);
         setQueue();
         setViews();
+        InQueueDialog inQueueDialog = new InQueueDialog(this);
     }
 
     @Override

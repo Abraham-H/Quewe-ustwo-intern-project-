@@ -5,15 +5,13 @@
     android:id="@+id/activityInQueueMainRelativeLayout"
     tools:context="app.com.example.android.queuee2.InQueueActivity">
 
-    <RelativeLayout
-        android:id="@+id/transparentRelativeLayer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true">
-    </RelativeLayout>
+    <app.com.example.android.queuee2.CancelHeader
+        android:id="@+id/in_line_pop_up_view"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:layout_width="500dp"
+        android:layout_height="50dp">
+    </app.com.example.android.queuee2.CancelHeader>
 
     <TextView
         android:layout_width="wrap_content"
