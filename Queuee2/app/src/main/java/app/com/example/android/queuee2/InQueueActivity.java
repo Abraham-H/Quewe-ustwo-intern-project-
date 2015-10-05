@@ -108,6 +108,7 @@ public class InQueueActivity extends Activity {
         cancelRelativeLayout.setOnClickListener(
                 z -> new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue));
         PopUp.startInQueuePopUp(this);
+
     }
 
     private void onYesLeaveQueue(){
@@ -115,7 +116,7 @@ public class InQueueActivity extends Activity {
     }
 
     private void onNoLeaveQueue(){
-        
+
     }
 
     @Override

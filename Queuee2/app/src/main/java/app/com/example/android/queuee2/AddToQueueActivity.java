@@ -66,6 +66,7 @@ public class AddToQueueActivity extends Activity {
     private void onUserAdded(Response response) {
         Log.d(TAG, response.getMessage());
         mQueue.disconnectChangeListener();
+        //// TODO: 10/5/2015  load
         launchActivity(InQueueActivity.class);
     }
     
@@ -103,6 +104,7 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void onGetQueue(Response response) {
+        // TODO: 10/5/2015 load 
         ArrayList<String> queueData = (ArrayList<String>) response.getData();
         // TODO: Queue contains user? (in queue class)
         if (queueData.contains(mQueue.getUserId())) {
