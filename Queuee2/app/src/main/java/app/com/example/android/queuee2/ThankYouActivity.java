@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import app.com.example.android.queuee2.model.FirebaseListener;
 import app.com.example.android.queuee2.model.HerokuApiClient;
@@ -24,6 +25,16 @@ public class ThankYouActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thank_you);
+        setViews();
+    }
+
+    private void setViews(){
+        ImageButton backToStartButton = (ImageButton) findViewById(R.id.back_to_start_button);
+        backToStartButton.setOnClickListener((v) -> {
+            Intent intent = new Intent(this,AddToQueueActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
     }
 
     public void backToAddToQueueActivity() {

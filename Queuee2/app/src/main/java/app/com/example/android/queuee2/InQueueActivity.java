@@ -1,23 +1,17 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import app.com.example.android.queuee2.dialog.InQueueDialog;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -105,7 +99,6 @@ public class InQueueActivity extends Activity {
 
         RelativeLayout cancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
         cancelRelativeLayout.setOnClickListener(z -> launchLeaveQueueDialog());
-        PopUp.startInQueuePopUp(this);
     }
 
     private void launchLeaveQueueDialog(){
