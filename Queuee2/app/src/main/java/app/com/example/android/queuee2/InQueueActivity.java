@@ -5,12 +5,14 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -95,11 +97,16 @@ public class InQueueActivity extends Activity {
     }
 
     private void setViews() {
+        ImageButton snoozeButton = (ImageButton) findViewById(R.id.snooze_button);
+        snoozeButton.setOnClickListener(v -> mQueue.snooze(
+                (r) -> Toast.makeText(this, "Snoozed", Toast.LENGTH_SHORT).show(),
+                (e) -> toastError(e.getMessage())
+        ));
+
+
         RelativeLayout cancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
-        cancelRelativeLayout.setOnClickListener(z -> {
-                    new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue);
-                }
-        );
+        cancelRelativeLayout.setOnClickListener(
+                z -> new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue));
         PopUp.startInQueuePopUp(this);
     }
 
@@ -125,7 +132,7 @@ public class InQueueActivity extends Activity {
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
                 .setAutoPlayAnimations(true)
-        .build();
+                .build();
         SimpleDraweeView sdv = (SimpleDraweeView) findViewById(R.id.waiting_animation);
         sdv.setController(controller);
     }

@@ -79,9 +79,12 @@ public class Queue {
                 .subscribe(onSuccess, onFailure);
     }
 
-    public void setQueueId(String queueId) {
-        this.disconnectChangeListener();
-        this.mQueueId = queueId;
+    public void snooze(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+        mHerokuService.snooze(mQueueId, sAndroidId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(Utils::jsonToResponse)
+                .subscribe(onSuccess, onFailure);
     }
 
     public String getUserId() {
