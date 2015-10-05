@@ -24,44 +24,6 @@ public class ThankYouActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thank_you);
-        setQueue();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mQueue.connectChangeListener();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mQueue.disconnectChangeListener();
-    }
-
-    private void setQueue(){
-        mQueue = new Queue();
-        mQueue.setChangeListener(getIntent().getStringExtra("queueId"), this::changeListener);
-    }
-
-    private void changeListener() {
-        mQueue.getUser(this::onGetUser, this::onGetUserError);
-    }
-
-    private void onGetUser(Response response) {
-        Log.d(TAG, "onGetUser: Still in queue...");
-    }
-
-    private void onGetUserError(Throwable throwable) {
-        Response.Error error = Response.getError(throwable);
-        switch (error.getStatus()) {
-            case 404: // Not in the queue
-                backToAddToQueueActivity();
-                break;
-            case 400: // Queue Not Found
-                backToAddToQueueActivity();
-                break;
-        }
     }
 
     public void backToAddToQueueActivity() {

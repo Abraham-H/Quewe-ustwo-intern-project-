@@ -116,6 +116,8 @@ public class AddToQueueActivity extends Activity {
                 launchActivity(InQueueActivity.class);
             }
         } else {
+//            TextView bottomTextView = (TextView) findViewById(R.id.bottom_text_view);
+//            bottomTextView.setText(R.string.queue_instructions);
             String resultString  = String.valueOf(queueData.size()) +
                     (queueData.size() == 1 ? " person" : " people")
                     + " in " + mQueue.getQueueId();

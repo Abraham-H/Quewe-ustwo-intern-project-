@@ -4,7 +4,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar.Fullscreen">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <style name="header_text_style">
@@ -25,7 +25,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <color name="white">#fff</color>
+    <color name="happy_blue">#27b5c3</color>
 
 </resources>
 

@@ -79,8 +79,10 @@ public class InQueueActivity extends Activity {
                         YouAreNextActivity.class, mQueue.getQueueId(), "You're Next!");
             }
         } else {
-            TextView queuePositionTextView = (TextView)findViewById(R.id.queuePositionTextView);
+            TextView queuePositionTextView = (TextView)findViewById(R.id.queue_position_text_view);
+            TextView timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
             queuePositionTextView.setText(String.valueOf(position-1));
+            timeEstimationTextView.setText("Around\n" + String.valueOf((position-1) * 2) + " minutes");
         }
     }
 
@@ -103,12 +105,13 @@ public class InQueueActivity extends Activity {
                 (e) -> toastError(e.getMessage())
         ));
 
-
         RelativeLayout cancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
-        cancelRelativeLayout.setOnClickListener(
-                z -> new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue));
+        cancelRelativeLayout.setOnClickListener(z -> launchLeaveQueueDialog());
         PopUp.startInQueuePopUp(this);
+    }
 
+    private void launchLeaveQueueDialog(){
+        new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue);
     }
 
     private void onYesLeaveQueue(){
@@ -140,7 +143,7 @@ public class InQueueActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        removeFromQueue();
+        launchLeaveQueueDialog();
     }
 
     private void removeFromQueue(){

@@ -1,37 +1,50 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:background="@color/happy_blue"
     tools:context="app.com.example.android.queuee2.YouAreNextActivity">
 
+    <app.com.example.android.queuee2.CancelHeader
+        android:id="@+id/you_are_next_cancel_header"
+        android:orientation="vertical"
+        android:background="@color/happy_blue"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.123333333"
+        >
+    </app.com.example.android.queuee2.CancelHeader>
+
+
     <TextView
+        android:layout_width="250dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.246666667"
         android:text="@string/you_are_next_text"
         style="@style/header_text_style"
+        android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="61dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/finished_shopping_button" />
+        android:id="@+id/youre_next_text_view" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Finished Shopping"
-        android:id="@+id/finished_shopping_button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70dp" />
+    <ImageView
+        android:layout_width="250sp"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:layout_gravity="center"
+        android:src="@drawable/youre_next_smile"
+        />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.131"
         style="@style/normal_text_style"
-        android:text="@string/directions_text"
-        android:id="@+id/directionsTextView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:textColor="@android:color/white"
+        android:text="Show this screen to the cashier"
+        android:layout_gravity="center"
+        android:gravity="top|center"/>
 
-</RelativeLayout>
+</LinearLayout>
