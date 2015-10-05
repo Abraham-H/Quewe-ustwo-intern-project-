@@ -27,7 +27,6 @@ import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.utils.Notification;
-import app.com.example.android.queuee2.utils.PopUp;
 
 public class InQueueActivity extends Activity {
 
@@ -42,7 +41,6 @@ public class InQueueActivity extends Activity {
         setContentView(R.layout.activity_in_queue);
         setQueue();
         setViews();
-        InQueueDialog inQueueDialog = new InQueueDialog(this);
     }
 
     @Override
@@ -118,9 +116,7 @@ public class InQueueActivity extends Activity {
         removeFromQueue();
     }
 
-    private void onNoLeaveQueue(){
-
-    }
+    private void onNoLeaveQueue(){}
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {

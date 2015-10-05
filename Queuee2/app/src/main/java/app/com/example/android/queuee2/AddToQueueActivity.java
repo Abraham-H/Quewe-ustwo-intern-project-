@@ -1,4 +1,6 @@
 package app.com.example.android.queuee2;
+
+import app.com.example.android.queuee2.dialog.ProgressDialog;
 import app.com.example.android.queuee2.model.BeaconListener;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
@@ -7,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +27,9 @@ public class AddToQueueActivity extends Activity {
     private TextView mNumInQueueTextView;
     private ImageButton mAddToQueueImageButton;
 
+    ProgressDialog mProgressDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,19 +39,25 @@ public class AddToQueueActivity extends Activity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onStart() {
+        super.onStart();
+        dismissLoadingDialog();
+    }
+
+    @Override
+    protected void onResume() {
         super.onResume();
         connectBeaconListener(mIsBluetoothDenied);
         mQueue.connectChangeListener();
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         disconnectBeaconListener();
         mQueue.disconnectChangeListener();
     }
-    
+
     private void setInstanceVariables() {
         mBeaconListener = new BeaconListener(this);
         mQueue = new Queue();
@@ -53,10 +65,16 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void setViews() {
-        mNumInQueueTextView = (TextView)findViewById(R.id.num_in_queue_textview);
-        mAddToQueueImageButton = (ImageButton)findViewById(R.id.add_to_queue_image_button);
+        mNumInQueueTextView = (TextView) findViewById(R.id.num_in_queue_textview);
+        mAddToQueueImageButton = (ImageButton) findViewById(R.id.add_to_queue_image_button);
         mAddToQueueImageButton.setEnabled(false);
-        mAddToQueueImageButton.setOnClickListener(v -> addUserToQueue());
+        mAddToQueueImageButton.setOnClickListener(this::addToQueueButtonTapped);
+    }
+
+    private void addToQueueButtonTapped(View v) {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.show();
+        addUserToQueue();
     }
 
     private void addUserToQueue() {
@@ -69,7 +87,7 @@ public class AddToQueueActivity extends Activity {
         //// TODO: 10/5/2015  load
         launchActivity(InQueueActivity.class);
     }
-    
+
     private void onUserAddedError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         switch (error.getStatus()) {
@@ -94,7 +112,6 @@ public class AddToQueueActivity extends Activity {
         Log.d(TAG, "EstimoteBeacon error:" + throwable.getMessage());
     }
 
-
     private void disconnectBeaconListener() {
         mBeaconListener.disconnect();
     }
@@ -116,9 +133,7 @@ public class AddToQueueActivity extends Activity {
                 launchActivity(InQueueActivity.class);
             }
         } else {
-//            TextView bottomTextView = (TextView) findViewById(R.id.bottom_text_view);
-//            bottomTextView.setText(R.string.queue_instructions);
-            String resultString  = String.valueOf(queueData.size()) +
+            String resultString = String.valueOf(queueData.size()) +
                     (queueData.size() == 1 ? " person" : " people")
                     + " in " + mQueue.getQueueId();
             mNumInQueueTextView.setText(resultString);
@@ -145,9 +160,15 @@ public class AddToQueueActivity extends Activity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void dismissLoadingDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+    }
+
     @Override // Bluetooth Dialogue callback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_ENABLE_BT) {
+        if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Bluetooth turning on, please wait...", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
