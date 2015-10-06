@@ -8,16 +8,6 @@
     android:background="@color/happy_blue"
     tools:context="app.com.example.android.queuee2.YouAreNextActivity">
 
-    <app.com.example.android.queuee2.CancelHeader
-        android:id="@+id/you_are_next_cancel_header"
-        android:orientation="vertical"
-        android:background="@color/happy_blue"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.123333333"
-        >
-    </app.com.example.android.queuee2.CancelHeader>
-
 
     <TextView
         android:layout_width="250dp"

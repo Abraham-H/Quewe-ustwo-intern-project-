@@ -77,41 +77,6 @@ public class YouAreNextActivity extends Activity {
     }
 
     private void setViews() {
-        RelativeLayout cancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
-        cancelRelativeLayout.setOnClickListener(z -> launchLeaveQueueDialog());
-    }
-
-    private void launchLeaveQueueDialog(){
-        new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue);
-    }
-
-    private void onYesLeaveQueue(){
-        removeFromQueue();
-    }
-
-    private void onNoLeaveQueue(){
-    }
-
-    private void removeFromQueue(){
-        mQueue.disconnectChangeListener();
-        mQueue.removeUserFromQueue(this::onRemoveSuccess, this::onRemoveError);
-    }
-
-    private void onRemoveSuccess(Response response){
-        Toast.makeText(this, "Removed from queue", Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    private void onRemoveError(Throwable throwable) {
-        Response.Error error = Response.getError(throwable);
-        switch (error.getStatus()) {
-            case 404: // Not in the queue
-                toastError(error.getMessage());
-                break;
-            case 400: // Queue Not Found
-                toastError(error.getMessage());
-                break;
-        }
     }
 
     public void backToAddToQueueActivity() {

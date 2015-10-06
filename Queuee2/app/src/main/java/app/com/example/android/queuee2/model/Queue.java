@@ -1,9 +1,8 @@
 package app.com.example.android.queuee2.model;
 
-import android.app.Activity;
-
 import app.com.example.android.queuee2.MyApplication;
 import app.com.example.android.queuee2.utils.Utils;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -49,43 +48,45 @@ public class Queue {
 
     public void addUserToQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         mHerokuService.add(mQueueId, sAndroidId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applySchedulers())
                 .map(Utils::jsonToResponse)
                 .subscribe(onSuccess, onFailure);
     }
 
     public void removeUserFromQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure){
         mHerokuService.remove(mQueueId, sAndroidId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applySchedulers())
                 .map(Utils::jsonToResponse)
                 .subscribe(onSuccess, onFailure);
     }
 
     public void getQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         mHerokuService.info(mQueueId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applySchedulers())
                 .map(Utils::jsonToResponse)
                 .subscribe(onSuccess, onFailure);
     }
 
     public void getUser(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         mHerokuService.info(mQueueId, sAndroidId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applySchedulers())
                 .map(Utils::jsonToResponse)
                 .subscribe(onSuccess, onFailure);
     }
 
     public void snooze(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         mHerokuService.snooze(mQueueId, sAndroidId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applySchedulers())
                 .map(Utils::jsonToResponse)
                 .subscribe(onSuccess, onFailure);
     }
+
+    private <T> Observable.Transformer<T, T> applySchedulers() {
+        return observable ->
+                observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread());
+    }
+
 
     public String getUserId() {
         return sAndroidId;
