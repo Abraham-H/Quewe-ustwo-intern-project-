@@ -1,5 +1,9 @@
 package app.com.example.android.queuee2.model;
 
+import android.util.Log;
+
+import java.util.ArrayList;
+
 import app.com.example.android.queuee2.MyApplication;
 import app.com.example.android.queuee2.utils.Utils;
 import rx.Observable;
@@ -12,11 +16,14 @@ import rx.schedulers.Schedulers;
  */
 public class Queue {
 
+    private static final String TAG = Queue.class.getSimpleName();
+
     private HerokuApiClient.HerokuService mHerokuService;
     private FirebaseListener mFirebaseListener;
     private Runnable mOnFirebaseChange;
     private static String sAndroidId;
     private String mQueueId;
+    private boolean mSnoozable;
 
     public Queue() {
         mHerokuService = HerokuApiClient.getHerokuService();
@@ -87,6 +94,24 @@ public class Queue {
                         .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public boolean snoozeable() {
+        mHerokuService.info(mQueueId)
+                .map(Utils::jsonToResponse)
+                .subscribe(
+                        (response) -> {
+                            ArrayList<String> queueData = (ArrayList<String>) response.getData();
+                            if (queueData.contains(getUserId())) {
+                                if (queueData.indexOf(getUserId()) < queueData.size() - 1) {
+                                    mSnoozable = true;
+                                } else {
+                                    mSnoozable = false;
+                                }
+                            }
+                        }
+                        ,
+                        (e) -> Log.d(TAG, e.getLocalizedMessage()));
+        return mSnoozable;
+    }
 
     public String getUserId() {
         return sAndroidId;

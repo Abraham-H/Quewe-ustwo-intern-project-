@@ -29,8 +29,8 @@ public class Notification {
                 new Intent[]{notifyIntent},
                 PendingIntent.FLAG_UPDATE_CURRENT);
         android.app.Notification notification = new android.app.Notification.Builder(fromActivity)
-                .setSmallIcon(R.drawable.cancel_button)
-                .setContentTitle("Note")
+                .setSmallIcon(R.drawable.happy_face_icon)
+                .setContentTitle("You're Next!")
                 .setContentText(msg)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class AddToQueueActivity extends Activity {
@@ -25,6 +26,7 @@ public class AddToQueueActivity extends Activity {
     private boolean mIsBluetoothDenied;
 
     private TextView mNumInQueueTextView;
+    private TextView mBottomTextView;
     private ImageButton mAddToQueueImageButton;
 
     ProgressDialog mProgressDialog;
@@ -67,13 +69,16 @@ public class AddToQueueActivity extends Activity {
     private void setViews() {
         mNumInQueueTextView = (TextView) findViewById(R.id.num_in_queue_textview);
         mAddToQueueImageButton = (ImageButton) findViewById(R.id.add_to_queue_image_button);
+        mBottomTextView = (TextView) findViewById(R.id.bottom_text_view);
         mAddToQueueImageButton.setEnabled(false);
         mAddToQueueImageButton.setOnClickListener(this::addToQueueButtonTapped);
     }
 
     private void addToQueueButtonTapped(View v) {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(this);
+//        mProgressDialog.show();
+        mAddToQueueImageButton.setEnabled(false);
+        mBottomTextView.setText("Adding to Queue...");
         addUserToQueue();
     }
 
@@ -125,7 +130,6 @@ public class AddToQueueActivity extends Activity {
         ArrayList<String> queueData = (ArrayList<String>) response.getData();
         // TODO: Queue contains user? (in queue class)
         if (queueData.contains(mQueue.getUserId())) {
-            // TODO: SNACKBAR  INSTEAD
             Toast.makeText(this, "Already in Queue", Toast.LENGTH_SHORT).show();
             if (queueData.indexOf(mQueue.getUserId()) == 0) {
                 launchActivity(YouAreNextActivity.class);
@@ -138,6 +142,7 @@ public class AddToQueueActivity extends Activity {
                     + " in " + mQueue.getQueueId();
             mNumInQueueTextView.setText(resultString);
             mAddToQueueImageButton.setEnabled(true);
+            mBottomTextView.setText("");
         }
     }
 

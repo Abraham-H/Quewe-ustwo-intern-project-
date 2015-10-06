@@ -27,7 +27,8 @@ public class InQueueActivity extends Activity {
     private static String TAG = InQueueActivity.class.getSimpleName();
 
     private Queue mQueue;
-    private boolean activityVisible;
+    private boolean mActivityVisible;
+    private ImageButton mSnoozeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,19 +42,23 @@ public class InQueueActivity extends Activity {
     protected void onResume(){
         super.onResume();
         mQueue.connectChangeListener();
-        activityVisible = true;
+        mActivityVisible = true;
     }
 
     @Override
     protected void onPause(){
         super.onPause();
-        mQueue.disconnectChangeListener();
-        activityVisible = false;
+        mActivityVisible = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void setQueue(){
         mQueue = new Queue();
-        mQueue.setChangeListener(getIntent().getStringExtra("queueId"),this::changeListener);
+        mQueue.setChangeListener(getIntent().getStringExtra("queueId"), this::changeListener);
     }
 
     private void changeListener(){
@@ -63,18 +68,23 @@ public class InQueueActivity extends Activity {
     private void onGetUserInfo(Response response) {
         int position = ((Double) response.getData()).intValue() + 1;
         if (position == 1) {
-            if(activityVisible)
+            if(mActivityVisible)
             {
                 launchYouAreNextActivity();
             } else {
                 Notification.youAreNextNotification(this,
-                        YouAreNextActivity.class, mQueue.getQueueId(), "You're Next!");
+                        YouAreNextActivity.class, mQueue.getQueueId(), "Please go to Cashier 4");
             }
         } else {
             TextView queuePositionTextView = (TextView)findViewById(R.id.queue_position_text_view);
             TextView timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
             queuePositionTextView.setText(String.valueOf(position-1));
             timeEstimationTextView.setText("Around\n" + String.valueOf((position-1) * 2) + " minutes");
+        }
+        if (!mQueue.snoozeable()) {
+            mSnoozeButton.setEnabled(false);
+        } else {
+            mSnoozeButton.setEnabled(true);
         }
     }
 
@@ -91,11 +101,14 @@ public class InQueueActivity extends Activity {
     }
 
     private void setViews() {
-        ImageButton snoozeButton = (ImageButton) findViewById(R.id.snooze_button);
-        snoozeButton.setOnClickListener(v -> mQueue.snooze(
-                (r) -> Toast.makeText(this, "Snoozed", Toast.LENGTH_SHORT).show(),
-                (e) -> toastError(e.getMessage())
-        ));
+        mSnoozeButton = (ImageButton) findViewById(R.id.snooze_button);
+        mSnoozeButton.setOnClickListener(v -> {
+            mSnoozeButton.setEnabled(false);
+            mQueue.snooze(
+                    (r) -> mSnoozeButton.setEnabled(true),
+                    (e) -> toastError(e.getMessage())
+            );
+        });
 
         RelativeLayout cancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
         cancelRelativeLayout.setOnClickListener(z -> launchLeaveQueueDialog());
