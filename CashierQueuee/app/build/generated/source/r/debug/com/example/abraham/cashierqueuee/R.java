@@ -8,32 +8,721 @@
 package com.example.abraham.cashierqueuee;
 
 public final class R {
+    public static final class array {
+        public static final int androidcolors=0x7f070000;
+    }
     public static final class attr {
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+         */
+        public static final int actualImageScaleType=0x7f01000b;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int backgroundImage=0x7f01000c;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int fadeDuration=0x7f010000;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int failureImage=0x7f010006;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+         */
+        public static final int failureImageScaleType=0x7f010007;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int overlayImage=0x7f01000d;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int placeholderImage=0x7f010002;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+         */
+        public static final int placeholderImageScaleType=0x7f010003;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int pressedStateOverlayImage=0x7f01000e;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int progressBarAutoRotateInterval=0x7f01000a;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int progressBarImage=0x7f010008;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+         */
+        public static final int progressBarImageScaleType=0x7f010009;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int retryImage=0x7f010004;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+         */
+        public static final int retryImageScaleType=0x7f010005;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundAsCircle=0x7f01000f;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundBottomLeft=0x7f010014;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundBottomRight=0x7f010013;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundTopLeft=0x7f010011;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundTopRight=0x7f010012;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundWithOverlayColor=0x7f010015;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundedCornerRadius=0x7f010010;
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundingBorderColor=0x7f010017;
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int roundingBorderWidth=0x7f010016;
+        /** <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int viewAspectRatio=0x7f010001;
+    }
+    public static final class color {
+        public static final int blue=0x7f080000;
+        public static final int cashier_pink=0x7f080001;
+        public static final int darkblue=0x7f080002;
+        public static final int darkgreen=0x7f080003;
+        public static final int darkorange=0x7f080004;
+        public static final int darkpurple=0x7f080005;
+        public static final int darkred=0x7f080006;
+        public static final int green=0x7f080007;
+        public static final int orange=0x7f080008;
+        public static final int purple=0x7f080009;
+        public static final int red=0x7f08000a;
     }
     public static final class dimen {
-        public static final int activity_horizontal_margin=0x7f050000;
-        public static final int activity_vertical_margin=0x7f050001;
+        public static final int activity_horizontal_margin=0x7f060000;
+        public static final int activity_vertical_margin=0x7f060001;
+    }
+    public static final class drawable {
+        public static final int add_to_queue_default=0x7f020000;
+        public static final int add_to_queue_off=0x7f020001;
+        public static final int add_to_queue_off_old=0x7f020002;
+        public static final int add_to_queue_push=0x7f020003;
+        public static final int cancel_button=0x7f020004;
+        public static final int happy_face_icon=0x7f020005;
+        public static final int sad_face_icon=0x7f020006;
+        public static final int snooze_button_default=0x7f020007;
+        public static final int snooze_button_default_old=0x7f020008;
+        public static final int snooze_button_push=0x7f020009;
+        public static final int snooze_button_push_old=0x7f02000a;
+        public static final int youre_next_smile=0x7f02000b;
     }
     public static final class id {
-        public static final int action_settings=0x7f080000;
+        public static final int action_settings=0x7f0b0009;
+        public static final int center=0x7f0b0000;
+        public static final int centerCrop=0x7f0b0001;
+        public static final int centerInside=0x7f0b0002;
+        public static final int fitCenter=0x7f0b0003;
+        public static final int fitEnd=0x7f0b0004;
+        public static final int fitStart=0x7f0b0005;
+        public static final int fitXY=0x7f0b0006;
+        public static final int focusCrop=0x7f0b0007;
+        public static final int none=0x7f0b0008;
     }
     public static final class layout {
-        public static final int activity_login=0x7f030000;
+        public static final int activity_login=0x7f040000;
     }
     public static final class menu {
-        public static final int menu_login=0x7f070000;
+        public static final int menu_login=0x7f0a0000;
     }
     public static final class mipmap {
-        public static final int ic_launcher=0x7f020000;
+        public static final int ic_launcher=0x7f030000;
     }
     public static final class string {
-        public static final int action_settings=0x7f060000;
-        public static final int app_name=0x7f060001;
-        public static final int hello_world=0x7f060002;
+        public static final int action_settings=0x7f090000;
+        public static final int app_name=0x7f090001;
+        public static final int hello_world=0x7f090002;
     }
     public static final class style {
-        /**  Customize your theme here. 
-         */
-        public static final int AppTheme=0x7f040000;
+        public static final int AppTheme=0x7f050000;
+        public static final int header_text_style=0x7f050001;
+        public static final int normal_text_style=0x7f050002;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a GenericDraweeView.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #GenericDraweeView_actualImageScaleType app.com.example.android.queuee2:actualImageScaleType}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_backgroundImage app.com.example.android.queuee2:backgroundImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_fadeDuration app.com.example.android.queuee2:fadeDuration}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_failureImage app.com.example.android.queuee2:failureImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_failureImageScaleType app.com.example.android.queuee2:failureImageScaleType}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_overlayImage app.com.example.android.queuee2:overlayImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_placeholderImage app.com.example.android.queuee2:placeholderImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_placeholderImageScaleType app.com.example.android.queuee2:placeholderImageScaleType}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_pressedStateOverlayImage app.com.example.android.queuee2:pressedStateOverlayImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_progressBarAutoRotateInterval app.com.example.android.queuee2:progressBarAutoRotateInterval}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_progressBarImage app.com.example.android.queuee2:progressBarImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_progressBarImageScaleType app.com.example.android.queuee2:progressBarImageScaleType}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_retryImage app.com.example.android.queuee2:retryImage}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_retryImageScaleType app.com.example.android.queuee2:retryImageScaleType}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundAsCircle app.com.example.android.queuee2:roundAsCircle}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundBottomLeft app.com.example.android.queuee2:roundBottomLeft}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundBottomRight app.com.example.android.queuee2:roundBottomRight}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundTopLeft app.com.example.android.queuee2:roundTopLeft}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundTopRight app.com.example.android.queuee2:roundTopRight}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundWithOverlayColor app.com.example.android.queuee2:roundWithOverlayColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundedCornerRadius app.com.example.android.queuee2:roundedCornerRadius}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundingBorderColor app.com.example.android.queuee2:roundingBorderColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_roundingBorderWidth app.com.example.android.queuee2:roundingBorderWidth}</code></td><td></td></tr>
+           <tr><td><code>{@link #GenericDraweeView_viewAspectRatio app.com.example.android.queuee2:viewAspectRatio}</code></td><td></td></tr>
+           </table>
+           @see #GenericDraweeView_actualImageScaleType
+           @see #GenericDraweeView_backgroundImage
+           @see #GenericDraweeView_fadeDuration
+           @see #GenericDraweeView_failureImage
+           @see #GenericDraweeView_failureImageScaleType
+           @see #GenericDraweeView_overlayImage
+           @see #GenericDraweeView_placeholderImage
+           @see #GenericDraweeView_placeholderImageScaleType
+           @see #GenericDraweeView_pressedStateOverlayImage
+           @see #GenericDraweeView_progressBarAutoRotateInterval
+           @see #GenericDraweeView_progressBarImage
+           @see #GenericDraweeView_progressBarImageScaleType
+           @see #GenericDraweeView_retryImage
+           @see #GenericDraweeView_retryImageScaleType
+           @see #GenericDraweeView_roundAsCircle
+           @see #GenericDraweeView_roundBottomLeft
+           @see #GenericDraweeView_roundBottomRight
+           @see #GenericDraweeView_roundTopLeft
+           @see #GenericDraweeView_roundTopRight
+           @see #GenericDraweeView_roundWithOverlayColor
+           @see #GenericDraweeView_roundedCornerRadius
+           @see #GenericDraweeView_roundingBorderColor
+           @see #GenericDraweeView_roundingBorderWidth
+           @see #GenericDraweeView_viewAspectRatio
+         */
+        public static final int[] GenericDraweeView = {
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
+            0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007,
+            0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b,
+            0x7f01000c, 0x7f01000d, 0x7f01000e, 0x7f01000f,
+            0x7f010010, 0x7f010011, 0x7f010012, 0x7f010013,
+            0x7f010014, 0x7f010015, 0x7f010016, 0x7f010017
+        };
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#actualImageScaleType}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+          @attr name app.com.example.android.queuee2:actualImageScaleType
+        */
+        public static final int GenericDraweeView_actualImageScaleType = 11;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#backgroundImage}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name app.com.example.android.queuee2:backgroundImage
+        */
+        public static final int GenericDraweeView_backgroundImage = 12;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#fadeDuration}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:fadeDuration
+        */
+        public static final int GenericDraweeView_fadeDuration = 0;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#failureImage}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name app.com.example.android.queuee2:failureImage
+        */
+        public static final int GenericDraweeView_failureImage = 6;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#failureImageScaleType}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+          @attr name app.com.example.android.queuee2:failureImageScaleType
+        */
+        public static final int GenericDraweeView_failureImageScaleType = 7;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#overlayImage}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name app.com.example.android.queuee2:overlayImage
+        */
+        public static final int GenericDraweeView_overlayImage = 13;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#placeholderImage}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name app.com.example.android.queuee2:placeholderImage
+        */
+        public static final int GenericDraweeView_placeholderImage = 2;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#placeholderImageScaleType}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+          @attr name app.com.example.android.queuee2:placeholderImageScaleType
+        */
+        public static final int GenericDraweeView_placeholderImageScaleType = 3;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#pressedStateOverlayImage}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name app.com.example.android.queuee2:pressedStateOverlayImage
+        */
+        public static final int GenericDraweeView_pressedStateOverlayImage = 14;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#progressBarAutoRotateInterval}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:progressBarAutoRotateInterval
+        */
+        public static final int GenericDraweeView_progressBarAutoRotateInterval = 10;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#progressBarImage}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name app.com.example.android.queuee2:progressBarImage
+        */
+        public static final int GenericDraweeView_progressBarImage = 8;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#progressBarImageScaleType}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+          @attr name app.com.example.android.queuee2:progressBarImageScaleType
+        */
+        public static final int GenericDraweeView_progressBarImageScaleType = 9;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#retryImage}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name app.com.example.android.queuee2:retryImage
+        */
+        public static final int GenericDraweeView_retryImage = 4;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#retryImageScaleType}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>none</code></td><td>-1</td><td></td></tr>
+<tr><td><code>fitXY</code></td><td>0</td><td></td></tr>
+<tr><td><code>fitStart</code></td><td>1</td><td></td></tr>
+<tr><td><code>fitCenter</code></td><td>2</td><td></td></tr>
+<tr><td><code>fitEnd</code></td><td>3</td><td></td></tr>
+<tr><td><code>center</code></td><td>4</td><td></td></tr>
+<tr><td><code>centerInside</code></td><td>5</td><td></td></tr>
+<tr><td><code>centerCrop</code></td><td>6</td><td></td></tr>
+<tr><td><code>focusCrop</code></td><td>7</td><td></td></tr>
+</table>
+          @attr name app.com.example.android.queuee2:retryImageScaleType
+        */
+        public static final int GenericDraweeView_retryImageScaleType = 5;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundAsCircle}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundAsCircle
+        */
+        public static final int GenericDraweeView_roundAsCircle = 15;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundBottomLeft}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundBottomLeft
+        */
+        public static final int GenericDraweeView_roundBottomLeft = 20;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundBottomRight}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundBottomRight
+        */
+        public static final int GenericDraweeView_roundBottomRight = 19;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundTopLeft}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundTopLeft
+        */
+        public static final int GenericDraweeView_roundTopLeft = 17;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundTopRight}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundTopRight
+        */
+        public static final int GenericDraweeView_roundTopRight = 18;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundWithOverlayColor}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundWithOverlayColor
+        */
+        public static final int GenericDraweeView_roundWithOverlayColor = 21;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundedCornerRadius}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundedCornerRadius
+        */
+        public static final int GenericDraweeView_roundedCornerRadius = 16;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundingBorderColor}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundingBorderColor
+        */
+        public static final int GenericDraweeView_roundingBorderColor = 23;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#roundingBorderWidth}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:roundingBorderWidth
+        */
+        public static final int GenericDraweeView_roundingBorderWidth = 22;
+        /**
+          <p>This symbol is the offset where the {@link app.com.example.android.queuee2.R.attr#viewAspectRatio}
+          attribute's value can be found in the {@link #GenericDraweeView} array.
+
+
+          <p>Must be a floating point value, such as "<code>1.2</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name app.com.example.android.queuee2:viewAspectRatio
+        */
+        public static final int GenericDraweeView_viewAspectRatio = 1;
+    };
 }
