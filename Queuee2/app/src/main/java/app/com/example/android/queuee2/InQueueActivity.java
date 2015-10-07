@@ -29,6 +29,7 @@ public class InQueueActivity extends Activity {
     private Queue mQueue;
     private boolean mActivityVisible;
     private ImageButton mSnoozeButton;
+    private RelativeLayout mCancelRelativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class InQueueActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG,"onDestroy ---------------------------------------------------");
         super.onDestroy();
     }
 
@@ -110,8 +112,8 @@ public class InQueueActivity extends Activity {
             );
         });
 
-        RelativeLayout cancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
-        cancelRelativeLayout.setOnClickListener(z -> launchLeaveQueueDialog());
+        mCancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
+        mCancelRelativeLayout.setOnClickListener(z -> launchLeaveQueueDialog());
     }
 
     private void launchLeaveQueueDialog(){
@@ -150,11 +152,14 @@ public class InQueueActivity extends Activity {
 
     private void removeFromQueue(){
         mQueue.disconnectChangeListener();
+        TextView timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
+        timeEstimationTextView.setText("Leaving\nQueue...");
+        mCancelRelativeLayout.setEnabled(false);
+
         mQueue.removeUserFromQueue(this::onRemoveSuccess, this::onRemoveError);
     }
 
     private void onRemoveSuccess(Response response){
-        Toast.makeText(this, "Removed from queue", Toast.LENGTH_SHORT).show();
         finish();
     }
 

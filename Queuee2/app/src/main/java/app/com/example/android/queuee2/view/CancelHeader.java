@@ -1,4 +1,4 @@
-package app.com.example.android.queuee2;
+package app.com.example.android.queuee2.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import app.com.example.android.queuee2.R;
 import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
 
 /**

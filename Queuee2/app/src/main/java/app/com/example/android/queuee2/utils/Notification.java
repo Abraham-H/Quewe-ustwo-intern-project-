@@ -15,7 +15,7 @@ public class Notification {
 
     public static int ACTIVE_NOTIFICATION_ID = 0;
 
-    public static void youAreNextNotification(Activity fromActivity, Class toActivityClass, String queueId,String msg) {
+    public static void youAreNextNotification(Activity fromActivity, Class toActivityClass, String queueId, String msg) {
         final int NOTIFICATION_ID = 123;
         NotificationManager notificationManager;
         notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
