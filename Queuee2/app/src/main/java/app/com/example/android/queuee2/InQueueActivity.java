@@ -1,12 +1,14 @@
 package app.com.example.android.queuee2;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,95 +20,86 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
-import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
-import app.com.example.android.queuee2.utils.Notification;
+import app.com.example.android.queuee2.service.CheckQueueService;
 
 public class InQueueActivity extends Activity {
 
     private static String TAG = InQueueActivity.class.getSimpleName();
 
-    private Queue mQueue;
-    private boolean mActivityVisible;
     private ImageButton mSnoozeButton;
     private RelativeLayout mCancelRelativeLayout;
+    private Intent mServiceIntent;
+    private CheckQueueService mService;
+    private InQueueActivityListener mChangeListener;
+    boolean mBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_queue);
-        setQueue();
         setViews();
+        setListener();
+        launchService();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        mQueue.connectChangeListener();
-        mActivityVisible = true;
+        bindService();
     }
 
     @Override
     protected void onPause(){
         super.onPause();
-        mActivityVisible = false;
+        unbindService();
     }
 
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG,"onDestroy ---------------------------------------------------");
-        super.onDestroy();
+    private void launchService(){
+        mServiceIntent = new Intent(this, CheckQueueService.class);
+        startService(mServiceIntent);
+        bindService();
     }
 
-    private void setQueue(){
-        mQueue = new Queue();
-        mQueue.setChangeListener(getIntent().getStringExtra("queueId"), this::changeListener);
+    private void bindService() {
+        mServiceIntent = new Intent(this, CheckQueueService.class);
+        bindService(mServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void changeListener(){
-        mQueue.getUser(this::onGetUserInfo, this::onGetUserInfoError);
+    private void unbindService() {
+        unbindService(mConnection);
     }
 
-    private void onGetUserInfo(Response response) {
-        int position = ((Double) response.getData()).intValue() + 1;
+    private void stopService() {
+        stopService(mServiceIntent);
+    }
+
+    private void setListener(){
+        mChangeListener = this::changeListener;
+    }
+
+    private void changeListener(int position){
         if (position == 1) {
-            if(mActivityVisible)
-            {
-                launchYouAreNextActivity();
-            } else {
-                Notification.youAreNextNotification(this,
-                        YouAreNextActivity.class, mQueue.getQueueId(), "Please go to Cashier 4");
-            }
-        } else {
+            launchYouAreNextActivity();
+        }
+        else {
             TextView queuePositionTextView = (TextView)findViewById(R.id.queue_position_text_view);
             TextView timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
             queuePositionTextView.setText(String.valueOf(position-1));
             timeEstimationTextView.setText("Around\n" + String.valueOf((position-1) * 2) + " minutes");
         }
-        if (!mQueue.snoozeable()) {
-            mSnoozeButton.setEnabled(false);
-        } else {
-            mSnoozeButton.setEnabled(true);
-        }
+        mService.checkSnoozable(
+                () -> mSnoozeButton.setEnabled(true),
+                () -> mSnoozeButton.setEnabled(false)
+        );
     }
 
-    private void onGetUserInfoError(Throwable throwable) {
-        Response.Error error = Response.getError(throwable);
-        switch (error.getStatus()) {
-            case 404: // Not in the queue
-                toastError(error.getMessage());
-                break;
-            case 400: // Queue Not Found
-                toastError(error.getMessage());
-                break;
-        }
-    }
 
     private void setViews() {
         mSnoozeButton = (ImageButton) findViewById(R.id.snooze_button);
         mSnoozeButton.setOnClickListener(v -> {
             mSnoozeButton.setEnabled(false);
-            mQueue.snooze(
+            mService.getQueue().snooze(
                     (r) -> mSnoozeButton.setEnabled(true),
                     (e) -> toastError(e.getMessage())
             );
@@ -151,15 +144,16 @@ public class InQueueActivity extends Activity {
     }
 
     private void removeFromQueue(){
-        mQueue.disconnectChangeListener();
+        mService.disconnectChangeListener();
         TextView timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
         timeEstimationTextView.setText("Leaving\nQueue...");
         mCancelRelativeLayout.setEnabled(false);
 
-        mQueue.removeUserFromQueue(this::onRemoveSuccess, this::onRemoveError);
+        mService.getQueue().removeUserFromQueue(this::onRemoveSuccess, this::onRemoveError);
     }
 
     private void onRemoveSuccess(Response response){
+        stopService();
         finish();
     }
 
@@ -176,9 +170,10 @@ public class InQueueActivity extends Activity {
     }
 
     private void launchYouAreNextActivity(){
-        mQueue.disconnectChangeListener();
+        stopService();
+
         Intent intent = new Intent(this, YouAreNextActivity.class);
-        intent.putExtra("queueId", mQueue.getQueueId());
+        intent.putExtra("queueId", mService.getQueue().getQueueId());
         startActivity(intent);
     }
 
@@ -187,11 +182,31 @@ public class InQueueActivity extends Activity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_in_queue, menu);
-        return super.onCreateOptionsMenu(menu);
+    /**
+     * Class for interacting with the main interface of the service.
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // This is called when the connection with the service has been
+            // established, giving us the object we can use to
+            // interact with the service.  We are communicating with the
+            // service using a Messenger, so here we get a client-side
+            // representation of that from the raw IBinder object.
+            CheckQueueService.LocalBinder binder = (CheckQueueService.LocalBinder) service;
+            mService = binder.getService();
+            mService.setChangeListener(getIntent().getStringExtra("queueId"), mChangeListener);
+            mBound = true;
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            // This is called when the connection with the service has been
+            // unexpectedly disconnected -- that is, its process crashed.
+            mBound = false;
+        }
+    };
+
+    public interface InQueueActivityListener {
+        void run(int position);
     }
 
 }

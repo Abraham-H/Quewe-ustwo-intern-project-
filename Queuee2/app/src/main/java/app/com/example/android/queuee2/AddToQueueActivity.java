@@ -75,8 +75,6 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void addToQueueButtonTapped(View v) {
-//        mProgressDialog = new ProgressDialog(this);
-//        mProgressDialog.show();
         mAddToQueueImageButton.setEnabled(false);
         mBottomTextView.setText("Adding to Queue...");
         addUserToQueue();
@@ -89,7 +87,6 @@ public class AddToQueueActivity extends Activity {
     private void onUserAdded(Response response) {
         Log.d(TAG, response.getMessage());
         mQueue.disconnectChangeListener();
-        //// TODO: 10/5/2015  load
         launchActivity(InQueueActivity.class);
     }
 

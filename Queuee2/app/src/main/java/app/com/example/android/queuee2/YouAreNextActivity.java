@@ -27,7 +27,7 @@ public class YouAreNextActivity extends Activity {
         setContentView(R.layout.activity_you_are_next);
         setViews();
         setQueue();
-        removeNotification();
+        Notification.removeLastNotification(this);
     }
 
     @Override
@@ -40,13 +40,6 @@ public class YouAreNextActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mQueue.disconnectChangeListener();
-    }
-
-    private void removeNotification(){
-        if (Notification.ACTIVE_NOTIFICATION_ID != 0) {
-            NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(Notification.ACTIVE_NOTIFICATION_ID);
-        }
     }
 
     private void setQueue(){
