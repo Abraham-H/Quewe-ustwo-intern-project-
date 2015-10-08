@@ -36,6 +36,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="app.com.example.android.queuee2.StartQueue"
+            android:label="@string/title_activity_start_queue" >
+        </activity>
+        <activity
+            android:name="com.example.abraham.cashierqueuee.StartQueue"
+            android:label="@string/title_activity_start_queue" >
+        </activity>
+        <activity
+            android:name="com.example.abraham.cashierqueuee.StartQueueActivity"
+            android:label="@string/title_activity_start_queue" >
+        </activity>
+        <activity
+            android:name="com.example.abraham.cashierqueuee.QueueInProgressActivity"
+            android:label="@string/title_activity_queue_in_progress" >
+        </activity>
 
         <service
             android:name="com.estimote.sdk.service.BeaconService"

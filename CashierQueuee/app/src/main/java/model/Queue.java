@@ -61,6 +61,13 @@ public class Queue {
                 .subscribe(onSuccess, onFailure);
     }
 
+    public void popUserFromQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure){
+        mHerokuService.pop(mQueueId)
+                .compose(applySchedulers())
+                .map(Utils::jsonToResponse)
+                .subscribe(onSuccess, onFailure);
+    }
+
     public void getQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         mHerokuService.info(mQueueId)
                 .compose(applySchedulers())
@@ -88,13 +95,16 @@ public class Queue {
                         .observeOn(AndroidSchedulers.mainThread());
     }
 
-
     public String getUserId() {
         return sAndroidId;
     }
 
     public String getQueueId() {
         return mQueueId;
+    }
+
+    public void setQueueId(String queueId) {
+        mQueueId = queueId;
     }
 
 }

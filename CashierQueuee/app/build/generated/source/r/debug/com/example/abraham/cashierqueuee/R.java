@@ -265,22 +265,33 @@ containing a value of this type.
         public static final int youre_next_smile=0x7f02000b;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b0009;
+        public static final int action_settings=0x7f0b0010;
+        public static final int cashier_number=0x7f0b000e;
+        public static final int cashier_text_view=0x7f0b0009;
         public static final int center=0x7f0b0000;
         public static final int centerCrop=0x7f0b0001;
         public static final int centerInside=0x7f0b0002;
+        public static final int finish_queue_image_button=0x7f0b000c;
         public static final int fitCenter=0x7f0b0003;
         public static final int fitEnd=0x7f0b0004;
         public static final int fitStart=0x7f0b0005;
         public static final int fitXY=0x7f0b0006;
         public static final int focusCrop=0x7f0b0007;
+        public static final int next_image_button=0x7f0b000b;
         public static final int none=0x7f0b0008;
+        public static final int queue_in_progress_textview_cashier_number=0x7f0b000a;
+        public static final int start_queue_image_button=0x7f0b000f;
+        public static final int start_queue_text=0x7f0b000d;
     }
     public static final class layout {
         public static final int activity_login=0x7f040000;
+        public static final int activity_queue_in_progress=0x7f040001;
+        public static final int activity_start_queue=0x7f040002;
     }
     public static final class menu {
         public static final int menu_login=0x7f0a0000;
+        public static final int menu_queue_in_progress=0x7f0a0001;
+        public static final int menu_start_queue=0x7f0a0002;
     }
     public static final class mipmap {
         public static final int ic_launcher=0x7f030000;
@@ -288,7 +299,12 @@ containing a value of this type.
     public static final class string {
         public static final int action_settings=0x7f090000;
         public static final int app_name=0x7f090001;
-        public static final int hello_world=0x7f090002;
+        public static final int cashier_number=0x7f090002;
+        public static final int cashier_text=0x7f090003;
+        public static final int hello_world=0x7f090004;
+        public static final int start_queue_text=0x7f090005;
+        public static final int title_activity_queue_in_progress=0x7f090006;
+        public static final int title_activity_start_queue=0x7f090007;
     }
     public static final class style {
         public static final int AppTheme=0x7f050000;

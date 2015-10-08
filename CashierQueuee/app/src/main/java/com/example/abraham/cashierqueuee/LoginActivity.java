@@ -1,37 +1,97 @@
 package com.example.abraham.cashierqueuee;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.widget.Toast;
+
+import model.BeaconListener;
+import model.Queue;
 
 public class LoginActivity extends Activity {
+
+    private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final int REQUEST_ENABLE_BT = 1234;
+
+    private BeaconListener mBeaconListener;
+    private Queue mQueue;
+    private boolean mIsBluetoothDenied;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setInstanceVariables();
+        setViews();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    protected void onResume() {
+        super.onResume();
+        connectBeaconListener(mIsBluetoothDenied);
+        mQueue.connectChangeListener();
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disconnectBeaconListener();
+        mQueue.disconnectChangeListener();
+    }
+
+    private void setInstanceVariables() {
+        mBeaconListener = new BeaconListener(this);
+        mQueue = new Queue();
+        mIsBluetoothDenied = false;
+    }
+
+    private void setViews() {
+    }
+
+    private void connectBeaconListener(boolean isBluetoothDenied) {
+        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+    }
+
+    private void onBeaconFound(String queueId) {
+        mQueue.setQueueId(queueId);
+        mQueue.getQueue(r -> launchActivity(StartQueueActivity.class),
+                e -> launchActivity(StartQueueActivity.class));
+    }
+
+    private void onBeaconError(Throwable throwable) {
+        Log.d(TAG, "EstimoteBeacon error:" + throwable.getMessage());
+    }
+
+    private void disconnectBeaconListener() {
+        mBeaconListener.disconnect();
+    }
+
+    private void launchActivity(Class toActivityClass) {
+        Intent intent = new Intent(this, toActivityClass);
+        intent.putExtra("queueId", mQueue.getQueueId());
+        startActivity(intent);
+    }
+
+    private void toastError(String message) {
+        Log.d(TAG, "Error: " + message);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override // Bluetooth Dialogue callback
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Bluetooth turning on, please wait...", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                mIsBluetoothDenied = true;
+                Toast.makeText(this, "Bluetooth Denied", Toast.LENGTH_SHORT).show();
+            }
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

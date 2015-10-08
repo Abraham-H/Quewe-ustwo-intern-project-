@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context="com.example.abraham.cashierqueuee.StartQueueActivity">
+
+    <TextView
+        android:layout_width="132dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:layout_gravity="bottom|center_horizontal"
+        style="@style/header_text_style"
+        android:text="@string/cashier_text"
+        android:id="@+id/cashier_text_view"
+        />
+
+    <TextView
+        android:layout_width="172dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        style="@style/header_text_style"
+        android:text="@string/cashier_number"
+        android:gravity="top|center_horizontal"
+        android:id="@+id/cashier_number"
+        />
+
+    <ImageButton
+        android:layout_width="250sp"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:id="@+id/start_queue_image_button"
+        android:src="@drawable/add_to_queue_default"
+        android:background="@null"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        />
+
+    <TextView
+        android:layout_width="172dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:text="@string/start_queue_text"
+        android:gravity="top|center_horizontal"
+        android:id="@+id/start_queue_text"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
