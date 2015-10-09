@@ -122,11 +122,11 @@ public class CheckQueueService extends Service {
         Response.Error error = Response.getError(throwable);
         switch (error.getStatus()) {
             case 404: // Not in the queue
-//                throw new RuntimeException("NOT IN THE QUEUE");
-//                break;
+                stopSelf();
+                break;
             case 400: // Queue Not Found
-//                throw new RuntimeException("QUEUE NOT FOUND");
-//                break;
+                stopSelf();
+                break;
         }
     }
 

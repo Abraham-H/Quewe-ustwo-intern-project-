@@ -6,9 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
@@ -71,7 +69,6 @@ public class BeaconListener {
                 }
             }
         } else {
-            Toast.makeText(mActivity, "Device does not have Bluetooth Low Energy", Toast.LENGTH_LONG).show();
             mSubscriber.onError(new Exception("myException"));
         }
     }
@@ -90,14 +87,7 @@ public class BeaconListener {
     }
 
     private void connectToService() {
-        mBeaconManager.connect(() -> {
-            try {
-                mBeaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION);
-            } catch (RemoteException e) {
-                Toast.makeText(mActivity, "Cannot start ranging, something terrible happened", Toast.LENGTH_LONG).show();
-                Log.e(TAG, "Cannot start ranging", e);
-            }
-        });
+        mBeaconManager.connect(() -> mBeaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION));
     }
 
     private void findBeacon(){
@@ -105,7 +95,7 @@ public class BeaconListener {
                 (Region region, final List<Beacon> beacons) -> {
                     if (beacons.size() > 0) {
                         Beacon beacon = beacons.get(0);
-                        String uuid = beacon.getProximityUUID();
+                        String uuid = beacon.getProximityUUID().toString();
                         int minor = beacon.getMinor();
                         String queueId = null;
 
@@ -169,12 +159,7 @@ public class BeaconListener {
     }
 
     public void stopRanging() {
-        try {
-            mBeaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
-        } catch (RemoteException e) {
-            Toast.makeText(mActivity, "Cannot stop ranging, something terrible happened", Toast.LENGTH_LONG).show();
-            Log.e(TAG, "Cannot stop ranging", e);
-        }
+        mBeaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
     }
 
     public Observable<String> createObservable() {

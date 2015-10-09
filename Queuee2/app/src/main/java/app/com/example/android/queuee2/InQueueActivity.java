@@ -98,7 +98,6 @@ public class InQueueActivity extends Activity {
     private void setViews() {
         mSnoozeButton = (ImageButton) findViewById(R.id.snooze_button);
         mSnoozeButton.setOnClickListener(v -> {
-            mSnoozeButton.setEnabled(false);
             mService.getQueue().snooze(
                     (r) -> mSnoozeButton.setEnabled(true),
                     (e) -> toastError(e.getMessage())

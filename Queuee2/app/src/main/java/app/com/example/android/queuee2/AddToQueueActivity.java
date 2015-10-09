@@ -2,11 +2,14 @@ package app.com.example.android.queuee2;
 
 import app.com.example.android.queuee2.dialog.ProgressDialog;
 import app.com.example.android.queuee2.model.BeaconListener;
+import app.com.example.android.queuee2.model.Permissions;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +23,7 @@ public class AddToQueueActivity extends Activity {
 
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
@@ -38,6 +42,7 @@ public class AddToQueueActivity extends Activity {
         setContentView(R.layout.activity_add_to_queue);
         setInstanceVariables();
         setViews();
+        Permissions.askLocationPermission(this);
     }
 
     @Override
@@ -119,7 +124,7 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void changeListener(){
-        mQueue.getQueue(this::onGetQueue,this::onGetQueueError);
+        mQueue.getQueue(this::onGetQueue, this::onGetQueueError);
     }
 
     private void onGetQueue(Response response) {
@@ -176,6 +181,26 @@ public class AddToQueueActivity extends Activity {
             } else if (resultCode == RESULT_CANCELED) {
                 mIsBluetoothDenied = true;
                 Toast.makeText(this, "Bluetooth Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override // Android M Integration
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_COARSE_LOCATION: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "coarse location permission granted");
+                } else {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Functionality limited");
+                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setOnDismissListener(dialog ->
+                            Log.d(TAG, "onRequestPermissionResult() called with: " + "requestCode = [" + requestCode + "], permissions = [" + permissions + "], grantResults = [" + grantResults + "]"));
+                    builder.show();
+                }
+                return;
             }
         }
     }

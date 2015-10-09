@@ -3,6 +3,7 @@ package app.com.example.android.queuee2;
 import android.app.Application;
 import android.content.Context;
 
+import com.estimote.sdk.EstimoteSDK;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
 
@@ -19,6 +20,7 @@ public class MyApplication extends Application {
         MyApplication.context = getApplicationContext();
         Stetho.initializeWithDefaults(this);
         Fresco.initialize(context);
+        EstimoteSDK.enableDebugLogging(true);
     }
 
     public static Context getAppContext() {
