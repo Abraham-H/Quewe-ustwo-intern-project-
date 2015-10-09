@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import model.BeaconListener;
 import model.Queue;
+import model.Response;
 
 public class LoginActivity extends Activity {
 
@@ -60,8 +62,21 @@ public class LoginActivity extends Activity {
 
     private void onBeaconFound(String queueId) {
         mQueue.setQueueId(queueId);
-        mQueue.getQueue(r -> launchActivity(StartQueueActivity.class),
-                e -> launchActivity(StartQueueActivity.class));
+        mQueue.getQueue(this::onQueueExists, this::onQueueExistError);
+    }
+
+    private void onQueueExists(Response response) {
+        launchActivity(QueueInProgressActivity.class);
+    }
+
+    private void onQueueExistError(Throwable throwable) {
+        Response.Error error = Response.getError(throwable);
+        switch (error.getStatus()) {
+            case 404: // Queue Not Found
+                toastError(error.getMessage());
+                launchActivity(StartQueueActivity.class);
+                break;
+        }
     }
 
     private void onBeaconError(Throwable throwable) {

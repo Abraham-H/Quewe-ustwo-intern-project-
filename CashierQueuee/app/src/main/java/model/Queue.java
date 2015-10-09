@@ -47,6 +47,20 @@ public class Queue {
         }
     }
 
+    public void startQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+        mHerokuService.add(mQueueId)//
+                .compose(applySchedulers())
+                .map(Utils::jsonToResponse)
+                .subscribe(onSuccess, onFailure);
+    }
+
+    public void closeQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+        mHerokuService.remove(mQueueId)// TODO: 10/9/2015 Check mHerokuService code remove with 1 param if needed!!!!
+                .compose(applySchedulers())
+                .map(Utils::jsonToResponse)
+                .subscribe(onSuccess, onFailure);
+    }
+
     public void addUserToQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         mHerokuService.add(mQueueId, sAndroidId)
                 .compose(applySchedulers())

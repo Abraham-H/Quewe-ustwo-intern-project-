@@ -40,7 +40,7 @@ public class QueueInProgressActivity extends Activity {
         mFinishQueueImageButton.setOnClickListener(this::finishQueueImageButtonTapped);
     }
 
-    private void setQueue(){
+    private void setQueue() {
         mQueue = new Queue();
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
         Log.d("StartQueueActivity", mQueue.getQueueId());
@@ -48,13 +48,28 @@ public class QueueInProgressActivity extends Activity {
     }
 
     private void finishQueueImageButtonTapped(View view) {
+        closeQueue();
+    }
+
+    private void closeQueue() {
+        mQueue.closeQueue(this::onQueueClosed, this::onQueueClosedError);
+    }
+
+    private void onQueueClosed(Response response) {
+        Toast.makeText(getApplicationContext(), "Queue Closed!",
+                Toast.LENGTH_LONG).show();
+    }
+
+    private void onQueueClosedError(Throwable throwable) {
+        Toast.makeText(getApplicationContext(), "Queue not closed...ERRRRROR!",
+                Toast.LENGTH_LONG).show();
     }
 
     private void nextInQueueImageButtonTapped(View view) {
         popUserFromQueue();
     }
 
-    private void popUserFromQueue(){
+    private void popUserFromQueue() {
         mQueue.popUserFromQueue(this::onUserPopped, this::onUserPoppedError);
     }
 

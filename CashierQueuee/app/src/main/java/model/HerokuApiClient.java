@@ -55,6 +55,10 @@ public class HerokuApiClient {
                 @Path("queueId") String queueId,
                 @Path("userId") String userId
         );
+        @GET("/remove/{queueId}")
+        Observable<JsonElement> remove(
+                @Path("queueId") String queueId
+        );
         @GET("/snooze/{queueId}/{userId}")
         Observable<JsonElement> snooze(
                 @Path("queueId") String queueId,
