@@ -33,7 +33,7 @@ public class QueueInProgressActivity extends Activity {
     private void setViews() {
         mCashierNumberTextView = (TextView) findViewById(R.id.queue_in_progress_textview_cashier_number);
 
-        mNextInQueueImageButton = (ImageButton) findViewById(R.id.next_image_button);
+        mNextInQueueImageButton = (ImageButton) findViewById(R.id.activity_queue_in_progress_image_button_next);
         mNextInQueueImageButton.setOnClickListener(this::nextInQueueImageButtonTapped);
 
         mFinishQueueImageButton = (ImageButton) findViewById(R.id.finish_queue_image_button);

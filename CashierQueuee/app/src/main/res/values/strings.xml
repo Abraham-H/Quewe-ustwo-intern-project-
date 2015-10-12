@@ -2,6 +2,11 @@
     <string name="app_name">CashierQueuee</string>
     <string name="cashier_text">Cashier</string>
     <string name="cashier_number">#</string>
+
+    <string name="welcome_text">Welcome</string>
+    <string name="help_text">We help you to queue!</string>
+    <string name="scanning_text">Scanning</string>
+
     <string name="start_queue_text">Tap to start queue!</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

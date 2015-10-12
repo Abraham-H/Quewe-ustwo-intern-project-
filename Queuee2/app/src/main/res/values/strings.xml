@@ -15,4 +15,5 @@
     <string name="title_activity_thank_you">ThankYouActivity</string>
     <string name="title_activity_you_are_next">YouAreNextActivity</string>
     <string name="title_activity_test">Test</string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>
