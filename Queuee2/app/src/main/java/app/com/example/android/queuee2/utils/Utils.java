@@ -30,7 +30,15 @@ public class Utils {
     }
 
     public static int getQueueImageResource(String queueId) {
-        return R.drawable.logo_hm;
+        switch (queueId) {
+            case "queue1":
+                return R.drawable.logo_hm;
+            case "queue2":
+                return R.drawable.logo_lindex;
+            case "queue3":
+                return R.drawable.logo_monki;
+        }
+        return -1;
     }
 
     public static void setupActionBar(Activity activity, String queueId, ActionBar ab, Runnable cancelBarRunnable) {

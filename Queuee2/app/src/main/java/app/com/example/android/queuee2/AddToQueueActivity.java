@@ -31,8 +31,10 @@ public class AddToQueueActivity extends Activity {
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
 
-    private TextView mNumInQueueTextView;
-    private TextView mBottomTextView;
+    private TextView mSubtitleTextView;
+    private TextView mHeaderTextView;
+    private TextView mFooterTextView;
+    private ImageView mAddToQueueLogoImageView;
     private ImageButton mAddToQueueImageButton;
 
     ProgressDialog mProgressDialog;
@@ -73,9 +75,11 @@ public class AddToQueueActivity extends Activity {
 
     private void setViews() {
         Utils.setupActionBar( this, null, getActionBar(), null );
-        mNumInQueueTextView = (TextView) findViewById(R.id.num_in_queue_textview);
+        mSubtitleTextView = (TextView) findViewById(R.id.add_to_queue_subtitle_text_view);
         mAddToQueueImageButton = (ImageButton) findViewById(R.id.add_to_queue_image_button);
-        mBottomTextView = (TextView) findViewById(R.id.bottom_text_view);
+        mAddToQueueLogoImageView = (ImageView) findViewById(R.id.add_to_queue_activity_logo_image_view);
+        mFooterTextView = (TextView) findViewById(R.id.add_to_queue_footer_text_view);
+        mHeaderTextView = (TextView) findViewById(R.id.add_to_queue_header_text_view);
         mAddToQueueImageButton.setEnabled(false);
         mAddToQueueImageButton.setOnClickListener(this::addToQueueButtonTapped);
     }
@@ -83,7 +87,7 @@ public class AddToQueueActivity extends Activity {
 
     private void addToQueueButtonTapped(View v) {
         mAddToQueueImageButton.setEnabled(false);
-        mBottomTextView.setText("Adding to Queue...");
+        mFooterTextView.setText("Adding to Queue...");
         addUserToQueue();
     }
 
@@ -141,27 +145,26 @@ public class AddToQueueActivity extends Activity {
             }
         } else {
             String resultString = String.valueOf(queueData.size()) +
-                    (queueData.size() == 1 ? " person" : " people")
-                    + " in " + mQueue.getQueueId();
-            mNumInQueueTextView.setText(resultString);
+                    (queueData.size() == 1 ? " person" : " people") + " in queue";
+            mSubtitleTextView.setText(resultString);
             mAddToQueueImageButton.setEnabled(true);
-            mBottomTextView.setText("");
+            mFooterTextView.setText("Press to enter queue");
+            mAddToQueueLogoImageView.setImageResource(Utils.getQueueImageResource(mQueue.getQueueId()));
+            resetQueueIcon();
         }
-        setBodyImage(mQueue.getQueueId());
     }
 
-    private void setBodyImage(String queueId) {
-        if(queueId.equals("queue1") || queueId.equals("queue2") || queueId.equals("queue3")) {
-            ImageView actionBarImageView = (ImageView) findViewById(R.id.action_bar_centered_image);
-            actionBarImageView.setImageResource(R.drawable.logo_hm);
-        }
+    private void resetQueueIcon(){
+        mHeaderTextView.setVisibility(View.INVISIBLE);
+        mAddToQueueLogoImageView.setImageResource(Utils.getQueueImageResource(mQueue.getQueueId()));
     }
 
     private void onGetQueueError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
             mAddToQueueImageButton.setEnabled(false);
-            mNumInQueueTextView.setText(mQueue.getQueueId() + " Closed");
+            resetQueueIcon();
+            mSubtitleTextView.setText("queue closed");
         }
     }
 
