@@ -13,6 +13,7 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        getActionBar().hide();
 
         Thread splashThread = new Thread() {
             public void run() {
@@ -31,7 +32,7 @@ public class SplashActivity extends Activity {
 
     private void launchActivity(Class toActivityClass) {
         Intent intent = new Intent(this, toActivityClass);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 
