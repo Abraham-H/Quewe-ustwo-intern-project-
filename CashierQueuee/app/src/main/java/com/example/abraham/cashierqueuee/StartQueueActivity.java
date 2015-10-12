@@ -40,6 +40,17 @@ public class StartQueueActivity extends Activity {
     private void setQueue(){
         mQueue = new Queue();
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
+
+        mQueue = new Queue();
+        mQueue.setQueueId(getIntent().getStringExtra("queueId"));
+
+        if (getIntent().getStringExtra("queueId") == null){
+            mQueue.setQueueId("queue1");
+        }// TODO: 10/12/2015 Remove just for testing with no beacon. Also change launcher
+
+        Log.d("StartQueueActivity", mQueue.getQueueId());
+        mCashierNumberTextView.setText("People in " + mQueue.getQueueId());
+
         Log.d("StartQueueActivity", mQueue.getQueueId());
         mCashierNumberTextView.setText(mQueue.getQueueId());
     }

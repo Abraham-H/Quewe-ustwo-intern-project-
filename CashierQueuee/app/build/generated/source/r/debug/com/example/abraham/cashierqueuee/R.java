@@ -328,9 +328,10 @@ containing a value of this type.
     public static final class style {
         public static final int AppTheme=0x7f050000;
         public static final int header_text_style=0x7f050001;
-        public static final int in_queue_header_text_style=0x7f050003;
+        public static final int in_queue_header_text_style=0x7f050004;
         public static final int normal_text_style=0x7f050002;
-        public static final int start_queue_header_text_style=0x7f050004;
+        public static final int start_queue_header_text_style=0x7f050005;
+        public static final int whiteActionBarStyle=0x7f050003;
     }
     public static final class styleable {
         /** Attributes that can be used with a GenericDraweeView.
