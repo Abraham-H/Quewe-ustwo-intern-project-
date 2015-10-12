@@ -69,7 +69,7 @@ public class YouAreNextActivity extends Activity {
                 toThankYouActivity();
                 break;
             case 400: // Queue Not Found
-                toThankYouActivity();
+                backToAddToQueueActivity();
                 break;
         }
     }

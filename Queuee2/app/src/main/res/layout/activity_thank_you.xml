@@ -13,7 +13,7 @@
         android:layout_height="0sp"
         android:layout_weight="0.37"
         android:text="@string/thank_you_text"
-        style="@style/header_text_style"
+        style="@style/headerTextStyle"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ImageView

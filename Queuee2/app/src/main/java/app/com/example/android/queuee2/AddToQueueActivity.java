@@ -165,6 +165,7 @@ public class AddToQueueActivity extends Activity {
             mAddToQueueImageButton.setEnabled(false);
             resetQueueIcon();
             mSubtitleTextView.setText("queue closed");
+            mFooterTextView.setText("");
         }
     }
 

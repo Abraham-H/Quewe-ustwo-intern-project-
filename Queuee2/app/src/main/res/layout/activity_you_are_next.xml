@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.246666667"
         android:text="@string/you_are_next_text"
-        style="@style/header_text_style"
+        style="@style/headerTextStyle"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/youre_next_text_view" />
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.131"
-        style="@style/normal_text_style"
+        style="@style/subheaderTextStyle"
         android:textColor="@android:color/white"
         android:text="Show this screen to the cashier"
         android:layout_gravity="center"

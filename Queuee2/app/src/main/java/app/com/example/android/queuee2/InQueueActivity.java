@@ -5,10 +5,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +32,10 @@ public class InQueueActivity extends Activity {
     private static String TAG = InQueueActivity.class.getSimpleName();
 
     private ImageButton mSnoozeButton;
+    private TextView mHeaderTextView;
+    private TextView mSubheaderTextView;
+    private TextView mFooterTextView;
+
     private Intent mServiceIntent;
     private CheckQueueService mService;
     private InQueueActivityListener mChangeListener;
@@ -82,12 +89,25 @@ public class InQueueActivity extends Activity {
     private void changeListener(int position){
         if (position == 1) {
             launchYouAreNextActivity();
+        } else if (position == 2){
+            setAlmostNextStyle();
+        } else if (position == -1) {
+            finish();
         }
         else {
-            TextView queuePositionTextView = (TextView)findViewById(R.id.queue_position_text_view);
-            TextView timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
-            queuePositionTextView.setText(String.valueOf(position-1));
-            timeEstimationTextView.setText("Around\n" + String.valueOf((position-1) * 2) + " minutes");
+            String suffix = "";
+            if (position % 10 == 1 && position % 11 != 0) {
+                suffix = "st";
+            } else if (position % 10 == 2 && position % 12 != 0) {
+                suffix = "nd";
+            } else if (position % 10 == 3 && position % 13 != 0) {
+                suffix = "rd";
+            } else {
+                suffix = "th";
+            }
+            removeAlmostNextStyle();
+            mHeaderTextView.setText(String.valueOf(position) + suffix);
+            mSubheaderTextView.setText("About " + String.valueOf(position*2) + " min left");
         }
         mService.checkSnoozable(
                 () -> mSnoozeButton.setEnabled(true),
@@ -95,15 +115,62 @@ public class InQueueActivity extends Activity {
         );
     }
 
+    private void removeAlmostNextStyle(){
+        View activity = (View) findViewById(R.id.activityInQueueMainRelativeLayout);
+        View root = activity.getRootView();
+        root.setBackgroundColor(Color.WHITE);
+
+        mHeaderTextView.setTextSize(72.0f);
+
+        mHeaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
+        mSubheaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
+        mFooterTextView.setTextColor(getResources().getColor(R.color.happy_grey));
+
+        mSnoozeButton.setVisibility(View.INVISIBLE);
+        mSnoozeButton = (ImageButton) findViewById(R.id.in_queue_activity_snooze_button);
+        mSnoozeButton.setVisibility(View.VISIBLE);
+
+        setSnoozeButtonListener();
+    }
+
+    private void setAlmostNextStyle() {
+        View activity = (View) findViewById(R.id.activityInQueueMainRelativeLayout);
+        View root = activity.getRootView();
+        root.setBackgroundColor(getResources().getColor(R.color.happy_peach));
+
+        mHeaderTextView.setTextSize(42.0f);
+
+        mSubheaderTextView.setText("Soon it's your turn!");
+        mHeaderTextView.setText("Almost There!");
+
+        mHeaderTextView.setTextColor(Color.WHITE);
+        mSubheaderTextView.setTextColor(Color.WHITE);
+        mFooterTextView.setTextColor(Color.WHITE);
+
+        mSnoozeButton.setVisibility(View.INVISIBLE);
+        mSnoozeButton = (ImageButton) findViewById(R.id.in_queue_activity_almost_there_snooze_button);
+        mSnoozeButton.setVisibility(View.VISIBLE);
+
+        setSnoozeButtonListener();
+
+    }
+
     private void setViews() {
         Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
                 getActionBar(), this::launchLeaveQueueDialog);
-        mSnoozeButton = (ImageButton) findViewById(R.id.snooze_button);
+        mSnoozeButton = (ImageButton) findViewById(R.id.in_queue_activity_snooze_button);
+        mHeaderTextView = (TextView) findViewById(R.id.in_queue_activity_header_text_view);
+        mSubheaderTextView = (TextView) findViewById(R.id.in_queue_activity_subheader_text_view);
+        mFooterTextView = (TextView) findViewById(R.id.in_queue_activity_footer_text_view);
+        setSnoozeButtonListener();
+    }
+
+    private void setSnoozeButtonListener(){
         mSnoozeButton.setOnClickListener(v -> {
+            mSnoozeButton.setEnabled(false);
             mService.getQueue().snooze(
                     (r) -> mSnoozeButton.setEnabled(true),
-                    (e) -> toastError(e.getMessage())
-            );
+                    (e) -> toastError(e.getMessage()));
         });
     }
 
@@ -143,8 +210,7 @@ public class InQueueActivity extends Activity {
 
     private void removeFromQueue(){
         mService.disconnectChangeListener();
-        TextView timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
-        timeEstimationTextView.setText("Leaving\nQueue...");
+        mSubheaderTextView.setText("Leaving Queue...");
 
         mService.getQueue().removeUserFromQueue(this::onRemoveSuccess, this::onRemoveError);
     }

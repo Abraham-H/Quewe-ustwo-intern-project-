@@ -61,7 +61,6 @@
         android:layout_gravity="center_horizontal"
          />
 
-
     <ImageButton
         android:layout_weight="0.4"
         android:layout_width="match_parent"
