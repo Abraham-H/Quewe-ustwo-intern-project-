@@ -3,7 +3,6 @@
     <!-- From: file:/C:/Users/Abraham/Desktop/internship2015/internship2015/CashierQueuee/app/src/main/res/values-v21/styles.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar.Fullscreen">
-        <item name="android:windowBackground">@color/cashier_pink</item>
     </style>
     <style name="header_text_style">
         <item name="android:fontFamily">sans-serif-medium</item>

@@ -26,6 +26,16 @@
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
+    <style name="in_queue_header_text_style">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+
     <style name="normal_text_style">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">16sp</item>

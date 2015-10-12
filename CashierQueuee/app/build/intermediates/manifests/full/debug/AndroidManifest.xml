@@ -30,19 +30,6 @@
         <activity
             android:name="com.example.abraham.cashierqueuee.LoginActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="app.com.example.android.queuee2.StartQueue"
-            android:label="@string/title_activity_start_queue" >
-        </activity>
-        <activity
-            android:name="com.example.abraham.cashierqueuee.StartQueue"
-            android:label="@string/title_activity_start_queue" >
         </activity>
         <activity
             android:name="com.example.abraham.cashierqueuee.StartQueueActivity"
@@ -51,6 +38,11 @@
         <activity
             android:name="com.example.abraham.cashierqueuee.QueueInProgressActivity"
             android:label="@string/title_activity_queue_in_progress" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service

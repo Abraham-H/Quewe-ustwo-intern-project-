@@ -95,7 +95,6 @@ public class InQueueActivity extends Activity {
         );
     }
 
-
     private void setViews() {
         Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
                 getActionBar(), this::launchLeaveQueueDialog);

@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:2:1-41:12
+ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:2:1-32:12
 	package
 		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:3:5-48
 		INJECTED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml
@@ -19,7 +19,7 @@ MERGED from [com.estimote:sdk:0.9.1] C:\Users\Abraham\Desktop\internship2015\int
 	android:name
 		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:5:22-76
 application
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:8:5-39:19
+ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:8:5-30:19
 MERGED from [com.estimote:sdk:0.9.1] C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\build\intermediates\exploded-aar\com.estimote\sdk\0.9.1\AndroidManifest.xml:20:5-24:19
 MERGED from [com.android.support:support-v4:21.0.3] C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\AndroidManifest.xml:16:5-19
 MERGED from [com.android.support:support-v4:21.0.3] C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\AndroidManifest.xml:16:5-19
@@ -34,45 +34,33 @@ MERGED from [com.android.support:support-v4:21.0.3] C:\Users\Abraham\Desktop\int
 	android:name
 		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:9:9-38
 activity#com.example.abraham.cashierqueuee.LoginActivity
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:14:9-22:20
+ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:14:9-17:20
 	android:label
 		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:16:13-45
 	android:name
 		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:15:13-42
-intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:17:13-21:29
-action#android.intent.action.MAIN
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:18:17-69
-	android:name
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:18:25-66
-category#android.intent.category.LAUNCHER
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:20:17-77
-	android:name
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:20:27-74
-activity#app.com.example.android.queuee2.StartQueue
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:23:9-26:20
-	android:label
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:25:13-63
-	android:name
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:24:13-70
-activity#com.example.abraham.cashierqueuee.StartQueue
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:27:9-30:20
-	android:label
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:29:13-63
-	android:name
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:28:13-39
 activity#com.example.abraham.cashierqueuee.StartQueueActivity
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:31:9-34:20
+ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:18:9-21:20
 	android:label
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:33:13-63
+		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:20:13-63
 	android:name
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:32:13-47
+		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:19:13-47
 activity#com.example.abraham.cashierqueuee.QueueInProgressActivity
-ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:35:9-38:20
+ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:22:9-29:20
 	android:label
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:37:13-69
+		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:24:13-69
 	android:name
-		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:36:13-52
+		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:23:13-52
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:25:13-28:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:26:17-69
+	android:name
+		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:26:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:27:17-77
+	android:name
+		ADDED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml:27:27-74
 uses-sdk
 INJECTED from C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.estimote:sdk:0.9.1] C:\Users\Abraham\Desktop\internship2015\internship2015\CashierQueuee\app\build\intermediates\exploded-aar\com.estimote\sdk\0.9.1\AndroidManifest.xml:7:5-43

@@ -4,7 +4,6 @@
     <eat-comment/>
     <integer-array name="androidcolors">
         <item>@color/blue</item>
-	<item>@color/cashier_pink</item>
         <item>@color/purple</item>
         <item>@color/green</item>
         <item>@color/orange</item>
@@ -17,7 +16,6 @@
     </integer-array>
     <item name="black" type="color">#000</item>
     <item name="blue" type="color">#FF33B5E5</item>
-    <item name="cashier_pink" type="color">#FCC3B0</item>
     <item name="darkblue" type="color">#FF0099CC</item>
     <item name="darkgreen" type="color">#FF669900</item>
     <item name="darkorange" type="color">#FFFF8800</item>
@@ -40,18 +38,18 @@
     <string name="app_name">CashierQueuee</string>
     <string name="cashier_number">#</string>
     <string name="cashier_text">Cashier</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="help_text">We help you to queue!</string>
+    <string name="help_text">We help you to queue</string>
+    <string name="number_of_people_in_queue">#</string>
     <string name="scanning_text">Scanning</string>
     <string name="start_queue_text">Tap to start queue!</string>
     <string name="title_activity_queue_in_progress">QueueInProgressActivity</string>
     <string name="title_activity_start_queue">StartQueue</string>
-    <string name="welcome_text">Welcome</string>
+    <string name="welcome_text">Welcome!</string>
     <!-- From: file:/C:/Users/Abraham/Desktop/internship2015/internship2015/CashierQueuee/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="android:Theme.Material.Light">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/cashier_pink</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
     <style name="header_text_style">
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -59,6 +57,14 @@
         <item name="android:textSize">34sp</item>
         <item name="android:rotation">-10</item>
         <item name="android:textColor">#000000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+    <style name="in_queue_header_text_style">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:textColor">#000</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>

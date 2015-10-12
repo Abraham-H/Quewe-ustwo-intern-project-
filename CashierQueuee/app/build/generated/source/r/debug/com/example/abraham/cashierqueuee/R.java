@@ -236,18 +236,17 @@ containing a value of this type.
     public static final class color {
         public static final int black=0x7f080000;
         public static final int blue=0x7f080001;
-        public static final int cashier_pink=0x7f080002;
-        public static final int darkblue=0x7f080003;
-        public static final int darkgreen=0x7f080004;
-        public static final int darkorange=0x7f080005;
-        public static final int darkpurple=0x7f080006;
-        public static final int darkred=0x7f080007;
-        public static final int green=0x7f080008;
-        public static final int orange=0x7f080009;
-        public static final int purple=0x7f08000a;
-        public static final int red=0x7f08000b;
-        public static final int start_queue_red=0x7f08000c;
-        public static final int white=0x7f08000d;
+        public static final int darkblue=0x7f080002;
+        public static final int darkgreen=0x7f080003;
+        public static final int darkorange=0x7f080004;
+        public static final int darkpurple=0x7f080005;
+        public static final int darkred=0x7f080006;
+        public static final int green=0x7f080007;
+        public static final int orange=0x7f080008;
+        public static final int purple=0x7f080009;
+        public static final int red=0x7f08000a;
+        public static final int start_queue_red=0x7f08000b;
+        public static final int white=0x7f08000c;
     }
     public static final class dimen {
         public static final int activity_horizontal_margin=0x7f060000;
@@ -281,21 +280,22 @@ containing a value of this type.
         public static final int youre_next_smile=0x7f020018;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b0010;
-        public static final int activity_queue_in_progress_image_button_next=0x7f0b000e;
+        public static final int action_settings=0x7f0b0011;
+        public static final int activity_queue_in_progress_image_button_next=0x7f0b000f;
+        public static final int activity_queue_in_progress_textview_number_in_queue=0x7f0b000d;
         public static final int cashier_number=0x7f0b000a;
         public static final int cashier_text_view=0x7f0b0009;
         public static final int center=0x7f0b0000;
         public static final int centerCrop=0x7f0b0001;
         public static final int centerInside=0x7f0b0002;
-        public static final int finish_queue_image_button=0x7f0b000f;
+        public static final int finish_queue_image_button=0x7f0b0010;
         public static final int fitCenter=0x7f0b0003;
         public static final int fitEnd=0x7f0b0004;
         public static final int fitStart=0x7f0b0005;
         public static final int fitXY=0x7f0b0006;
         public static final int focusCrop=0x7f0b0007;
         public static final int none=0x7f0b0008;
-        public static final int queue_in_progress_textview_cashier_number=0x7f0b000d;
+        public static final int queue_in_progress_textview_cashier_number=0x7f0b000e;
         public static final int start_queue_image_button=0x7f0b000b;
         public static final int start_queue_text=0x7f0b000c;
     }
@@ -317,8 +317,8 @@ containing a value of this type.
         public static final int app_name=0x7f090001;
         public static final int cashier_number=0x7f090002;
         public static final int cashier_text=0x7f090003;
-        public static final int hello_world=0x7f090004;
-        public static final int help_text=0x7f090005;
+        public static final int help_text=0x7f090004;
+        public static final int number_of_people_in_queue=0x7f090005;
         public static final int scanning_text=0x7f090006;
         public static final int start_queue_text=0x7f090007;
         public static final int title_activity_queue_in_progress=0x7f090008;
@@ -328,8 +328,9 @@ containing a value of this type.
     public static final class style {
         public static final int AppTheme=0x7f050000;
         public static final int header_text_style=0x7f050001;
+        public static final int in_queue_header_text_style=0x7f050003;
         public static final int normal_text_style=0x7f050002;
-        public static final int start_queue_header_text_style=0x7f050003;
+        public static final int start_queue_header_text_style=0x7f050004;
     }
     public static final class styleable {
         /** Attributes that can be used with a GenericDraweeView.
