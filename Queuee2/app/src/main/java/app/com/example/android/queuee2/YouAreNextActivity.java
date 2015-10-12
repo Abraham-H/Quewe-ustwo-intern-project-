@@ -1,20 +1,26 @@
 package app.com.example.android.queuee2;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.utils.Notification;
+import app.com.example.android.queuee2.utils.Utils;
 
 public class YouAreNextActivity extends Activity {
 
@@ -25,8 +31,8 @@ public class YouAreNextActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_you_are_next);
-        setViews();
         setQueue();
+        setViews();
         Notification.removeLastNotification(this);
     }
 
@@ -44,8 +50,7 @@ public class YouAreNextActivity extends Activity {
 
     private void setQueue(){
         mQueue = new Queue();
-        // TODO: 10/5/15 get rid of this
-        String queueId = getIntent().getStringExtra("queueId") == null ? "queue2" : getIntent().getStringExtra("queueId");
+        String queueId = getIntent().getStringExtra("queueId");
         mQueue.setChangeListener(queueId, this::changeListener);
     }
 
@@ -70,6 +75,39 @@ public class YouAreNextActivity extends Activity {
     }
 
     private void setViews() {
+        Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
+                getActionBar(), this::launchLeaveQueueDialog);
+    }
+
+    private void launchLeaveQueueDialog(){
+        new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue);
+    }
+
+    private void onYesLeaveQueue(){
+        removeFromQueue();
+    }
+
+    private void onNoLeaveQueue(){}
+
+
+    private void removeFromQueue(){
+        mQueue.removeUserFromQueue(this::onRemoveSuccess,this::onRemoveError);
+    }
+
+    private void onRemoveSuccess(Response response){
+        backToAddToQueueActivity();
+    }
+
+    private void onRemoveError(Throwable throwable) {
+        Response.Error error = Response.getError(throwable);
+        switch (error.getStatus()) {
+            case 404: // Not in the queue
+                toastError(error.getMessage());
+                break;
+            case 400: // Queue Not Found
+                toastError(error.getMessage());
+                break;
+        }
     }
 
     public void backToAddToQueueActivity() {

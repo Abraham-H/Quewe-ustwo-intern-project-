@@ -5,6 +5,7 @@ import app.com.example.android.queuee2.model.BeaconListener;
 import app.com.example.android.queuee2.model.Permissions;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
+import app.com.example.android.queuee2.utils.Utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +37,6 @@ public class AddToQueueActivity extends Activity {
 
     ProgressDialog mProgressDialog;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,6 @@ public class AddToQueueActivity extends Activity {
         setViews();
         Permissions.askLocationPermission(this);
     }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -72,12 +72,14 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void setViews() {
+        Utils.setupActionBar( this, null, getActionBar(), null );
         mNumInQueueTextView = (TextView) findViewById(R.id.num_in_queue_textview);
         mAddToQueueImageButton = (ImageButton) findViewById(R.id.add_to_queue_image_button);
         mBottomTextView = (TextView) findViewById(R.id.bottom_text_view);
         mAddToQueueImageButton.setEnabled(false);
         mAddToQueueImageButton.setOnClickListener(this::addToQueueButtonTapped);
     }
+
 
     private void addToQueueButtonTapped(View v) {
         mAddToQueueImageButton.setEnabled(false);
@@ -144,6 +146,14 @@ public class AddToQueueActivity extends Activity {
             mNumInQueueTextView.setText(resultString);
             mAddToQueueImageButton.setEnabled(true);
             mBottomTextView.setText("");
+        }
+        setBodyImage(mQueue.getQueueId());
+    }
+
+    private void setBodyImage(String queueId) {
+        if(queueId.equals("queue1") || queueId.equals("queue2") || queueId.equals("queue3")) {
+            ImageView actionBarImageView = (ImageView) findViewById(R.id.action_bar_centered_image);
+            actionBarImageView.setImageResource(R.drawable.logo_hm);
         }
     }
 

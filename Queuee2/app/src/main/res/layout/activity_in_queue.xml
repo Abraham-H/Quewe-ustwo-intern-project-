@@ -7,17 +7,6 @@
     tools:context="app.com.example.android.queuee2.InQueueActivity"
     android:weightSum="1">
 
-    <app.com.example.android.queuee2.view.CancelHeader
-        android:id="@+id/cancel_header"
-        android:orientation="vertical"
-        android:background="#FFFFFF"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.123333333"
-        >
-    </app.com.example.android.queuee2.view.CancelHeader>
-
-
     <TextView
         android:layout_width="172dp"
         android:layout_height="0dp"

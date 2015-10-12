@@ -22,13 +22,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
 import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.service.CheckQueueService;
+import app.com.example.android.queuee2.utils.Utils;
 
 public class InQueueActivity extends Activity {
 
     private static String TAG = InQueueActivity.class.getSimpleName();
 
     private ImageButton mSnoozeButton;
-    private RelativeLayout mCancelRelativeLayout;
     private Intent mServiceIntent;
     private CheckQueueService mService;
     private InQueueActivityListener mChangeListener;
@@ -42,6 +42,7 @@ public class InQueueActivity extends Activity {
         setListener();
         launchService();
     }
+
 
     @Override
     protected void onResume(){
@@ -96,6 +97,8 @@ public class InQueueActivity extends Activity {
 
 
     private void setViews() {
+        Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
+                getActionBar(), this::launchLeaveQueueDialog);
         mSnoozeButton = (ImageButton) findViewById(R.id.snooze_button);
         mSnoozeButton.setOnClickListener(v -> {
             mService.getQueue().snooze(
@@ -103,9 +106,6 @@ public class InQueueActivity extends Activity {
                     (e) -> toastError(e.getMessage())
             );
         });
-
-        mCancelRelativeLayout = (RelativeLayout) findViewById(R.id.cancelHeaderRelativeLayout);
-        mCancelRelativeLayout.setOnClickListener(z -> launchLeaveQueueDialog());
     }
 
     private void launchLeaveQueueDialog(){
@@ -146,7 +146,6 @@ public class InQueueActivity extends Activity {
         mService.disconnectChangeListener();
         TextView timeEstimationTextView = (TextView)findViewById(R.id.time_estimation_text_view);
         timeEstimationTextView.setText("Leaving\nQueue...");
-        mCancelRelativeLayout.setEnabled(false);
 
         mService.getQueue().removeUserFromQueue(this::onRemoveSuccess, this::onRemoveError);
     }

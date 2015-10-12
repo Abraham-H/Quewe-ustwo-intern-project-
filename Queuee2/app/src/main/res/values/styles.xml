@@ -1,8 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
+    <style name="AppTheme" parent="android:Theme.Material.Light">
         <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:actionBarStyle">@style/whiteActionBarStyle</item>
+    </style>
+
+    <style name="whiteActionBarStyle" parent="@android:style/Widget.Material.Light.ActionBar" >
+        <item name="android:background">@android:color/white</item>
+        <item name="android:displayOptions">showCustom</item>
     </style>
 
     <style name="header_text_style">
@@ -23,4 +31,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <color name="happy_blue">#27b5c3</color>
+
 </resources>
+
