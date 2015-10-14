@@ -1,5 +1,6 @@
 package app.com.example.android.queuee2;
 
+import app.com.example.android.queuee2.animation.CustomAnimationController;
 import app.com.example.android.queuee2.dialog.ProgressDialog;
 import app.com.example.android.queuee2.model.BeaconListener;
 import app.com.example.android.queuee2.model.Permissions;
@@ -13,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -21,6 +24,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 
 import java.util.ArrayList;
 
@@ -39,6 +49,7 @@ public class AddToQueueActivity extends Activity {
     private TextView mFooterTextView;
     private ImageView mAddToQueueLogoImageView;
     private ImageButton mAddToQueueImageButton;
+    private SimpleDraweeView mDraweeView;
 
     ProgressDialog mProgressDialog;
 
@@ -85,6 +96,21 @@ public class AddToQueueActivity extends Activity {
         mHeaderTextView = (TextView) findViewById(R.id.add_to_queue_header_text_view);
         mAddToQueueImageButton.setEnabled(false);
         mAddToQueueImageButton.setOnClickListener(this::addToQueueButtonTapped);
+        runLoadingAnimation();
+    }
+
+    private void runLoadingAnimation(){
+        // TODO: 10/14/15 custom drawee controller and custom URI
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+                .path(String.valueOf(R.drawable.animation_loading))
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setControllerListener(new CustomAnimationController())
+                .build();
+        mDraweeView = (SimpleDraweeView) findViewById(R.id.add_to_queue_activity_loading_animation);
+        mDraweeView.setController(controller);
     }
 
 
@@ -151,14 +177,20 @@ public class AddToQueueActivity extends Activity {
                 launchActivity(InQueueActivity.class);
             }
         } else {
-            String resultString = String.valueOf(queueData.size()) +
-                    (queueData.size() == 1 ? " person" : " people") + " in queue";
-            mSubtitleTextView.setText(resultString);
-            mAddToQueueImageButton.setEnabled(true);
-            mFooterTextView.setText("Press to enter queue");
-            mAddToQueueLogoImageView.setImageResource(Utils.getQueueImageResource(mQueue.getQueueId()));
-            resetQueueIcon();
+            updateViews(queueData);
         }
+    }
+
+    private void updateViews(ArrayList<String> queueData){
+        if (!mAddToQueueLogoImageView.isEnabled()) {
+            mAddToQueueImageButton.setEnabled(true);
+        }
+        String resultString = String.valueOf(queueData.size()) +
+                (queueData.size() == 1 ? " person" : " people") + " in queue";
+        mSubtitleTextView.setText(resultString);
+        mFooterTextView.setText("Press to enter queue");
+        mAddToQueueLogoImageView.setImageResource(Utils.getQueueImageResource(mQueue.getQueueId()));
+        resetQueueIcon();
     }
 
     private void resetQueueIcon(){

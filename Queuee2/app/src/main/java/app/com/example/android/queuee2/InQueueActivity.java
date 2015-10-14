@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -168,6 +167,7 @@ public class InQueueActivity extends Activity {
         mSubheaderTextView = (TextView) findViewById(R.id.in_queue_activity_subheader_text_view);
         mFooterTextView = (TextView) findViewById(R.id.in_queue_activity_footer_text_view);
         setSnoozeButtonListener();
+        runLoadingAnimation();
     }
 
     private void setSnoozeButtonListener(){
@@ -189,13 +189,7 @@ public class InQueueActivity extends Activity {
 
     private void onNoLeaveQueue(){}
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        prepareAndRunAnimation();
-        super.onWindowFocusChanged(hasFocus);
-    }
-
-    private void prepareAndRunAnimation(){
+    private void runLoadingAnimation(){
         Uri uri = new Uri.Builder()
                 .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
                 .path(String.valueOf(R.drawable.waiting_animation))

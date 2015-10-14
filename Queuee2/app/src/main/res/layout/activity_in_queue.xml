@@ -15,8 +15,8 @@
         style="@style/headerTextStyle"
         android:gravity="bottom|center_horizontal"
         android:textSize="70sp"
-        android:text="Xth"
         android:id="@+id/in_queue_activity_header_text_view"/>
+    <!--android:text="Xth"-->
 
     <TextView
         android:layout_weight="0.07"
@@ -25,7 +25,7 @@
         android:gravity="top|center_horizontal"
         style="@style/subheaderTextStyle"
         android:id="@+id/in_queue_activity_subheader_text_view"
-        android:text="About x min left"
+        android:text="finding your position in the queue..."
         />
 
     <FrameLayout

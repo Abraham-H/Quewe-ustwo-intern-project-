@@ -2,47 +2,44 @@ package app.com.example.android.queuee2.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import app.com.example.android.queuee2.R;
+import app.com.example.android.queuee2.utils.Utils;
 
 /**
  * Created by Abraham on 10/2/2015.
  */
 public class LeaveQueueConfirmationDialog extends Dialog {
 
-    Runnable mYesClickListener;
-    Runnable mNoClickListener;
-
     public LeaveQueueConfirmationDialog(Context context, Runnable yesClickListener, Runnable noClickListener) {
         super(context);
-        mYesClickListener = yesClickListener;
-        mNoClickListener = noClickListener;
-        setDialogComponents();
+        setDialogComponents(yesClickListener,noClickListener);
         show();
     }
 
-    private void setDialogComponents() {
+    private void setDialogComponents(Runnable yes, Runnable no) {
         setContentView(R.layout.leave_queue_confirmation_pop_up_dialog);
-        TextView popUpText = (TextView) findViewById(R.id.popUpDialogTextView);
-        popUpText.setText(R.string.leave_queue_confirmation_dialog);
-        ImageView popUpImageView = (ImageView) findViewById(R.id.popUpDialogImage);
-        popUpImageView.setImageResource(R.drawable.sad_face_icon);
 
-        Button yesPopUpButton = (Button) findViewById(R.id.dialogButtonOK);
+        ImageView leaveQueueImageView = (ImageView) findViewById(R.id.leave_queue_confirmation_dialog_image);
+
+        String queueId = PreferenceManager.getDefaultSharedPreferences(getContext())
+                .getString("queueId", "Shared Preferences Error");
+        leaveQueueImageView.setImageResource(Utils.getQueueImageResource(queueId));
+
+
+        Button yesPopUpButton = (Button) findViewById(R.id.leave_queue_confirmation_dialog_yes);
         yesPopUpButton.setOnClickListener(z -> {
-                    // TODO: 10/2/2015 Actually remove user from queue
-                    mYesClickListener.run();
+                    yes.run();
                     dismiss();
                 }
         );
 
-        Button noPopUpButton = (Button) findViewById(R.id.dialogButtonNo);
+        Button noPopUpButton = (Button) findViewById(R.id.leave_queue_confirmation_dialog_no);
         noPopUpButton.setOnClickListener(z -> {
-                    mNoClickListener.run();
+                    no.run();
                     dismiss();
                 }
         );
