@@ -6,6 +6,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:actionBarStyle">@style/whiteActionBarStyle</item>
+        <item name="android:screenOrientation">portrait</item>
     </style>
 
     <style name="whiteActionBarStyle" parent="@android:style/Widget.Material.Light.ActionBar" >

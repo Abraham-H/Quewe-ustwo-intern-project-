@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,10 @@ import android.widget.Toolbar;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import app.com.example.android.queuee2.R;
 import app.com.example.android.queuee2.model.Response;
@@ -67,5 +72,10 @@ public class Utils {
             Toolbar toolbar = (Toolbar) v.getParent();
             toolbar.setContentInsetsAbsolute(0, 0);
         }
+    }
+
+    public static void afterDelayRun(int time, Runnable callback) {
+        final Handler handler = new Handler();
+        handler.postDelayed(callback,time * 1000);
     }
 }
