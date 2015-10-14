@@ -6,14 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,7 +95,9 @@ public class InQueueActivity extends Activity {
             finish();
         }
         else {
-            String suffix = "";
+            removeAlmostNextStyle();
+
+            String suffix;
             if (position % 10 == 1 && position % 11 != 0) {
                 suffix = "st";
             } else if (position % 10 == 2 && position % 12 != 0) {
@@ -105,9 +107,11 @@ public class InQueueActivity extends Activity {
             } else {
                 suffix = "th";
             }
-            removeAlmostNextStyle();
-            mHeaderTextView.setText(String.valueOf(position) + suffix);
-            mSubheaderTextView.setText("About " + String.valueOf(position*2) + " min left");
+            String headerText = String.valueOf(position) + suffix;
+            String subheaderText = "About " + String.valueOf(position*2) + " min left";
+
+            mHeaderTextView.setText(headerText);
+            mSubheaderTextView.setText(subheaderText);
         }
         mService.checkSnoozable(
                 () -> mSnoozeButton.setEnabled(true),
@@ -116,13 +120,13 @@ public class InQueueActivity extends Activity {
     }
 
     private void removeAlmostNextStyle(){
-        View activity = (View) findViewById(R.id.activityInQueueMainRelativeLayout);
+        View activity = findViewById(R.id.activityInQueueMainRelativeLayout);
         View root = activity.getRootView();
         root.setBackgroundColor(Color.WHITE);
 
-        mHeaderTextView.setTextSize(72.0f);
-
+        mHeaderTextView.setTextSize(70.0f);
         mHeaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
+
         mSubheaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
         mFooterTextView.setTextColor(getResources().getColor(R.color.happy_grey));
 
@@ -134,7 +138,7 @@ public class InQueueActivity extends Activity {
     }
 
     private void setAlmostNextStyle() {
-        View activity = (View) findViewById(R.id.activityInQueueMainRelativeLayout);
+        View activity = findViewById(R.id.activityInQueueMainRelativeLayout);
         View root = activity.getRootView();
         root.setBackgroundColor(getResources().getColor(R.color.happy_peach));
 
@@ -143,9 +147,9 @@ public class InQueueActivity extends Activity {
         mSubheaderTextView.setText("Soon it's your turn!");
         mHeaderTextView.setText("Almost There!");
 
-        mHeaderTextView.setTextColor(Color.WHITE);
         mSubheaderTextView.setTextColor(Color.WHITE);
         mFooterTextView.setTextColor(Color.WHITE);
+        mHeaderTextView.setTextColor(Color.WHITE);
 
         mSnoozeButton.setVisibility(View.INVISIBLE);
         mSnoozeButton = (ImageButton) findViewById(R.id.in_queue_activity_almost_there_snooze_button);
@@ -156,8 +160,9 @@ public class InQueueActivity extends Activity {
     }
 
     private void setViews() {
-        Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
-                getActionBar(), this::launchLeaveQueueDialog);
+        String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getString("queueId", "Shared Preferences Error");
+        Utils.setupActionBar(this, queueId, getActionBar(), this::launchLeaveQueueDialog);
         mSnoozeButton = (ImageButton) findViewById(R.id.in_queue_activity_snooze_button);
         mHeaderTextView = (TextView) findViewById(R.id.in_queue_activity_header_text_view);
         mSubheaderTextView = (TextView) findViewById(R.id.in_queue_activity_subheader_text_view);
@@ -236,7 +241,6 @@ public class InQueueActivity extends Activity {
         stopService();
 
         Intent intent = new Intent(this, YouAreNextActivity.class);
-        intent.putExtra("queueId", mService.getQueue().getQueueId());
         startActivity(intent);
     }
 
@@ -257,7 +261,9 @@ public class InQueueActivity extends Activity {
             // representation of that from the raw IBinder object.
             CheckQueueService.LocalBinder binder = (CheckQueueService.LocalBinder) service;
             mService = binder.getService();
-            mService.setChangeListener(getIntent().getStringExtra("queueId"), mChangeListener);
+            String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                    .getString("queueId", "Shared Preferences Error");
+            mService.setChangeListener(queueId, mChangeListener);
             mBound = true;
         }
 

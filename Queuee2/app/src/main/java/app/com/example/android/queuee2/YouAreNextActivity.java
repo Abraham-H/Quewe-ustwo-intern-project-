@@ -1,20 +1,11 @@
 package app.com.example.android.queuee2;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
 import app.com.example.android.queuee2.model.Queue;
@@ -49,8 +40,9 @@ public class YouAreNextActivity extends Activity {
     }
 
     private void setQueue(){
+        String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getString("queueId", "Shared Preferences Error");
         mQueue = new Queue();
-        String queueId = getIntent().getStringExtra("queueId");
         mQueue.setChangeListener(queueId, this::changeListener);
     }
 
@@ -75,7 +67,8 @@ public class YouAreNextActivity extends Activity {
     }
 
     private void setViews() {
-        Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
+        String queueId = getIntent().getStringExtra("queueId");
+        Utils.setupActionBar(this, queueId,
                 getActionBar(), this::launchLeaveQueueDialog);
     }
 

@@ -3,6 +3,7 @@ package app.com.example.android.queuee2;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.ImageButton;
 
 import app.com.example.android.queuee2.utils.Utils;
@@ -19,9 +20,11 @@ public class ThankYouActivity extends Activity {
     }
 
     private void setViews(){
-        Utils.setupActionBar( this, getIntent().getStringExtra("queueId"), getActionBar(), null );
-        ImageButton backToStartButton = (ImageButton) findViewById(R.id.back_to_start_button);
-        backToStartButton.setOnClickListener((v) -> {
+        String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getString("queueId", "Shared Preferences Error");
+        Utils.setupActionBar( this, queueId, getActionBar(), null );
+        ImageButton queueAgainButton = (ImageButton) findViewById(R.id.thank_you_activity_queue_again_button);
+        queueAgainButton.setOnClickListener((v) -> {
             Intent intent = new Intent(this, AddToQueueActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

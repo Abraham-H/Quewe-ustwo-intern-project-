@@ -4,16 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import app.com.example.android.queuee2.InQueueActivity;
-import app.com.example.android.queuee2.R;
 import app.com.example.android.queuee2.YouAreNextActivity;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
@@ -21,13 +17,11 @@ import app.com.example.android.queuee2.utils.Notification;
 
 public class CheckQueueService extends Service {
 
-    int mStartMode;       // indicates how to behave if the service is killed
     private final IBinder mBinder = new LocalBinder();      // interface for clients that bind
     boolean mAllowRebind; // indicates whether onRebind should be used
     private static final String TAG = CheckQueueService.class.getSimpleName();
-    private Queue mQueue;
+    private static Queue sQueue;
 
-    private ScheduledExecutorService mScheduledExecutorService;
     private boolean isBound;
     private InQueueActivity.InQueueActivityListener mBoundChangeListener;
 
@@ -43,16 +37,20 @@ public class CheckQueueService extends Service {
     @Override
     public void onCreate() {
         // The service is being created
-        Log.d(TAG, "onCreate() called with: " + " " + this.toString());
         mAllowRebind = true;
+        sQueue = new Queue();
+        Log.d(TAG, "onCreate() called with: " + "");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // The service is starting, due to a call to startService()
-        Log.d(TAG, "onStartCommand() called with: " + "intent = [" + intent + "], flags = [" + flags + "], startId = [" + startId + "]");
+        String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getString("queueId", "Shared Preferences Error");
+        sQueue.setQueueId(queueId);
         if (intent == null) {
-            setChangeListener("queue2", null);
+            Log.d(TAG, "intent is null <------------------------------------");
+            setChangeListener(sQueue.getQueueId(), null);
         }
         return START_STICKY;
     }
@@ -60,7 +58,6 @@ public class CheckQueueService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         // A client is binding to the service with bindService()
-        Log.d(TAG, "onBind() called with: " + "intent = [" + intent + "]");
         isBound = true;
         return mBinder;
     }
@@ -68,7 +65,6 @@ public class CheckQueueService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         // All clients have unbound with unbindService()
-        Log.d(TAG, "onUnbind() called with: " + "intent = [" + intent + "]");
         isBound = false;
         return mAllowRebind;
     }
@@ -77,7 +73,6 @@ public class CheckQueueService extends Service {
     public void onRebind(Intent intent) {
         // A client is binding to the service with bindService(),
         // after onUnbind() has already been called
-        Log.d(TAG, "onRebind() called with: " + "intent = [" + intent + "]");
         isBound = true;
     }
 
@@ -85,58 +80,49 @@ public class CheckQueueService extends Service {
     public void onDestroy() {
         // The service is no longer used and is being destroyed
         disconnectChangeListener();
-        Log.d(TAG, "onDestroy() called");
     }
 
     public void setChangeListener(String queueId, InQueueActivity.InQueueActivityListener boundChangeListener){
-        mQueue = new Queue();
         mBoundChangeListener = boundChangeListener;
-        mQueue.setChangeListener(queueId, this::changeListener);
+        sQueue.setChangeListener(queueId, this::changeListener);
     }
 
 
     private void changeListener(){
-        mQueue.getUser(this::onGetUserInfo, this::onGetUserInfoError);
+        sQueue.getUser(this::onGetUserInfo, this::onGetUserInfoError);
     }
 
     private void onGetUserInfo(Response response) {
 
         int position = ((Double) response.getData()).intValue() + 1;
-        Log.d(TAG, "onGetUserInfo() called with: " + "response = [" + response + "]");
 
         if (isBound) {
             mBoundChangeListener.run(position);
         } else if (position == 1){
             Notification.removeLastNotification(this);
             Notification.youAreNextNotification(this,
-                    YouAreNextActivity.class, mQueue.getQueueId());
+                    YouAreNextActivity.class, sQueue.getQueueId());
         } else if (position == 2) {
             Notification.removeLastNotification(this);
             Notification.almostThereNotification(this,
-                    InQueueActivity.class, mQueue.getQueueId());
-
+                    InQueueActivity.class, sQueue.getQueueId());
         }
     }
 
     private void onGetUserInfoError(Throwable throwable) {
-        Response.Error error = Response.getError(throwable);
-        switch (error.getStatus()) {
-            case 404: // Not in the queue
-                mBoundChangeListener.run(-1);
-                stopSelf();
-                break;
-            case 400: // Queue Not Found
-                mBoundChangeListener.run(-1);
-                stopSelf();
-                break;
+        Notification.removeLastNotification(this);
+        if (isBound){
+            mBoundChangeListener.run(-1);
+        } else {
+           stopSelf();
         }
     }
 
     public void checkSnoozable(Runnable onSnoozable, Runnable onNotSnoozable){
-        mQueue.getQueue(response -> {
+        sQueue.getQueue(response -> {
             ArrayList<String> queueData = (ArrayList<String>) response.getData();
-            if (queueData.contains(mQueue.getUserId())) {
-                if (queueData.indexOf(mQueue.getUserId()) < queueData.size() - 1) {
+            if (queueData.contains(sQueue.getUserId())) {
+                if (queueData.indexOf(sQueue.getUserId()) < queueData.size() - 1) {
                     onSnoozable.run();
                 } else {
                     onNotSnoozable.run();
@@ -147,15 +133,15 @@ public class CheckQueueService extends Service {
 
 
     public Queue getQueue(){
-        return mQueue;
+        return sQueue;
     }
 
     public void connectChangeListener(){
-        mQueue.connectChangeListener();
+        sQueue.connectChangeListener();
     }
 
     public void disconnectChangeListener(){
-        mQueue.connectChangeListener();
+        sQueue.connectChangeListener();
     }
 
 }

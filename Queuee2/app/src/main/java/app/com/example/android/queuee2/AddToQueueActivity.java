@@ -9,9 +9,12 @@ import app.com.example.android.queuee2.utils.Utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -118,6 +121,11 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void onBeaconFound(String queueId) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("queueId", queueId);
+        editor.commit();
+
         mQueue.setChangeListener(queueId, this::changeListener);
     }
 
@@ -137,7 +145,6 @@ public class AddToQueueActivity extends Activity {
         ArrayList<String> queueData = (ArrayList<String>) response.getData();
         // TODO: Queue contains user? (in queue class)
         if (queueData.contains(mQueue.getUserId())) {
-            Toast.makeText(this, "Already in Queue", Toast.LENGTH_SHORT).show();
             if (queueData.indexOf(mQueue.getUserId()) == 0) {
                 launchActivity(YouAreNextActivity.class);
             } else {
@@ -171,7 +178,6 @@ public class AddToQueueActivity extends Activity {
 
     private void launchActivity(Class toActivityClass) {
         Intent intent = new Intent(this, toActivityClass);
-        intent.putExtra("queueId", mQueue.getQueueId());
         startActivity(intent);
     }
 

@@ -1,6 +1,6 @@
 package app.com.example.android.queuee2.model;
 
-import android.content.Context;
+import android.util.Log;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -14,6 +14,7 @@ import app.com.example.android.queuee2.MyApplication;
  */
 public class FirebaseListener {
 
+    private final static String TAG = FirebaseListener.class.getSimpleName();
     Firebase fRef;
     Runnable onChange;
     ValueEventListener eventListener;
@@ -35,7 +36,7 @@ public class FirebaseListener {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-
+                    Log.d(TAG, "onCancelled() called with: " + "firebaseError = [" + firebaseError + "]");
                 }
             };
             fRef.addValueEventListener(eventListener);

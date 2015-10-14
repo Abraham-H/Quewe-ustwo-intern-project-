@@ -27,9 +27,8 @@ public class LeaveQueueConfirmationDialog extends Dialog {
 
     private void setDialogComponents() {
         setContentView(R.layout.leave_queue_confirmation_pop_up_dialog);
-       // setTitle("Warning do you want to leave queue");
         TextView popUpText = (TextView) findViewById(R.id.popUpDialogTextView);
-        popUpText.setText("Warning do you want to leave queue?");
+        popUpText.setText(R.string.leave_queue_confirmation_dialog);
         ImageView popUpImageView = (ImageView) findViewById(R.id.popUpDialogImage);
         popUpImageView.setImageResource(R.drawable.sad_face_icon);
 

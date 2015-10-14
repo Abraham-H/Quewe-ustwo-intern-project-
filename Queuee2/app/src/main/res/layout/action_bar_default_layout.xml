@@ -4,12 +4,22 @@
     android:layout_height="match_parent"
     android:weightSum="1" >
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/cancel_button"
-        android:id="@+id/action_bar_default_layout_cancel_button"
-        android:visibility="invisible"/>
+        android:weightSum="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:src="@drawable/cancel_button"
+            android:scaleType="center"
+            android:id="@+id/action_bar_default_layout_cancel_button"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

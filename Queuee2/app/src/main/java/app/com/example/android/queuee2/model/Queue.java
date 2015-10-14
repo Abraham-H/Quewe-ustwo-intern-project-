@@ -65,6 +65,7 @@ public class Queue {
     }
 
     public void getUser(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+        Log.d(TAG, "getUser(): " + String.valueOf(sAndroidId) + ", " + mQueueId);
         addSubscribers(mHerokuService.info(mQueueId, sAndroidId), onSuccess, onFailure);
     }
 
@@ -93,6 +94,10 @@ public class Queue {
 
     public String getUserId() {
         return sAndroidId;
+    }
+
+    public void setQueueId(String queueId) {
+        mQueueId = queueId;
     }
 
     public String getQueueId() {
