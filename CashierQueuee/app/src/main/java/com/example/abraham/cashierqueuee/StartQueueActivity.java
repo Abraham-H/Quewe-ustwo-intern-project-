@@ -14,10 +14,13 @@ import android.widget.Toast;
 import com.example.abraham.cashierqueuee.R;
 
 import model.Queue;
+import model.Response;
 
 public class StartQueueActivity extends Activity {
 
     private Queue mQueue;
+
+    private static String TAG = StartQueueActivity.class.getSimpleName();
 
     private TextView mCashierNumberTextView;
     private ImageButton mStartQueueImageButton;
@@ -41,22 +44,24 @@ public class StartQueueActivity extends Activity {
         mQueue = new Queue();
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
 
-        mQueue = new Queue();
-        mQueue.setQueueId(getIntent().getStringExtra("queueId"));
-
-        if (getIntent().getStringExtra("queueId") == null){
-            mQueue.setQueueId("queue1");
-        }// TODO: 10/12/2015 Remove just for testing with no beacon. Also change launcher
-
-        Log.d("StartQueueActivity", mQueue.getQueueId());
-        mCashierNumberTextView.setText("People in " + mQueue.getQueueId());
-
         Log.d("StartQueueActivity", mQueue.getQueueId());
         mCashierNumberTextView.setText(mQueue.getQueueId());
     }
 
     private void startQueueButtonTapped(View v){
+        mQueue.startQueue(this::onQueueStartedSuccess, this::onQueueStartedFailure);
         launchActivity(QueueInProgressActivity.class);
+    }
+
+    private void onQueueStartedSuccess(Response response) {
+        launchActivity(QueueInProgressActivity.class);
+    }
+
+    private void onQueueStartedFailure(Throwable throwable) {
+        Response.Error error = Response.getError(throwable);
+        if (error.getStatus() == 409){
+            toastError(error.getMessage());
+        }
     }
 
     private void launchActivity(Class toActivityClass) {
@@ -65,5 +70,8 @@ public class StartQueueActivity extends Activity {
         startActivity(intent);
     }
 
-
+    private void toastError(String message) {
+        Log.d(TAG, "Error: " + message);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 }

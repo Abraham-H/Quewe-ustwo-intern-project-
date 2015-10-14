@@ -30,10 +30,6 @@
         <activity
             android:name="com.example.abraham.cashierqueuee.LoginActivity"
             android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="com.example.abraham.cashierqueuee.StartQueueActivity"
-            android:label="@string/title_activity_start_queue" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,9 +37,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.example.abraham.cashierqueuee.StartQueueActivity"
+            android:label="@string/title_activity_start_queue" />
+        <activity
             android:name="com.example.abraham.cashierqueuee.QueueInProgressActivity"
-            android:label="@string/title_activity_queue_in_progress" >
-        </activity>
+            android:label="@string/title_activity_queue_in_progress" />
 
         <service
             android:name="com.estimote.sdk.service.BeaconService"

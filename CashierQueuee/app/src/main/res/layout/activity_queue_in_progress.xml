@@ -11,7 +11,6 @@
         android:layout_weight="0.2"
         android:layout_gravity="bottom|center_horizontal"
         style="@style/in_queue_header_text_style"
-        android:text="@string/number_of_people_in_queue"
         android:id="@+id/activity_queue_in_progress_textview_number_in_queue"
         />
 
@@ -20,7 +19,6 @@
         android:layout_height="0dp"
         android:layout_weight="0.1"
         style="@style/normal_text_style"
-        android:text="@string/cashier_number"
         android:gravity="top|center_horizontal"
         android:id="@+id/queue_in_progress_textview_cashier_number"
         android:layout_gravity="center_horizontal" />
@@ -36,6 +34,11 @@
         android:scaleType="fitStart"
         android:adjustViewBounds="true"
         />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.15"/>
 
     <ImageButton
         android:layout_width="150sp"

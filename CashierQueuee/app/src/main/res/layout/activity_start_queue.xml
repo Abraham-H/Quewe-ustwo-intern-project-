@@ -3,7 +3,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="@color/start_queue_red"
     tools:context="com.example.abraham.cashierqueuee.StartQueueActivity">
 
     <TextView
@@ -20,18 +19,18 @@
         android:layout_width="172dp"
         android:layout_height="0dp"
         android:layout_weight="0.1"
-        style="@style/start_queue_header_text_style"
-        android:text="@string/cashier_number"
+        style="@style/normal_text_style"
+        android:text=" "
         android:gravity="top|center_horizontal"
         android:id="@+id/cashier_number"
-        />
+        android:layout_gravity="center_horizontal" />
 
     <ImageButton
         android:layout_width="250sp"
         android:layout_height="0dp"
         android:layout_weight="0.5"
         android:id="@+id/start_queue_image_button"
-        android:src="@drawable/happyface_login"
+        android:src="@drawable/start_button_selector"
         android:background="@null"
         android:layout_gravity="center_horizontal"
         android:scaleType="fitStart"
@@ -43,7 +42,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.1"
         android:text="@string/start_queue_text"
-        android:textColor="@color/white"
+        style="@style/normal_text_style"
         android:gravity="top|center_horizontal"
         android:id="@+id/start_queue_text"
         android:layout_gravity="center_horizontal" />

@@ -3,20 +3,17 @@ package com.example.abraham.cashierqueuee;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.abraham.cashierqueuee.R;
-
 import java.util.ArrayList;
 
+import dialog.CloseQueueConfirmationDialog;
 import model.Queue;
 import model.Response;
+import utils.Utils;
 
 public class QueueInProgressActivity extends Activity {
 
@@ -30,12 +27,20 @@ public class QueueInProgressActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue_in_progress);
-        setViews();
         setQueue();
+        setViews();
+        changeListener();
         setChangeListener();
+    }
+    private void setQueue() {
+        mQueue = new Queue();
+        mQueue.setQueueId(getIntent().getStringExtra("queueId"));
     }
 
     private void setViews() {
+        Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
+                getActionBar(), this::launchCloseQueueConfirmationDialog);
+
         mCashierNumberTextView = (TextView) findViewById(R.id.queue_in_progress_textview_cashier_number);
         mNumOfPeopleInQueue = (TextView) findViewById(R.id.activity_queue_in_progress_textview_number_in_queue);
 
@@ -44,18 +49,20 @@ public class QueueInProgressActivity extends Activity {
 
         mFinishQueueImageButton = (ImageButton) findViewById(R.id.finish_queue_image_button);
         mFinishQueueImageButton.setOnClickListener(this::finishQueueImageButtonTapped);
+
+        mCashierNumberTextView.setText("People in " + mQueue.getQueueId());
+
     }
 
-    private void setQueue() {
-        mQueue = new Queue();
-        mQueue.setQueueId(getIntent().getStringExtra("queueId"));
+    private void launchCloseQueueConfirmationDialog() {
+        new CloseQueueConfirmationDialog(this, this::onYesCloseQueue, this::onNoCloseQueue);
+    }
 
-        if (getIntent().getStringExtra("queueId") == null){
-            mQueue.setQueueId("queue1");
-        }// TODO: 10/12/2015 Remove just for testing with no beacon. Also change launcher 
+    private void onYesCloseQueue() {
+        closeQueue();
+    }
 
-        Log.d("StartQueueActivity", mQueue.getQueueId());
-        mCashierNumberTextView.setText("People in " + mQueue.getQueueId());
+    private void onNoCloseQueue() {
     }
 
     private void setChangeListener() {
@@ -69,12 +76,12 @@ public class QueueInProgressActivity extends Activity {
     private void onGetQueue(Response response) {
         ArrayList<String> queueData = (ArrayList<String>) response.getData();
         String resultString = String.valueOf(queueData.size());
-        if (resultString == null) {
-            mNumOfPeopleInQueue.setText("0");
+        if (resultString == "0") {
+            mNumOfPeopleInQueue.setText("No");
+            disableNextImageButton();
         } else {
             mNumOfPeopleInQueue.setText(resultString);
-            mNextInQueueImageButton.setEnabled(true);
-            mFinishQueueImageButton.setEnabled(true);
+            enableActivityImageButtons();
         }
     }
 
@@ -82,13 +89,22 @@ public class QueueInProgressActivity extends Activity {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
             mNextInQueueImageButton.setEnabled(false);
-            mFinishQueueImageButton.setEnabled(false);
+            mFinishQueueImageButton.setEnabled(true);
             mNumOfPeopleInQueue.setText("No");
         }
     }
 
+    private void enableActivityImageButtons() {
+        mNextInQueueImageButton.setEnabled(true);
+        mFinishQueueImageButton.setEnabled(true);
+    }
+
+    private void disableNextImageButton() {
+        mNextInQueueImageButton.setEnabled(false);
+    }
+
     private void finishQueueImageButtonTapped(View view) {
-        closeQueue();
+        launchCloseQueueConfirmationDialog();
     }
 
     private void closeQueue() {
@@ -102,8 +118,14 @@ public class QueueInProgressActivity extends Activity {
     }
 
     private void onQueueClosedError(Throwable throwable) {
-        Toast.makeText(getApplicationContext(), "Queue not closed...ERRRRROR!",
-                Toast.LENGTH_LONG).show();
+        Response.Error error = Response.getError(throwable);
+        switch (error.getStatus()) {
+            case 404: // Queue Not Found
+                Toast.makeText(getApplicationContext(), "Queue did not exist!",
+                        Toast.LENGTH_LONG).show();
+                launchActivity(LoginActivity.class);
+                break;
+        }
     }
 
     private void nextInQueueImageButtonTapped(View view) {
@@ -115,8 +137,6 @@ public class QueueInProgressActivity extends Activity {
     }
 
     private void onUserPopped(Response response) {
-        Toast.makeText(getApplicationContext(), "User popped!",
-                Toast.LENGTH_LONG).show();
     }
 
     private void onUserPoppedError(Throwable throwable) {
