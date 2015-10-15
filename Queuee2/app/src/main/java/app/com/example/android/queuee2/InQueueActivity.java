@@ -34,11 +34,13 @@ public class InQueueActivity extends Activity {
     private TextView mHeaderTextView;
     private TextView mSubheaderTextView;
     private TextView mFooterTextView;
+    private SimpleDraweeView mDraweeView;
 
     private Intent mServiceIntent;
     private CheckQueueService mService;
     private InQueueActivityListener mChangeListener;
     boolean mBound;
+    boolean mAlmostNextStyle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +91,16 @@ public class InQueueActivity extends Activity {
         if (position == 1) {
             launchYouAreNextActivity();
         } else if (position == 2){
-            setAlmostNextStyle();
+            if ( !mAlmostNextStyle ) {
+                setAlmostNextStyle();
+            }
         } else if (position == -1) {
             finish();
         }
         else {
-            removeAlmostNextStyle();
+            if ( mAlmostNextStyle ) {
+                removeAlmostNextStyle();
+            }
 
             String suffix;
             if (position % 10 == 1 && position % 11 != 0) {
@@ -119,9 +125,12 @@ public class InQueueActivity extends Activity {
     }
 
     private void removeAlmostNextStyle(){
+        mAlmostNextStyle = false;
         View activity = findViewById(R.id.activityInQueueMainRelativeLayout);
         View root = activity.getRootView();
         root.setBackgroundColor(Color.WHITE);
+
+        runAnimation(R.drawable.animation_waiting);
 
         mHeaderTextView.setTextSize(70.0f);
         mHeaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
@@ -137,9 +146,12 @@ public class InQueueActivity extends Activity {
     }
 
     private void setAlmostNextStyle() {
+        mAlmostNextStyle = true;
         View activity = findViewById(R.id.activityInQueueMainRelativeLayout);
         View root = activity.getRootView();
         root.setBackgroundColor(getResources().getColor(R.color.happy_peach));
+
+        runAnimation(R.drawable.animation_almost_there);
 
         mHeaderTextView.setTextSize(42.0f);
 
@@ -166,8 +178,24 @@ public class InQueueActivity extends Activity {
         mHeaderTextView = (TextView) findViewById(R.id.in_queue_activity_header_text_view);
         mSubheaderTextView = (TextView) findViewById(R.id.in_queue_activity_subheader_text_view);
         mFooterTextView = (TextView) findViewById(R.id.in_queue_activity_footer_text_view);
+        mDraweeView = (SimpleDraweeView) findViewById(R.id.in_queue_animation_drawee_view);
         setSnoozeButtonListener();
-        runLoadingAnimation();
+        runAnimation(R.drawable.animation_waiting);
+    }
+
+    private void runAnimation(int drawable){
+        // TODO: 10/14/15 custom drawee controller and custom URI
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+                .path(String.valueOf(drawable))
+                .build();
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build();
+
+        mDraweeView.setController(controller);
     }
 
     private void setSnoozeButtonListener(){
@@ -180,26 +208,7 @@ public class InQueueActivity extends Activity {
     }
 
     private void launchLeaveQueueDialog(){
-        new LeaveQueueConfirmationDialog(this, this::onYesLeaveQueue, this::onNoLeaveQueue);
-    }
-
-    private void onYesLeaveQueue(){
-        removeFromQueue();
-    }
-
-    private void onNoLeaveQueue(){}
-
-    private void runLoadingAnimation(){
-        Uri uri = new Uri.Builder()
-                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
-                .path(String.valueOf(R.drawable.waiting_animation))
-                .build();
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build();
-        SimpleDraweeView sdv = (SimpleDraweeView) findViewById(R.id.waiting_animation);
-        sdv.setController(controller);
+        new LeaveQueueConfirmationDialog(this, this::removeFromQueue, () -> {});
     }
 
     @Override

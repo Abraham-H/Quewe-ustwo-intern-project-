@@ -13,8 +13,7 @@
 
     <!-- Needed for Bluetooth low energy scanning. -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
- <!-- Needed for Estimote Cloud. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- Needed for Estimote Cloud. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature

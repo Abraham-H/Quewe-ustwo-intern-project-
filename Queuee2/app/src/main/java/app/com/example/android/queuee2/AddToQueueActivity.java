@@ -1,6 +1,5 @@
 package app.com.example.android.queuee2;
 
-import app.com.example.android.queuee2.animation.CustomAnimationController;
 import app.com.example.android.queuee2.dialog.ProgressDialog;
 import app.com.example.android.queuee2.model.BeaconListener;
 import app.com.example.android.queuee2.model.Permissions;
@@ -47,7 +46,6 @@ public class AddToQueueActivity extends Activity {
     private ImageButton mAddToQueueImageButton;
     private SimpleDraweeView mDraweeView;
 
-    CustomAnimationController mAnimationController;
     ProgressDialog mProgressDialog;
 
     @Override
@@ -91,19 +89,17 @@ public class AddToQueueActivity extends Activity {
         mAddToQueueLogoImageView = (ImageView) findViewById(R.id.add_to_queue_activity_logo_image_view);
         mFooterTextView = (TextView) findViewById(R.id.add_to_queue_footer_text_view);
         mHeaderTextView = (TextView) findViewById(R.id.add_to_queue_header_text_view);
+        mDraweeView = (SimpleDraweeView) findViewById(R.id.add_to_queue_activity_loading_animation);
         mAddToQueueImageButton.setEnabled(false);
         mAddToQueueImageButton.setOnClickListener(this::addToQueueButtonTapped);
         runAnimation(R.drawable.animation_loading);
     }
 
     private void runAnimation(int drawable){
-        // TODO: 10/14/15 custom drawee controller and custom URI
         Uri uri = new Uri.Builder()
                 .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
                 .path(String.valueOf(drawable))
                 .build();
-
-        mDraweeView = (SimpleDraweeView) findViewById(R.id.add_to_queue_activity_loading_animation);
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
@@ -176,11 +172,11 @@ public class AddToQueueActivity extends Activity {
                 launchActivity(InQueueActivity.class);
             }
         } else {
-            updateViews(queueData);
+            updateViewsWithData(queueData);
         }
     }
 
-    private void updateViews(ArrayList<String> queueData){
+    private void updateViewsWithData(ArrayList<String> queueData){
         runAnimation(R.drawable.animation_button);
         Utils.afterDelayRun(1, () -> {
             mAddToQueueImageButton.setVisibility(View.VISIBLE);
@@ -190,9 +186,13 @@ public class AddToQueueActivity extends Activity {
         if (!mAddToQueueImageButton.isEnabled()) {
             mAddToQueueImageButton.setEnabled(true);
         }
-        String resultString = String.valueOf(queueData.size()) +
-                (queueData.size() == 1 ? " person" : " people") + " in queue";
-        // TODO: 10/14/15 Queue empty®
+        String resultString;
+        if (queueData.size() > 0) {
+            resultString = String.valueOf(queueData.size()) +
+                    (queueData.size() == 1 ? " person" : " people") + " in queue";
+        } else {
+            resultString = "queue empty";
+        }
         mSubtitleTextView.setText(resultString);
         mFooterTextView.setText("Press to enter queue");
         mAddToQueueLogoImageView.setImageResource(Utils.getQueueImageResource(mQueue.getQueueId()));
@@ -207,16 +207,21 @@ public class AddToQueueActivity extends Activity {
     private void onGetQueueError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
-            runAnimation(R.drawable.animation_button_closed);
-            Utils.afterDelayRun(1, () -> {
-                mAddToQueueImageButton.setVisibility(View.VISIBLE);
-                mDraweeView.setVisibility(View.GONE);
-            });
-            mAddToQueueImageButton.setEnabled(false);
-            resetQueueIcon();
-            mSubtitleTextView.setText("queue closed");
-            mFooterTextView.setText("");
+            animateQueueClosedState();
         }
+    }
+
+    private void animateQueueClosedState(){
+        runAnimation(R.drawable.animation_button_closed);
+        Utils.afterDelayRun(1, () -> {
+            mAddToQueueImageButton.setVisibility(View.VISIBLE);
+            mDraweeView.setVisibility(View.GONE);
+        });
+        mAddToQueueImageButton.setEnabled(false);
+        resetQueueIcon();
+        mSubtitleTextView.setText("queue closed");
+        mFooterTextView.setText("");
+
     }
 
     private void launchActivity(Class toActivityClass) {

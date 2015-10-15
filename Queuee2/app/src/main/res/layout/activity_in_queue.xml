@@ -34,13 +34,14 @@
         android:layout_weight="0.4">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/waiting_animation"
+            android:id="@+id/in_queue_animation_drawee_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:actualImageScaleType="fitCenter"
-            app:placeholderImageScaleType="fitCenter"
-            app:placeholderImage="@drawable/waiting_animation"
             android:layout_gravity="center" />
+
+            <!--app:placeholderImageScaleType="fitCenter"-->
+            <!--app:placeholderImage="@drawable/waiting_animation"-->
 
     </FrameLayout>
 

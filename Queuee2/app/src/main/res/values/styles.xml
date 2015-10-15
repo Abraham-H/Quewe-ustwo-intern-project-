@@ -6,6 +6,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:actionBarStyle">@style/whiteActionBarStyle</item>
+        <item name="android:screenOrientation">portrait</item>
     </style>
 
     <style name="whiteActionBarStyle" parent="@android:style/Widget.Material.Light.ActionBar" >
@@ -17,17 +18,22 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textSize">43sp</item>
-        <item name="android:textColor">#143438</item>
+        <item name="android:textColor">@color/happy_grey</item>
     </style>
 
     <style name="subheaderTextStyle">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">#143438</item>
+        <item name="android:textColor">@color/happy_grey</item>
     </style>
 
 
     <color name="happy_blue">#27b5c3</color>
+    <color name="happy_peach">#FCC3B0</color>
+    <color name="happy_grey">#143438</color>
+
+    <item name="headerTextSize" format="float" type="dimen">43.0</item>
+    <item name="headerTextSizeNumber" format="float" type="dimen">70.0</item>
 
 </resources>
 

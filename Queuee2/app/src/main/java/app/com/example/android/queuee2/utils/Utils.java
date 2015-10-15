@@ -8,14 +8,18 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.InputFilter;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+
+import org.w3c.dom.Text;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -59,8 +63,11 @@ public class Utils {
 
             ImageView logoImageView = (ImageView) activity.findViewById(R.id.action_bar_centered_image);
             ImageView cancelImageView = (ImageView) activity.findViewById(R.id.action_bar_default_layout_cancel_button);
+            TextView titleTextView = (TextView) activity.findViewById(R.id.action_bar_title_text);
 
             if (queueId != null) {
+                // TODO: 10/15/15 When new logo comes, redo this
+                titleTextView.setVisibility(View.INVISIBLE);
                 logoImageView.setImageResource(Utils.getQueueImageResource(queueId));
             }
 
