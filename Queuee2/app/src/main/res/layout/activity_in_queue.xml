@@ -16,7 +16,6 @@
         android:gravity="bottom|center_horizontal"
         android:textSize="70sp"
         android:id="@+id/in_queue_activity_header_text_view"/>
-    <!--android:text="Xth"-->
 
     <TextView
         android:layout_weight="0.07"
@@ -39,9 +38,6 @@
             android:layout_height="match_parent"
             app:actualImageScaleType="fitCenter"
             android:layout_gravity="center" />
-
-            <!--app:placeholderImageScaleType="fitCenter"-->
-            <!--app:placeholderImage="@drawable/waiting_animation"-->
 
     </FrameLayout>
 
@@ -90,7 +86,7 @@
             android:layout_weight="0.2"
             android:gravity="bottom|center_horizontal"
             android:id="@+id/in_queue_activity_footer_text_view"
-            android:text="Move two people back in line"/>
+            android:text="Move two people back in queue"/>
 
     </LinearLayout>
 

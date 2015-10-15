@@ -90,7 +90,7 @@ public class InQueueActivity extends Activity {
     private void changeListener(int position){
         if (position == 1) {
             launchYouAreNextActivity();
-        } else if (position == 2){
+        } else if (position == 3){
             if ( !mAlmostNextStyle ) {
                 setAlmostNextStyle();
             }
@@ -119,8 +119,14 @@ public class InQueueActivity extends Activity {
             mSubheaderTextView.setText(subheaderText);
         }
         mService.checkSnoozable(
-                () -> mSnoozeButton.setEnabled(true),
-                () -> mSnoozeButton.setEnabled(false)
+                () -> {
+                    mSnoozeButton.setVisibility(View.VISIBLE);
+                    mFooterTextView.setText("Move two people back in the queue");
+                },
+                () -> {
+                    mSnoozeButton.setVisibility(View.INVISIBLE);
+                    mFooterTextView.setText("At end of the queue");
+                }
         );
     }
 
@@ -201,6 +207,7 @@ public class InQueueActivity extends Activity {
     private void setSnoozeButtonListener(){
         mSnoozeButton.setOnClickListener(v -> {
             mSnoozeButton.setEnabled(false);
+            mFooterTextView.setText("Snoozing...");
             mService.getQueue().snooze(
                     (r) -> mSnoozeButton.setEnabled(true),
                     (e) -> toastError(e.getMessage()));

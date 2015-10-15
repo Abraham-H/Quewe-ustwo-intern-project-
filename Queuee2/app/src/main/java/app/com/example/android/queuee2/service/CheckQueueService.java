@@ -102,7 +102,7 @@ public class CheckQueueService extends Service {
             Notification.removeLastNotification(this);
             Notification.youAreNextNotification(this,
                     YouAreNextActivity.class, sQueue.getQueueId());
-        } else if (position == 2) {
+        } else if (position == 3) {
             Notification.removeLastNotification(this);
             Notification.almostThereNotification(this,
                     InQueueActivity.class, sQueue.getQueueId());

@@ -29,7 +29,7 @@ public class Notification {
                 new Intent[]{notifyIntent},
                 PendingIntent.FLAG_UPDATE_CURRENT);
         android.app.Notification notification = new android.app.Notification.Builder(fromActivity)
-                .setSmallIcon(R.drawable.cancel_button)
+                .setSmallIcon(R.drawable.happy_face_icon)
                 .setContentTitle("You're Next!")
                 .setContentText("Tap here!")
                 .setAutoCancel(true)
@@ -55,7 +55,7 @@ public class Notification {
                 new Intent[]{notifyIntent},
                 PendingIntent.FLAG_UPDATE_CURRENT);
         android.app.Notification notification = new android.app.Notification.Builder(fromActivity)
-                .setSmallIcon(R.drawable.cancel_button)
+                .setSmallIcon(R.drawable.happy_face_icon)
                 .setContentTitle("Almost There!")
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)

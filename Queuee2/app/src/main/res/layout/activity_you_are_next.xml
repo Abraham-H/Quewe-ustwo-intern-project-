@@ -12,7 +12,7 @@
         android:text="It's your turn!"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.20"
+        android:layout_weight="0.23"
         style="@style/headerTextStyle"
         android:textColor="@android:color/white"
         android:gravity="bottom|center_horizontal"
@@ -22,7 +22,7 @@
         android:text="Go to the cashier"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.10"
+        android:layout_weight="0.07"
         style="@style/subheaderTextStyle"
         android:textColor="@android:color/white"
         android:gravity="center_vertical|center_horizontal"
@@ -38,8 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:actualImageScaleType="fitCenter"
-            app:placeholderImageScaleType="fitCenter"
-            app:placeholderImage="@drawable/youre_next_smile"
             android:layout_gravity="center" />
 
     </FrameLayout>

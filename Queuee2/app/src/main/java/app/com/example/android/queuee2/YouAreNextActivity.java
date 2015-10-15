@@ -2,10 +2,16 @@ package app.com.example.android.queuee2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
 import app.com.example.android.queuee2.model.Queue;
@@ -17,6 +23,7 @@ public class YouAreNextActivity extends Activity {
 
     private static final String TAG = YouAreNextActivity.class.getSimpleName();
     private Queue mQueue;
+    private SimpleDraweeView mDraweeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,23 @@ public class YouAreNextActivity extends Activity {
         String queueId = getIntent().getStringExtra("queueId");
         Utils.setupActionBar(this, queueId,
                 getActionBar(), this::launchLeaveQueueDialog);
+        mDraweeView = (SimpleDraweeView) findViewById(R.id.you_are_next_activity_animation);
+        runAnimation(R.drawable.animation_you_are_next  );
+    }
+
+    private void runAnimation(int drawable){
+        // TODO: 10/14/15 custom drawee controller and custom URI
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+                .path(String.valueOf(drawable))
+                .build();
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build();
+
+        mDraweeView.setController(controller);
     }
 
     private void launchLeaveQueueDialog(){
