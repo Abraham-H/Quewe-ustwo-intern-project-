@@ -2,12 +2,14 @@ package app.com.example.android.queuee2.utils;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.InputFilter;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import app.com.example.android.queuee2.MyApplication;
 import app.com.example.android.queuee2.R;
 import app.com.example.android.queuee2.model.Response;
 
@@ -50,6 +53,20 @@ public class Utils {
         return -1;
     }
 
+    public static void storeQueueId(String queueId){
+        SharedPreferences sharedPref =
+                PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("queueId", queueId);
+        editor.commit();
+    }
+
+    public static String getQueueId() {
+        return PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext())
+                .getString("queueId", null);
+    }
+
+    // TODO: 10/16/15 remove this when appropriate
     public static void setupActionBar(Activity activity, String queueId, ActionBar ab, Runnable cancelBarRunnable) {
         if (ab != null) {
             View v = LayoutInflater.from(ab.getThemedContext())

@@ -5,9 +5,13 @@
     <string name="your_lined_up_text">OK</string>
     <string name="queue_instructions">Press + to get in the queue</string>
 
-    <string name="add_to_queue_activity_welcome_title">Welcome!</string>
-    <string name="add_to_queue_activity_welcome_subtitle">We queue for you</string>
-    <string name="add_to_queue_activity_footer">finding a queue for you!</string>
+    <string name="add_to_queue_header_welcome">Welcome</string>
+    <string name="add_to_queue_subheader_welcome">We queue for you</string>
+    <string name="add_to_queue_footer_welcome">finding a queue for you!</string>
+    <string name="add_to_queue_subheader_instructions">Press to enter queue</string>
+    <string name="add_to_queue_subheader_closed">queue closed</string>
+    <string name="add_to_queue_footer_closed">come back soon!</string>
+    <string name="add_to_queue_subheader_empty">queue empty</string>
 
     <string name="leave_queue_confirmation_dialog">Are you sure you want to leave the queue?</string>
 

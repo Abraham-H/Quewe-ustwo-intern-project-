@@ -1,65 +1,44 @@
 package app.com.example.android.queuee2;
 
-import app.com.example.android.queuee2.dialog.ProgressDialog;
+import app.com.example.android.queuee2.activity.StyledActionBarActivity;
 import app.com.example.android.queuee2.model.BeaconListener;
 import app.com.example.android.queuee2.model.Permissions;
 import app.com.example.android.queuee2.model.Queue;
 import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.utils.Utils;
+import app.com.example.android.queuee2.view.AddToQueueLinearLayout;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 
-public class AddToQueueActivity extends Activity {
+public class AddToQueueActivity extends StyledActionBarActivity{
 
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
 
-    private TextView mSubtitleTextView;
-    private TextView mHeaderTextView;
-    private TextView mFooterTextView;
-    private ImageView mAddToQueueLogoImageView;
-    private ImageButton mAddToQueueImageButton;
-    private SimpleDraweeView mDraweeView;
-
-    ProgressDialog mProgressDialog;
+    private AddToQueueLinearLayout mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_queue);
         setInstanceVariables();
-        setViews();
+        setupView();
         Permissions.askLocationPermission(this);
     }
+
     @Override
     protected void onStart() {
         super.onStart();
-        dismissLoadingDialog();
     }
 
     @Override
@@ -72,7 +51,7 @@ public class AddToQueueActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        disconnectBeaconListener();
+        mBeaconListener.disconnect();
         mQueue.disconnectChangeListener();
     }
 
@@ -82,41 +61,13 @@ public class AddToQueueActivity extends Activity {
         mIsBluetoothDenied = false;
     }
 
-    private void setViews() {
-        Utils.setupActionBar( this, null, getActionBar(), null );
-        mSubtitleTextView = (TextView) findViewById(R.id.add_to_queue_subtitle_text_view);
-        mAddToQueueImageButton = (ImageButton) findViewById(R.id.add_to_queue_image_button);
-        mAddToQueueLogoImageView = (ImageView) findViewById(R.id.add_to_queue_activity_logo_image_view);
-        mFooterTextView = (TextView) findViewById(R.id.add_to_queue_footer_text_view);
-        mHeaderTextView = (TextView) findViewById(R.id.add_to_queue_header_text_view);
-        mDraweeView = (SimpleDraweeView) findViewById(R.id.add_to_queue_activity_loading_animation);
-        mAddToQueueImageButton.setEnabled(false);
-        mAddToQueueImageButton.setOnClickListener(this::addToQueueButtonTapped);
-        runAnimation(R.drawable.animation_loading);
+    private void setupView() {
+        hideActionBarLogo();
+        mView = (AddToQueueLinearLayout) findViewById(R.id.add_to_queue_linear_layout);
+        mView.setAddToQueueButtonListener(this::addUserToQueue);
     }
 
-    private void runAnimation(int drawable){
-        Uri uri = new Uri.Builder()
-                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
-                .path(String.valueOf(drawable))
-                .build();
-
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build();
-
-        mDraweeView.setController(controller);
-    }
-
-
-    private void addToQueueButtonTapped(View v) {
-        mAddToQueueImageButton.setEnabled(false);
-        mFooterTextView.setText("Adding to Queue...");
-        addUserToQueue();
-    }
-
-    private void addUserToQueue() {
+    private void addUserToQueue(View v) {
         mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError);
     }
 
@@ -128,14 +79,7 @@ public class AddToQueueActivity extends Activity {
 
     private void onUserAddedError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
-        switch (error.getStatus()) {
-            case 409: // Already in queue
-                toastError(error.getMessage());
-                break;
-            case 404: // Queue Not Found
-                toastError(error.getMessage());
-                break;
-        }
+        Log.d(TAG, String.valueOf(error.getStatus()) + " Server Error: " + error.getMessage());
     }
 
     private void connectBeaconListener(boolean isBluetoothDenied) {
@@ -143,11 +87,7 @@ public class AddToQueueActivity extends Activity {
     }
 
     private void onBeaconFound(String queueId) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("queueId", queueId);
-        editor.commit();
-
+        Utils.storeQueueId(queueId);
         mQueue.setChangeListener(queueId, this::changeListener);
     }
 
@@ -155,89 +95,33 @@ public class AddToQueueActivity extends Activity {
         Log.d(TAG, "EstimoteBeacon error:" + throwable.getMessage());
     }
 
-    private void disconnectBeaconListener() {
-        mBeaconListener.disconnect();
-    }
-
     private void changeListener(){
         mQueue.getQueue(this::onGetQueue, this::onGetQueueError);
     }
 
     private void onGetQueue(Response response) {
-        ArrayList<String> queueData = (ArrayList<String>) response.getData();
-        if (queueData.contains(mQueue.getUserId())) {
-            if (queueData.indexOf(mQueue.getUserId()) == 0) {
+        ArrayList<String> data = (ArrayList<String>) response.getData();
+        if (data.contains(mQueue.getUserId())) {
+            if (data.indexOf(mQueue.getUserId()) == 0) {
                 launchActivity(YouAreNextActivity.class);
             } else {
                 launchActivity(InQueueActivity.class);
             }
         } else {
-            updateViewsWithData(queueData);
+            mView.update(data);
         }
-    }
-
-    private void updateViewsWithData(ArrayList<String> queueData){
-        runAnimation(R.drawable.animation_button);
-        Utils.afterDelayRun(1, () -> {
-            mAddToQueueImageButton.setVisibility(View.VISIBLE);
-            mDraweeView.setVisibility(View.GONE);
-        });
-
-        if (!mAddToQueueImageButton.isEnabled()) {
-            mAddToQueueImageButton.setEnabled(true);
-        }
-        String resultString;
-        if (queueData.size() > 0) {
-            resultString = String.valueOf(queueData.size()) +
-                    (queueData.size() == 1 ? " person" : " people") + " in queue";
-        } else {
-            resultString = "queue empty";
-        }
-        mSubtitleTextView.setText(resultString);
-        mFooterTextView.setText("Press to enter queue");
-        mAddToQueueLogoImageView.setImageResource(Utils.getQueueImageResource(mQueue.getQueueId()));
-        resetQueueIcon();
-    }
-
-    private void resetQueueIcon(){
-        mHeaderTextView.setVisibility(View.INVISIBLE);
-        mAddToQueueLogoImageView.setImageResource(Utils.getQueueImageResource(mQueue.getQueueId()));
     }
 
     private void onGetQueueError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
-            animateQueueClosedState();
+            mView.update(null);
         }
-    }
-
-    private void animateQueueClosedState(){
-        runAnimation(R.drawable.animation_button_closed);
-        Utils.afterDelayRun(1, () -> {
-            mAddToQueueImageButton.setVisibility(View.VISIBLE);
-            mDraweeView.setVisibility(View.GONE);
-        });
-        mAddToQueueImageButton.setEnabled(false);
-        resetQueueIcon();
-        mSubtitleTextView.setText("queue closed");
-        mFooterTextView.setText("");
-
     }
 
     private void launchActivity(Class toActivityClass) {
         Intent intent = new Intent(this, toActivityClass);
         startActivity(intent);
-    }
-
-    private void toastError(String message) {
-        Log.d(TAG, "Error: " + message);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    private void dismissLoadingDialog() {
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
     }
 
     @Override // Bluetooth Dialogue callback
@@ -248,26 +132,6 @@ public class AddToQueueActivity extends Activity {
             } else if (resultCode == RESULT_CANCELED) {
                 mIsBluetoothDenied = true;
                 Toast.makeText(this, "Bluetooth Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override // Android M Integration
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_COARSE_LOCATION: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "coarse location permission granted");
-                } else {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Functionality limited");
-                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    builder.setOnDismissListener(dialog ->
-                            Log.d(TAG, "onRequestPermissionResult() called with: " + "requestCode = [" + requestCode + "], permissions = [" + permissions + "], grantResults = [" + grantResults + "]"));
-                    builder.show();
-                }
-                return;
             }
         }
     }

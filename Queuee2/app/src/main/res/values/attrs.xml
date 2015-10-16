@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <declare-styleable name="CustomLinearLayout">
+      <attr name="header_text" format="string" />
+      <attr name="subheader_text" format="string" />
+      <attr name="footer_text" format="string" />
+      <attr name="snooze_hidden" format="boolean" />
+   </declare-styleable>
+</resources>
