@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
  <selector xmlns:android="http://schemas.android.com/apk/res/android">
      <item android:state_pressed="true"
-           android:drawable="@drawable/stop_queue_button_pressed" /> <!-- pressed -->
+           android:drawable="@drawable/finish_button_push" /> <!-- pressed -->
      <item android:state_enabled="false"
-           android:drawable="@drawable/stop_queue_button_off" />
-     <item android:drawable="@drawable/stop_queue_button_default" /> <!-- default -->
+           android:drawable="@drawable/finish_button_unable" />
+     <item android:drawable="@drawable/finish_button_default" /> <!-- default -->
  </selector>

@@ -2,10 +2,16 @@ package com.example.abraham.cashierqueuee;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import model.BeaconListener;
 import model.Queue;
@@ -15,6 +21,9 @@ public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
+
+    private SimpleDraweeView mLoadingAnimationView;
+
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
@@ -54,8 +63,23 @@ public class LoginActivity extends Activity {
     }
 
     private void setViews() {
+        mLoadingAnimationView = (SimpleDraweeView) findViewById(R.id.activity_login_loading_animation);
+        runAnimation(R.drawable.animation_loading);
     }
 
+    private void runAnimation(int drawable){
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+                .path(String.valueOf(drawable))
+                .build();
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build();
+
+        mLoadingAnimationView.setController(controller);
+    }
     private void connectBeaconListener(boolean isBluetoothDenied) {
         mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
     }

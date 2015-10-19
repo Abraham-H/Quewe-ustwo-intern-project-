@@ -37,7 +37,7 @@ public class Utils {
             ImageView logoImageView = (ImageView) activity.findViewById(R.id.action_bar_centered_image);
 
             if (queueId != null) {
-                logoImageView.setImageResource(Utils.getQueueImageResource(queueId));
+                logoImageView.setImageResource(R.drawable.logo_quewe);
             }
 
             Toolbar toolbar = (Toolbar) v.getParent();
@@ -48,11 +48,11 @@ public class Utils {
     public static int getQueueImageResource(String queueId) {
         switch (queueId) {
             case "queue1":
-                return R.drawable.logo_quewe;
+                return R.drawable.logo_hm;
             case "queue2":
-                return R.drawable.logo_quewe;
+                return R.drawable.logo_lindex;
             case "queue3":
-                return R.drawable.logo_quewe;
+                return R.drawable.logo_monki;
         }
         return -1;
     }

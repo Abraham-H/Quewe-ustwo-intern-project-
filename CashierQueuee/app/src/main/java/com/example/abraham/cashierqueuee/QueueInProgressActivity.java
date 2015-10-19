@@ -51,7 +51,6 @@ public class QueueInProgressActivity extends Activity {
         mFinishQueueImageButton.setOnClickListener(this::finishQueueImageButtonTapped);
 
         mCashierNumberTextView.setText("People in " + mQueue.getQueueId());
-
     }
 
     private void launchCloseQueueConfirmationDialog() {
@@ -79,7 +78,11 @@ public class QueueInProgressActivity extends Activity {
         if (resultString == "0") {
             mNumOfPeopleInQueue.setText("No");
             disableNextImageButton();
-        } else {
+        }
+        else if(resultString == "1"){
+            mCashierNumberTextView.setText("Person in " + mQueue.getQueueId());
+        }
+        else {
             mNumOfPeopleInQueue.setText(resultString);
             enableActivityImageButtons();
         }
@@ -130,6 +133,7 @@ public class QueueInProgressActivity extends Activity {
 
     private void nextInQueueImageButtonTapped(View view) {
         popUserFromQueue();
+        mNextInQueueImageButton.setEnabled(false);
     }
 
     private void popUserFromQueue() {
@@ -137,9 +141,11 @@ public class QueueInProgressActivity extends Activity {
     }
 
     private void onUserPopped(Response response) {
+        mNextInQueueImageButton.setEnabled(true);
     }
 
     private void onUserPoppedError(Throwable throwable) {
+        mNextInQueueImageButton.setEnabled(true);
         Toast.makeText(getApplicationContext(), "User NOT popped...ERRRRROR!",
                 Toast.LENGTH_LONG).show();
     }

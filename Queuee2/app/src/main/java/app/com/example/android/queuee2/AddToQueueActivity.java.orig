@@ -61,12 +61,47 @@ public class AddToQueueActivity extends StyledActionBarActivity{
         mIsBluetoothDenied = false;
     }
 
+<<<<<<< HEAD
     private void setupView() {
         hideActionBarLogo();
         mView = (AddToQueueLinearLayout) findViewById(R.id.add_to_queue_linear_layout);
         mView.setAddToQueueButtonListener(this::addUserToQueue);
+=======
+    private void setViews() {
+        Utils.setupActionBar( this, null, getActionBar(), null );
+        mSubtitleTextView = (TextView) findViewById(R.id.add_to_queue_subtitle_text_view);
+        mAddToQueueImageButton = (ImageButton) findViewById(R.id.add_to_queue_image_button);
+        mAddToQueueLogoImageView = (ImageView) findViewById(R.id.add_to_queue_activity_logo_image_view);
+        mFooterTextView = (TextView) findViewById(R.id.add_to_queue_footer_text_view);
+        mHeaderTextView = (TextView) findViewById(R.id.add_to_queue_header_text_view);
+
+        mDraweeView = (SimpleDraweeView) findViewById(R.id.add_to_queue_activity_loading_animation);
+
+        mAddToQueueImageButton.setEnabled(false);
+        mAddToQueueImageButton.setOnClickListener(this::addToQueueButtonTapped);
+        runAnimation(R.drawable.animation_loading);
+    }
+
+    private void runAnimation(int drawable){
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+                .path(String.valueOf(drawable))
+                .build();
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                .build();
+
+        mDraweeView.setController(controller);
+    }
 
 
+    private void addToQueueButtonTapped(View v) {
+        mAddToQueueImageButton.setEnabled(false);
+        mFooterTextView.setText("Adding to Queue...");
+        addUserToQueue();
+>>>>>>> changed assets and queue messages
     }
 
     private void addUserToQueue(View v) {
