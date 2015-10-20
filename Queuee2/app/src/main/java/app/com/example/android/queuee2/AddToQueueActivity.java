@@ -21,6 +21,7 @@ public class AddToQueueActivity extends StyledActionBarActivity{
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
 
+    // TODO: 10/20/15 Remove
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
@@ -101,16 +102,11 @@ public class AddToQueueActivity extends StyledActionBarActivity{
         mQueue.getQueue(this::onGetQueue, this::onGetQueueError);
     }
 
-    private void onGetQueue(Response response) {
-        ArrayList<String> data = (ArrayList<String>) response.getData();
-        if (data.contains(mQueue.getUserId())) {
-            if (data.indexOf(mQueue.getUserId()) == 0) {
-                launchActivity(YouAreNextActivity.class);
-            } else {
-                launchActivity(InQueueActivity.class);
-            }
+    private void onGetQueue(ArrayList<String> queueData) {
+        if (queueData.contains(mQueue.getUserId())) {
+            launchActivity(InQueueActivity.class);
         } else {
-            mView.update(data);
+            mView.update(queueData);
         }
     }
 
@@ -123,6 +119,7 @@ public class AddToQueueActivity extends StyledActionBarActivity{
 
     private void launchActivity(Class toActivityClass) {
         Intent intent = new Intent(this, toActivityClass);
+        intent.putExtra("launchDialog",true);
         startActivity(intent);
     }
 

@@ -1,82 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<app.com.example.android.queuee2.view.BaseLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    tools:context="app.com.example.android.queuee2.ThankYouActivity">
-
-    <TextView
-        android:text="Thank You"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.20"
-        style="@style/headerTextStyle"
-        android:gravity="bottom|center_horizontal"
-        android:id="@+id/thank_you_activity_header_text_view"/>
-
-    <TextView
-        android:text="Enjoy your day!"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.10"
-        style="@style/subheaderTextStyle"
-        android:textColor="@android:color/white"
-        android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/thank_you_activity_subheader_text_view"/>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.4">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/thank_you_activity_animation"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:actualImageScaleType="fitCenter"
-            app:placeholderImageScaleType="fitCenter"
-            app:placeholderImage="@drawable/thank_you_smiley"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:orientation="vertical"
-        android:weightSum="1">
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.45" />
-
-
-        <ImageButton
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.35"
-            android:id="@+id/thank_you_activity_queue_again_button"
-            android:src="@drawable/shop_again_button_selector"
-            android:scaleType="fitCenter"
-            android:background="@null"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"
-            android:gravity="bottom|center_horizontal"
-            android:id="@+id/thank_you_activity_footer_text_view"
-            android:text="press to shop again"/>
-
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"/>
-
-</LinearLayout>
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/thank_you_linear_layout"
+    app:header_text="@string/thank_you_header"
+    app:subheader_text="@string/thank_you_subheader"
+    app:footer_image_hidden="true"
+    app:footer_image_drawable="@drawable/restart_button_selector"
+    app:initial_animation="@drawable/thank_you_smiley"
+    />

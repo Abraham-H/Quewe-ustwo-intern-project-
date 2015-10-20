@@ -1,98 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<app.com.example.android.queuee2.view.InQueueLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:id="@+id/activityInQueueMainRelativeLayout"
-    tools:context="app.com.example.android.queuee2.InQueueActivity"
-    android:weightSum="1">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.23"
-        style="@style/headerTextStyle"
-        android:gravity="bottom|center_horizontal"
-        android:textSize="70sp"
-        android:id="@+id/in_queue_activity_header_text_view"/>
-
-    <TextView
-        android:layout_weight="0.07"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="top|center_horizontal"
-        style="@style/subheaderTextStyle"
-        android:id="@+id/in_queue_activity_subheader_text_view"
-        android:text="finding your position in the queue..."
-        />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.4">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/in_queue_animation_drawee_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:actualImageScaleType="fitCenter"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
-        android:orientation="vertical"
-        android:weightSum="1">
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.45" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.35">
-
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/in_queue_activity_snooze_button"
-                android:src="@drawable/snooze_button_selector"
-                android:scaleType="fitCenter"
-                android:background="@null"
-                />
-
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/in_queue_activity_almost_there_snooze_button"
-                android:src="@drawable/snooze_almost_there_button_selector"
-                android:visibility="invisible"
-                android:scaleType="fitCenter"
-                android:background="@null"
-                />
-
-        </FrameLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"
-            android:gravity="bottom|center_horizontal"
-            android:id="@+id/in_queue_activity_footer_text_view"
-            android:text="Move two people back in queue"/>
-
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"/>
-
-</LinearLayout>
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/in_queue_linear_layout"
+    app:subheader_text="@string/in_queue_subheader_welcome"
+    app:footer_image_hidden="true"
+    app:footer_image_drawable="@drawable/snooze_button_selector"
+    app:initial_animation="@drawable/animation_waiting"
+    />

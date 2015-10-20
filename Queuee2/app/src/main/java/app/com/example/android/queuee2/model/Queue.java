@@ -1,6 +1,8 @@
 package app.com.example.android.queuee2.model;
 
 import android.util.Log;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import com.google.gson.JsonElement;
@@ -23,13 +25,14 @@ public class Queue {
     private Runnable mOnFirebaseChange;
     private static String sAndroidId;
     private String mQueueId;
-    private boolean mSnoozable;
+    private boolean mLast;
 
     public Queue() {
         mHerokuService = HerokuApiClient.getHerokuService();
         sAndroidId = android.provider.Settings.Secure.getString(
                 MyApplication.getAppContext().getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
+        mLast = false;
     }
 
     public void setChangeListener(String queueId, Runnable callback) {
@@ -60,8 +63,13 @@ public class Queue {
         addSubscribers(mHerokuService.remove(mQueueId, sAndroidId), onSuccess, onFailure);
     }
 
-    public void getQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
-        addSubscribers(mHerokuService.info(mQueueId), onSuccess, onFailure);
+    public void getQueue(Action1<ArrayList<String>> onSuccess, Action1<Throwable> onFailure) {
+        addSubscribers(mHerokuService.info(mQueueId), (response) -> {
+            ArrayList<String> queue = (ArrayList<String>) response.getData();
+            int position = queue.indexOf(getUserId()) + 1;
+            mLast = (position == queue.size());
+            onSuccess.call(queue);
+        }, onFailure);
     }
 
     public void getUser(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
@@ -81,15 +89,8 @@ public class Queue {
                 .subscribe(onSuccess, onFailure);
     }
 
-    public boolean snoozeable() {
-        mHerokuService.info(mQueueId)
-                .map(Utils::jsonToResponse)
-                .subscribe(
-                        (response) -> {
-                        }
-                        ,
-                        (e) -> Log.d(TAG, e.getLocalizedMessage()));
-        return mSnoozable;
+    public boolean isLast(){
+        return mLast;
     }
 
     public String getUserId() {

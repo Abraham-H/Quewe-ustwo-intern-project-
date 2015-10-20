@@ -15,13 +15,13 @@ public class Notification {
 
     public static int ACTIVE_NOTIFICATION_ID = 0;
 
-    public static void youAreNextNotification(Context fromActivity, Class toActivityClass, String queueId) {
+    public static void youAreNextNotification(Context fromActivity, Class toActivityClass) {
         final int NOTIFICATION_ID = 123;
         NotificationManager notificationManager;
         notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent notifyIntent = new Intent(fromActivity, toActivityClass);
-        notifyIntent.putExtra("queueId", queueId);
+        notifyIntent.putExtra("queueId", Utils.getQueueId());
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivities(
                 fromActivity,
@@ -41,13 +41,13 @@ public class Notification {
         ACTIVE_NOTIFICATION_ID = NOTIFICATION_ID;
     }
 
-    public static void almostThereNotification(Context fromActivity, Class toActivityClass, String queueId) {
+    public static void almostThereNotification(Context fromActivity, Class toActivityClass) {
         final int NOTIFICATION_ID = 456;
         NotificationManager notificationManager;
         notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent notifyIntent = new Intent(fromActivity, toActivityClass);
-        notifyIntent.putExtra("queueId", queueId);
+        notifyIntent.putExtra("queueId", Utils.getQueueId());
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivities(
                 fromActivity,

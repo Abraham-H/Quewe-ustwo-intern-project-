@@ -12,21 +12,15 @@ import app.com.example.android.queuee2.utils.Utils;
 /**
  * Created by bkach on 10/16/15.
  */
-public class AddToQueueLinearLayout extends CustomLinearLayout {
+public class AddToQueueLinearLayout extends BaseLinearLayout {
 
     public AddToQueueLinearLayout(Context context, AttributeSet attrs){
         super(context, attrs);
-        startLoadingAnimation();
-    }
-
-    private void startLoadingAnimation(){
-        replaceAnimationDrawable(R.drawable.animation_loading);
     }
 
     private void startQueueOpenButtonTransition(){
         buttonTransition(R.drawable.animation_button);
     }
-
 
     public void startQueueClosedButtonTransition(){
         buttonTransition(R.drawable.animation_button_closed);
@@ -49,10 +43,7 @@ public class AddToQueueLinearLayout extends CustomLinearLayout {
     }
 
     public void update(ArrayList<String> data){
-        mHeaderImageView.setImageResource(Utils.getQueueImageResource(Utils.getQueueId()));
-        if (mHeaderTextView.getVisibility() == VISIBLE) {
-            mHeaderTextView.setVisibility(INVISIBLE);
-        }
+        setHeaderImageView();
 
         if (data != null) {
             startQueueOpenButtonTransition();

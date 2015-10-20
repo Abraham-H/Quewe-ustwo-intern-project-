@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.facebook.drawee.view.SimpleDraweeView
+    android:id="@+id/animation_layout"
+    app:actualImageScaleType="fitCenter"
+    app:placeholderImageScaleType="fitCenter"
+    app:fadeDuration="0"
+    android:layout_gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"/>
+

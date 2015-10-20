@@ -24,6 +24,7 @@ public abstract class StyledActionBarActivity extends Activity {
     private static final String TAG = StyledActionBarActivity.class.getSimpleName();
     private TextView mActionBarTitleTextView;
     private ImageView mActionBarLogoImageView;
+    private ImageView mCancelImageView;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     @Override
@@ -49,9 +50,13 @@ public abstract class StyledActionBarActivity extends Activity {
     }
 
     protected void setCancelListener(Runnable runnable){
-        ImageView cancelImageView = (ImageView) findViewById(R.id.action_bar_default_layout_cancel_button);
-        cancelImageView.setVisibility(View.VISIBLE);
-        cancelImageView.setOnClickListener((v) -> runnable.run());
+        mCancelImageView = (ImageView) findViewById(R.id.action_bar_default_layout_cancel_button);
+        mCancelImageView.setVisibility(View.VISIBLE);
+        mCancelImageView.setOnClickListener((v) -> runnable.run());
+    }
+
+    protected void removeCancelButton(){
+        mCancelImageView.setVisibility(View.GONE);
     }
 
     protected void hideActionBarLogo(){
@@ -68,6 +73,7 @@ public abstract class StyledActionBarActivity extends Activity {
     private void setActionBarLogo(){
         String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("queueId", null);
+        queueId = (queueId == null) ? "queue1" : queueId;
         mActionBarLogoImageView.setImageResource(Utils.getQueueImageResource(queueId));
         mActionBarTitleTextView.setVisibility(View.INVISIBLE);
         mActionBarLogoImageView.setVisibility(View.VISIBLE);

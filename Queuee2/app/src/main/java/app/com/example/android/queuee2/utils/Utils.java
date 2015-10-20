@@ -1,17 +1,9 @@
 package app.com.example.android.queuee2.utils;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.text.InputFilter;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,12 +12,6 @@ import android.widget.Toolbar;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-
-import org.w3c.dom.Text;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import app.com.example.android.queuee2.MyApplication;
 import app.com.example.android.queuee2.R;
