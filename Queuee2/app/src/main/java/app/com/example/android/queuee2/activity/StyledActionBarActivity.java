@@ -49,28 +49,28 @@ public abstract class StyledActionBarActivity extends Activity {
         toolbar.setContentInsetsAbsolute(0, 0);
     }
 
-    protected void setCancelListener(Runnable runnable){
+    protected void setCancelListener(Runnable runnable) {
         mCancelImageView = (ImageView) findViewById(R.id.action_bar_default_layout_cancel_button);
         mCancelImageView.setVisibility(View.VISIBLE);
         mCancelImageView.setOnClickListener((v) -> runnable.run());
     }
 
-    protected void removeCancelButton(){
+    protected void removeCancelButton() {
         mCancelImageView.setVisibility(View.GONE);
     }
 
-    protected void hideActionBarLogo(){
+    protected void hideActionBarLogo() {
         mActionBarLogoImageView.setVisibility(View.INVISIBLE);
         mActionBarTitleTextView.setVisibility(View.VISIBLE);
     }
 
-    protected void updateActionBarLogo(){
+    protected void updateActionBarLogo() {
         setActionBarLogo();
         mActionBarLogoImageView.setVisibility(View.INVISIBLE);
         mActionBarTitleTextView.setVisibility(View.VISIBLE);
     }
 
-    private void setActionBarLogo(){
+    private void setActionBarLogo() {
         String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("queueId", null);
         queueId = (queueId == null) ? "queue1" : queueId;

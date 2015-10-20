@@ -9,10 +9,10 @@ import android.util.AttributeSet;
 public class ThankYouLinearLayout extends BaseLinearLayout {
 
     public ThankYouLinearLayout(Context context, AttributeSet attrs) {
-        super(context,attrs);
+        super(context, attrs);
     }
 
-    public void setQueueAgainButtonListener(Runnable runnable){
-       setFooterButtonListener((v) -> runnable.run());
+    public void setQueueAgainButtonListener(Runnable runnable) {
+        setFooterButtonListener((v) -> runnable.run());
     }
 }

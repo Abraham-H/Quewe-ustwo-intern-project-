@@ -2,10 +2,10 @@ package app.com.example.android.queuee2.model;
 
 import android.util.Log;
 
-import java.lang.reflect.Array;
+import com.google.gson.JsonElement;
+
 import java.util.ArrayList;
 
-import com.google.gson.JsonElement;
 import app.com.example.android.queuee2.MyApplication;
 import app.com.example.android.queuee2.utils.Utils;
 import rx.Observable;
@@ -43,7 +43,7 @@ public class Queue {
         mFirebaseListener.connectListener();
     }
 
-    public void connectChangeListener(){
+    public void connectChangeListener() {
         if (mFirebaseListener != null) {
             mFirebaseListener.connectListener();
         }
@@ -59,7 +59,7 @@ public class Queue {
         addSubscribers(mHerokuService.add(mQueueId, sAndroidId), onSuccess, onFailure);
     }
 
-    public void removeUserFromQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure){
+    public void removeUserFromQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         addSubscribers(mHerokuService.remove(mQueueId, sAndroidId), onSuccess, onFailure);
     }
 
@@ -89,7 +89,7 @@ public class Queue {
                 .subscribe(onSuccess, onFailure);
     }
 
-    public boolean isLast(){
+    public boolean isLast() {
         return mLast;
     }
 

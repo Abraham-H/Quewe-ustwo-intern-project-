@@ -7,7 +7,9 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import app.com.example.android.queuee2.activity.StyledActionBarActivity;
 import app.com.example.android.queuee2.dialog.InQueueDialog;
@@ -19,12 +21,20 @@ import rx.functions.Action1;
 
 public class InQueueActivity extends StyledActionBarActivity {
 
+    private static final String LAUNCH_DIALOG = "launchDialog";
     private static String TAG = InQueueActivity.class.getSimpleName();
     private InQueueLinearLayout mView;
     private Intent mServiceIntent;
     private CheckQueueService mService;
     private Action1<Integer> mChangeListener;
     boolean mBound;
+
+    @NonNull
+    static Intent createIntent(Context context, boolean launchDialog) {
+        Intent intent = new Intent(context, InQueueActivity.class);
+        intent.putExtra(LAUNCH_DIALOG, launchDialog);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +48,19 @@ public class InQueueActivity extends StyledActionBarActivity {
 
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         bindService();
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         unbindService(mConnection);
     }
 
-    private void launchPopup(){
-        if (getIntent().getBooleanExtra("launchDialog", false)){
+    private void launchPopup() {
+        if (getIntent().getBooleanExtra(LAUNCH_DIALOG, false)) {
             new InQueueDialog(this);
         }
     }
@@ -58,13 +68,13 @@ public class InQueueActivity extends StyledActionBarActivity {
     private void setupView() {
         mView = (InQueueLinearLayout) findViewById(R.id.in_queue_linear_layout);
         mView.setSnoozeButtonListener(() ->
-            mService.getQueue().snooze(
-                    (r) -> Log.d(TAG, "Snooze Success!"),
-                    (e) -> Log.d(TAG, "Snooze Error!")));
+                mService.getQueue().snooze(
+                        (r) -> Log.d(TAG, "Snooze Success!"),
+                        (e) -> Log.d(TAG, "Snooze Error!")));
         setCancelListener(this::cancelConfirmation);
     }
 
-    private void launchService(){
+    private void launchService() {
         mServiceIntent = new Intent(this, CheckQueueService.class);
         startService(mServiceIntent);
         bindService();
@@ -75,26 +85,26 @@ public class InQueueActivity extends StyledActionBarActivity {
         bindService(mServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void setListener(){
+    private void setListener() {
         mChangeListener = (position) ->
-            {
-                if (position == 0){
-                    launchThankYouActivity();
-                } else if (position == -1) {
-                    finish();
+        {
+            if (position == 0) {
+                launchThankYouActivity();
+            } else if (position == -1) {
+                finish();
+            } else {
+                mView.update(position);
+                if (position == 1) {
+                    removeCancelButton();
                 } else {
-                    mView.update(position);
-                    if (position == 1){
-                        removeCancelButton();
+                    if (mService.isLast()) {
+                        mView.lastInQueue();
                     } else {
-                        if (mService.isLast()) {
-                            mView.lastInQueue();
-                        } else {
-                            mView.notLastInQueue();
-                        }
+                        mView.notLastInQueue();
                     }
                 }
-            };
+            }
+        };
     }
 
     @Override
@@ -102,17 +112,17 @@ public class InQueueActivity extends StyledActionBarActivity {
         cancelConfirmation();
     }
 
-    private void cancelConfirmation(){
+    private void cancelConfirmation() {
         new LeaveQueueConfirmationDialog(this, this::removeFromQueue, () -> {});
     }
 
-    private void removeFromQueue(){
+    private void removeFromQueue() {
         mView.leavingQueue();
         mService.disconnectChangeListener();
         mService.getQueue().removeUserFromQueue(this::onRemoveSuccess, this::onRemoveError);
     }
 
-    private void onRemoveSuccess(Response response){
+    private void onRemoveSuccess(Response response) {
         stopService(mServiceIntent);
         finish();
     }
@@ -123,7 +133,7 @@ public class InQueueActivity extends StyledActionBarActivity {
         Log.d(TAG, "Error: " + error.getMessage());
     }
 
-    private void launchThankYouActivity(){
+    private void launchThankYouActivity() {
         stopService(mServiceIntent);
         Intent intent = new Intent(this, ThankYouActivity.class);
         startActivity(intent);

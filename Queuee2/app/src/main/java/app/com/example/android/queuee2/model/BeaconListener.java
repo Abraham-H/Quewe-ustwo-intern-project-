@@ -39,13 +39,13 @@ public class BeaconListener {
 
     private Observable<String> mObservable;
 
-    public BeaconListener(Activity activity){
+    public BeaconListener(Activity activity) {
         this.mActivity = activity;
         mBeaconManager = new BeaconManager(activity);
         mRecieverRegistered = false;
     }
 
-    public void connect(Action1<String> onSuccess, Action1<Throwable> onFailure, boolean bluetoothDenied){
+    public void connect(Action1<String> onSuccess, Action1<Throwable> onFailure, boolean bluetoothDenied) {
         if (!mConnecting) {
             mConnecting = true;
             mBluetoothDenied = bluetoothDenied;
@@ -73,15 +73,15 @@ public class BeaconListener {
         }
     }
 
-    private void registerReciever(){
-        if(mReciever == null || !mRecieverRegistered) {
+    private void registerReciever() {
+        if (mReciever == null || !mRecieverRegistered) {
             mReciever = createBroadcastReceiver();
             mActivity.registerReceiver(mReciever, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
             mRecieverRegistered = true;
         }
     }
 
-    private void requestBluetooth(){
+    private void requestBluetooth() {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         mActivity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
     }
@@ -90,7 +90,7 @@ public class BeaconListener {
         mBeaconManager.connect(() -> mBeaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION));
     }
 
-    private void findBeacon(){
+    private void findBeacon() {
         mBeaconManager.setRangingListener(
                 (Region region, final List<Beacon> beacons) -> {
                     if (beacons.size() > 0) {
@@ -100,7 +100,7 @@ public class BeaconListener {
                         String queueId = null;
 
                         if (uuid.equals("b9407f30-f5f8-466e-aff9-25556b57fe6d")) {
-                            if(minor == 1) {
+                            if (minor == 1) {
                                 queueId = "queue1";
                             } else if (minor == 2) {
                                 queueId = "queue2";
@@ -146,7 +146,7 @@ public class BeaconListener {
         };
     }
 
-    public void disconnect(){
+    public void disconnect() {
         if (mBeaconManager != null) {
             mBeaconManager.disconnect();
             stopRanging();

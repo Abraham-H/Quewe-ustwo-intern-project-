@@ -30,7 +30,7 @@ public class FirebaseListener {
             eventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(eventListener != null)
+                    if (eventListener != null)
                         onChange.run();
                 }
 

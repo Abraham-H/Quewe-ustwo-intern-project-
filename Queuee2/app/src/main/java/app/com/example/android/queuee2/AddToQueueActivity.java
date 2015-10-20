@@ -1,13 +1,5 @@
 package app.com.example.android.queuee2;
 
-import app.com.example.android.queuee2.activity.StyledActionBarActivity;
-import app.com.example.android.queuee2.model.BeaconListener;
-import app.com.example.android.queuee2.model.Permissions;
-import app.com.example.android.queuee2.model.Queue;
-import app.com.example.android.queuee2.model.Response;
-import app.com.example.android.queuee2.utils.Utils;
-import app.com.example.android.queuee2.view.AddToQueueLinearLayout;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,12 +8,20 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class AddToQueueActivity extends StyledActionBarActivity{
+import app.com.example.android.queuee2.activity.StyledActionBarActivity;
+import app.com.example.android.queuee2.model.BeaconListener;
+import app.com.example.android.queuee2.model.Permissions;
+import app.com.example.android.queuee2.model.Queue;
+import app.com.example.android.queuee2.model.Response;
+import app.com.example.android.queuee2.utils.Utils;
+import app.com.example.android.queuee2.view.AddToQueueLinearLayout;
+
+public class AddToQueueActivity extends StyledActionBarActivity {
 
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
+    private static final boolean DEBUG = true;
 
-    // TODO: 10/20/15 Remove
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
@@ -52,12 +52,14 @@ public class AddToQueueActivity extends StyledActionBarActivity{
     @Override
     protected void onPause() {
         super.onPause();
-        mBeaconListener.disconnect();
+        if (!DEBUG)
+            mBeaconListener.disconnect();
         mQueue.disconnectChangeListener();
     }
 
     private void setInstanceVariables() {
-        mBeaconListener = new BeaconListener(this);
+        if (!DEBUG)
+            mBeaconListener = new BeaconListener(this);
         mQueue = new Queue();
         mIsBluetoothDenied = false;
     }
@@ -66,8 +68,6 @@ public class AddToQueueActivity extends StyledActionBarActivity{
         hideActionBarLogo();
         mView = (AddToQueueLinearLayout) findViewById(R.id.add_to_queue_linear_layout);
         mView.setAddToQueueButtonListener(this::addUserToQueue);
-
-
     }
 
     private void addUserToQueue(View v) {
@@ -77,7 +77,7 @@ public class AddToQueueActivity extends StyledActionBarActivity{
     private void onUserAdded(Response response) {
         Log.d(TAG, response.getMessage());
         mQueue.disconnectChangeListener();
-        launchActivity(InQueueActivity.class);
+        launchActivity();
     }
 
     private void onUserAddedError(Throwable throwable) {
@@ -86,7 +86,10 @@ public class AddToQueueActivity extends StyledActionBarActivity{
     }
 
     private void connectBeaconListener(boolean isBluetoothDenied) {
-        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+        if (!DEBUG)
+            mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+        else
+            onBeaconFound("queue1");
     }
 
     private void onBeaconFound(String queueId) {
@@ -98,13 +101,13 @@ public class AddToQueueActivity extends StyledActionBarActivity{
         Log.d(TAG, "EstimoteBeacon error:" + throwable.getMessage());
     }
 
-    private void changeListener(){
+    private void changeListener() {
         mQueue.getQueue(this::onGetQueue, this::onGetQueueError);
     }
 
     private void onGetQueue(ArrayList<String> queueData) {
         if (queueData.contains(mQueue.getUserId())) {
-            launchActivity(InQueueActivity.class);
+            launchActivity();
         } else {
             mView.update(queueData);
         }
@@ -117,9 +120,8 @@ public class AddToQueueActivity extends StyledActionBarActivity{
         }
     }
 
-    private void launchActivity(Class toActivityClass) {
-        Intent intent = new Intent(this, toActivityClass);
-        intent.putExtra("launchDialog",true);
+    private void launchActivity() {
+        Intent intent = InQueueActivity.createIntent(this, true);
         startActivity(intent);
     }
 

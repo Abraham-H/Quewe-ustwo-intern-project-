@@ -16,7 +16,7 @@ public class InQueueLinearLayout extends BaseLinearLayout {
     private boolean mAlmostNext;
     private boolean mYourTurn;
 
-    public InQueueLinearLayout(Context context, AttributeSet attrs){
+    public InQueueLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         mAlmostNext = false;
         mYourTurn = false;
@@ -30,22 +30,22 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         });
     }
 
-    public void notLastInQueue(){
+    public void notLastInQueue() {
         mFooterImageButton.setEnabled(true);
         mFooterImageButton.setVisibility(VISIBLE);
         mFooterTextView.setText("Move two people in front of you");
     }
 
-    public void lastInQueue(){
+    public void lastInQueue() {
         mFooterImageButton.setVisibility(INVISIBLE);
         mFooterTextView.setText("At the back of the queue");
     }
 
-    public void leavingQueue(){
+    public void leavingQueue() {
         mSubheaderTextView.setText("Leaving queue...");
     }
 
-    private String positionToString(int position){
+    private String positionToString(int position) {
         String suffix;
         if (position % 10 == 1 && position % 11 != 0) {
             suffix = "st";
@@ -59,30 +59,28 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         return String.valueOf(position) + suffix;
     }
 
-    public void update(int position){
-        if (position == 1){
-            if( !mYourTurn ){
+    public void update(int position) {
+        if (position == 1) {
+            if (!mYourTurn) {
                 setYourTurnStyle();
             }
-        }
-        else if (position == 3){
-            if ( !mAlmostNext ) {
+        } else if (position == 3) {
+            if (!mAlmostNext) {
                 setAlmostNextStyle();
             }
-        }
-        else {
-            if ( mAlmostNext ) {
+        } else {
+            if (mAlmostNext) {
                 clearStyles();
             }
             mHeaderTextView.setText(positionToString(position));
-            String subheaderText = "About " + String.valueOf(position*2) + " min left";
+            String subheaderText = "About " + String.valueOf(position * 2) + " min left";
             mSubheaderTextView.setText(subheaderText);
         }
     }
 
-    private void setAlmostNextStyle(){
+    private void setAlmostNextStyle() {
         mAlmostNext = true;
-        transitionBackgroundColor(Color.WHITE,getResources().getColor(R.color.happy_peach));
+        transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_peach));
         replaceAnimationDrawable(R.drawable.animation_almost_there);
         mHeaderTextView.setTextSize(42.0f);
         mHeaderTextView.setText(R.string.in_queue_almost_there_header);
@@ -93,9 +91,9 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mFooterImageButton.setImageResource(R.drawable.snooze_almost_there_button_selector);
     }
 
-    private void clearStyles(){
+    private void clearStyles() {
         mAlmostNext = false;
-        transitionBackgroundColor(getResources().getColor(R.color.happy_peach),Color.WHITE);
+        transitionBackgroundColor(getResources().getColor(R.color.happy_peach), Color.WHITE);
         replaceAnimationDrawable(R.drawable.animation_waiting);
         mHeaderTextView.setTextSize(70.0f);
         mHeaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
@@ -104,9 +102,9 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mFooterImageButton.setImageResource(R.drawable.snooze_button_selector);
     }
 
-    private void setYourTurnStyle(){
+    private void setYourTurnStyle() {
         mYourTurn = true;
-        transitionBackgroundColor(Color.WHITE,getResources().getColor(R.color.happy_blue));
+        transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_blue));
         replaceAnimationDrawable(R.drawable.animation_you_are_next);
         mHeaderTextView.setTextSize(42.0f);
         mHeaderTextView.setText("It's your turn!");
@@ -118,7 +116,7 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mFooterImageButton.setVisibility(GONE);
     }
 
-    private void transitionBackgroundColor(int colorFrom, int colorTo){
+    private void transitionBackgroundColor(int colorFrom, int colorTo) {
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
         colorAnimation.addUpdateListener(
                 animator -> setBackgroundColor((Integer) animator.getAnimatedValue()));

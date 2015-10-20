@@ -1,6 +1,5 @@
 package app.com.example.android.queuee2.utils;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,9 +10,12 @@ import app.com.example.android.queuee2.R;
 /**
  * Created by bkach on 9/28/15.
  */
-public class Notification {
+public final class Notification {
 
     public static int ACTIVE_NOTIFICATION_ID = 0;
+
+    private Notification() {
+    }
 
     public static void youAreNextNotification(Context fromActivity, Class toActivityClass) {
         final int NOTIFICATION_ID = 123;

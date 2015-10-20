@@ -14,19 +14,19 @@ import app.com.example.android.queuee2.utils.Utils;
  */
 public class AddToQueueLinearLayout extends BaseLinearLayout {
 
-    public AddToQueueLinearLayout(Context context, AttributeSet attrs){
+    public AddToQueueLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    private void startQueueOpenButtonTransition(){
+    private void startQueueOpenButtonTransition() {
         buttonTransition(R.drawable.animation_button);
     }
 
-    public void startQueueClosedButtonTransition(){
+    public void startQueueClosedButtonTransition() {
         buttonTransition(R.drawable.animation_button_closed);
     }
 
-    private void buttonTransition(int resourceId){
+    private void buttonTransition(int resourceId) {
         replaceAnimationDrawable(resourceId);
         Utils.afterDelayRun(1, () -> {
             mCenterImageButton.setVisibility(View.VISIBLE);
@@ -34,7 +34,7 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
         });
     }
 
-    private String numInQueueString(int size){
+    private String numInQueueString(int size) {
         if (size > 0) {
             return String.valueOf(size) + (size == 1 ? " person" : " people") + " in queue";
         } else {
@@ -42,7 +42,7 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
         }
     }
 
-    public void update(ArrayList<String> data){
+    public void update(ArrayList<String> data) {
         setHeaderImageView();
 
         if (data != null) {
@@ -61,7 +61,7 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
     }
 
 
-    public void setAddToQueueButtonListener(OnClickListener onClickListener){
+    public void setAddToQueueButtonListener(OnClickListener onClickListener) {
         mCenterImageButton.setOnClickListener(onClickListener);
     }
 }

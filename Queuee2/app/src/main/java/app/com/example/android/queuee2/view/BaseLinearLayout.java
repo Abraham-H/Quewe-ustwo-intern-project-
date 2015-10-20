@@ -35,17 +35,17 @@ public class BaseLinearLayout extends LinearLayout {
     protected TextView mFooterTextView;
     protected FrameLayout mFrameLayout;
 
-    public BaseLinearLayout(Context context, AttributeSet attrs){
+    public BaseLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.base_linear_layout, (ViewGroup) this.getRootView(), true);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.base_activity_layout, (ViewGroup) this.getRootView(), true);
         setViews();
         setAttributes(context, attrs);
     }
 
-    private void setViews(){
+    private void setViews() {
         mHeaderImageView = (ImageView) findViewById(R.id.custom_header_image_view);
-        mHeaderTextView= (TextView) findViewById(R.id.custom_header_text_view);
+        mHeaderTextView = (TextView) findViewById(R.id.custom_header_text_view);
         mSubheaderTextView = (TextView) findViewById(R.id.custom_subheader_text_view);
         mAnimationView = (SimpleDraweeView) findViewById(R.id.custom_animation_drawee_view);
         mCenterImageButton = (ImageButton) findViewById(R.id.custom_center_image_button);
@@ -54,7 +54,7 @@ public class BaseLinearLayout extends LinearLayout {
         mFrameLayout = (FrameLayout) findViewById(R.id.custom_frame_layout);
     }
 
-    private void setAttributes(Context context, AttributeSet attrs){
+    private void setAttributes(Context context, AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
                 R.styleable.CustomLinearLayout,
@@ -67,8 +67,8 @@ public class BaseLinearLayout extends LinearLayout {
             if (a.getBoolean(R.styleable.CustomLinearLayout_footer_image_hidden, true)) {
                 mFooterImageButton.setVisibility(GONE);
             }
-            int animationResource = a.getResourceId(R.styleable.CustomLinearLayout_initial_animation,0);
-            if (animationResource != 0){
+            int animationResource = a.getResourceId(R.styleable.CustomLinearLayout_initial_animation, 0);
+            if (animationResource != 0) {
                 replaceAnimationDrawable(animationResource);
             }
 
@@ -89,14 +89,14 @@ public class BaseLinearLayout extends LinearLayout {
                 .build());
     }
 
-    protected void setHeaderImageView(){
+    protected void setHeaderImageView() {
         mHeaderImageView.setImageResource(Utils.getQueueImageResource(Utils.getQueueId()));
         if (mHeaderTextView.getVisibility() == VISIBLE) {
             mHeaderTextView.setVisibility(INVISIBLE);
         }
     }
 
-    protected void setFooterButtonListener(OnClickListener onClickListener){
+    protected void setFooterButtonListener(OnClickListener onClickListener) {
         mFooterImageButton.setOnClickListener(onClickListener);
     }
 

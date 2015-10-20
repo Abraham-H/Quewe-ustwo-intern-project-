@@ -5,7 +5,7 @@
       <attr name="subheader_text" format="string" />
       <attr name="footer_text" format="string" />
       <attr name="footer_image_hidden" format="boolean" />
-       <attr name="footer_image_drawable" format="integer" />
+      <attr name="footer_image_drawable" format="integer" />
       <attr name="initial_animation" format="integer" />
    </declare-styleable>
 

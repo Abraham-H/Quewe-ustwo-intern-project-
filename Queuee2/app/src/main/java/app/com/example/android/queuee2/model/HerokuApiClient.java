@@ -30,31 +30,38 @@ public class HerokuApiClient {
         Observable<JsonElement> add(
                 @Path("queueId") String queueId
         );
+
         @GET("/add/{queueId}/{userId}")
         Observable<JsonElement> add(
                 @Path("queueId") String queueId,
                 @Path("userId") String userId
         );
+
         @GET("/info")
         Observable<JsonElement> info();
+
         @GET("/info/{queueId}")
         Observable<JsonElement> info(
                 @Path("queueId") String queueId
         );
+
         @GET("/info/{queueId}/{userId}")
         Observable<JsonElement> info(
                 @Path("queueId") String queueId,
                 @Path("userId") String userId
         );
+
         @GET("/pop/{queueId}")
         Observable<JsonElement> pop(
                 @Path("queueId") String queueId
         );
+
         @GET("/remove/{queueId}/{userId}")
         Observable<JsonElement> remove(
                 @Path("queueId") String queueId,
                 @Path("userId") String userId
         );
+
         @GET("/snooze/{queueId}/{userId}")
         Observable<JsonElement> snooze(
                 @Path("queueId") String queueId,

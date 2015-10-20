@@ -72,10 +72,10 @@ public class CheckQueueService extends Service {
         disconnectChangeListener();
     }
 
-    public void setChangeListener(String queueId, Action1<Integer> boundChangeListener){
+    public void setChangeListener(String queueId, Action1<Integer> boundChangeListener) {
         mBoundChangeListener = boundChangeListener;
         sQueue.setChangeListener(queueId,
-                () -> sQueue.getQueue(this::onGetQueue,this::onGetQueueError));
+                () -> sQueue.getQueue(this::onGetQueue, this::onGetQueueError));
     }
 
     private void onGetQueue(ArrayList<String> queue) {
@@ -84,7 +84,7 @@ public class CheckQueueService extends Service {
 
         if (isBound) {
             mBoundChangeListener.call(position);
-        } else if( position != mLastPosition ) {
+        } else if (position != mLastPosition) {
             mLastPosition = position;
             if (position == 1) {
                 Notification.removeLastNotification(this);
@@ -98,26 +98,26 @@ public class CheckQueueService extends Service {
 
     private void onGetQueueError(Throwable throwable) {
         Notification.removeLastNotification(this);
-        if (isBound){
+        if (isBound) {
             mBoundChangeListener.call(-1);
         } else {
-           stopSelf();
+            stopSelf();
         }
     }
 
-    public boolean isLast(){
+    public boolean isLast() {
         return sQueue.isLast();
     }
 
-    public Queue getQueue(){
+    public Queue getQueue() {
         return sQueue;
     }
 
-    public void connectChangeListener(){
+    public void connectChangeListener() {
         sQueue.connectChangeListener();
     }
 
-    public void disconnectChangeListener(){
+    public void disconnectChangeListener() {
         sQueue.connectChangeListener();
     }
 
