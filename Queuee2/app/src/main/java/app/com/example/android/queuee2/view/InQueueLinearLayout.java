@@ -80,7 +80,7 @@ public class InQueueLinearLayout extends BaseLinearLayout {
 
     private void setAlmostNextStyle() {
         mAlmostNext = true;
-        transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_peach));
+        transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_peach,null));
         replaceAnimationDrawable(R.drawable.animation_almost_there);
         mHeaderTextView.setTextSize(42.0f);
         mHeaderTextView.setText(R.string.in_queue_almost_there_header);
@@ -93,18 +93,18 @@ public class InQueueLinearLayout extends BaseLinearLayout {
 
     private void clearStyles() {
         mAlmostNext = false;
-        transitionBackgroundColor(getResources().getColor(R.color.happy_peach), Color.WHITE);
+        transitionBackgroundColor(getResources().getColor(R.color.happy_peach,null), Color.WHITE);
         replaceAnimationDrawable(R.drawable.animation_waiting);
         mHeaderTextView.setTextSize(70.0f);
-        mHeaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
-        mFooterTextView.setTextColor(getResources().getColor(R.color.happy_grey));
-        mSubheaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
+        mHeaderTextView.setTextColor(getResources().getColor(R.color.happy_grey,null));
+        mFooterTextView.setTextColor(getResources().getColor(R.color.happy_grey,null));
+        mSubheaderTextView.setTextColor(getResources().getColor(R.color.happy_grey,null));
         mFooterImageButton.setImageResource(R.drawable.snooze_button_selector);
     }
 
     private void setYourTurnStyle() {
         mYourTurn = true;
-        transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_blue));
+        transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_blue,null));
         replaceAnimationDrawable(R.drawable.animation_you_are_next);
         mHeaderTextView.setTextSize(42.0f);
         mHeaderTextView.setText("It's your turn!");

@@ -10,7 +10,7 @@ import rx.Observable;
 /**
  * Created by bkach on 9/16/15.
  */
-public class HerokuApiClient {
+public final class HerokuApiClient {
 
     private static final String sHerokuServiceEndpoint = "https://intern-queue.herokuapp.com";
     private static HerokuService sHerokuService;

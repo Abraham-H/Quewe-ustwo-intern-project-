@@ -12,7 +12,7 @@ import app.com.example.android.queuee2.R;
  */
 public final class Notification {
 
-    public static int ACTIVE_NOTIFICATION_ID = 0;
+    private static int ACTIVE_NOTIFICATION_ID = 0;
 
     private Notification() {
     }

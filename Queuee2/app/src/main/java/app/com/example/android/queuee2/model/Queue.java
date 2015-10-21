@@ -22,7 +22,6 @@ public class Queue {
 
     private HerokuApiClient.HerokuService mHerokuService;
     private FirebaseListener mFirebaseListener;
-    private Runnable mOnFirebaseChange;
     private static String sAndroidId;
     private String mQueueId;
     private boolean mLast;
@@ -38,8 +37,7 @@ public class Queue {
     public void setChangeListener(String queueId, Runnable callback) {
         this.disconnectChangeListener();
         this.mQueueId = queueId;
-        this.mOnFirebaseChange = callback::run;
-        mFirebaseListener = new FirebaseListener(mOnFirebaseChange);
+        mFirebaseListener = new FirebaseListener(callback::run);
         mFirebaseListener.connectListener();
     }
 
@@ -72,16 +70,11 @@ public class Queue {
         }, onFailure);
     }
 
-    public void getUser(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
-        Log.d(TAG, "getUser(): " + String.valueOf(sAndroidId) + ", " + mQueueId);
-        addSubscribers(mHerokuService.info(mQueueId, sAndroidId), onSuccess, onFailure);
-    }
-
     public void snooze(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         addSubscribers(mHerokuService.snooze(mQueueId, sAndroidId), onSuccess, onFailure);
     }
 
-    public void addSubscribers(Observable<JsonElement> observable, Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+    private void addSubscribers(Observable<JsonElement> observable, Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

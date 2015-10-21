@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import app.com.example.android.queuee2.activity.StyledActionBarActivity;
 import app.com.example.android.queuee2.dialog.InQueueDialog;
@@ -22,17 +21,16 @@ import rx.functions.Action1;
 public class InQueueActivity extends StyledActionBarActivity {
 
     private static final String LAUNCH_DIALOG = "launchDialog";
-    private static String TAG = InQueueActivity.class.getSimpleName();
+    private static final String TAG = InQueueActivity.class.getSimpleName();
     private InQueueLinearLayout mView;
     private Intent mServiceIntent;
     private CheckQueueService mService;
     private Action1<Integer> mChangeListener;
-    boolean mBound;
 
     @NonNull
-    static Intent createIntent(Context context, boolean launchDialog) {
+    static Intent createInQueueActivityIntent(Context context) {
         Intent intent = new Intent(context, InQueueActivity.class);
-        intent.putExtra(LAUNCH_DIALOG, launchDialog);
+        intent.putExtra(LAUNCH_DIALOG, true);
         return intent;
     }
 
@@ -146,11 +144,7 @@ public class InQueueActivity extends StyledActionBarActivity {
             String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                     .getString("queueId", null);
             mService.setChangeListener(queueId, mChangeListener);
-            mBound = true;
         }
-
-        public void onServiceDisconnected(ComponentName className) {
-            mBound = false;
-        }
+        public void onServiceDisconnected(ComponentName className) {}
     };
 }

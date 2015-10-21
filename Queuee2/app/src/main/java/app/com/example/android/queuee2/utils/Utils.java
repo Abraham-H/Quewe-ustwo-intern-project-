@@ -1,15 +1,8 @@
 package app.com.example.android.queuee2.utils;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -48,7 +41,7 @@ public final class Utils {
                 PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("queueId", queueId);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getQueueId() {

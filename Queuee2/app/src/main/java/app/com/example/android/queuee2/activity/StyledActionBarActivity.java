@@ -96,7 +96,6 @@ public abstract class StyledActionBarActivity extends Activity {
                             Log.d(TAG, "onRequestPermissionResult() called with: " + "requestCode = [" + requestCode + "], permissions = [" + permissions + "], grantResults = [" + grantResults + "]"));
                     builder.show();
                 }
-                return;
             }
         }
     }

@@ -24,8 +24,6 @@ import app.com.example.android.queuee2.utils.Utils;
  */
 public class BaseLinearLayout extends LinearLayout {
 
-    private static final String TAG = BaseLinearLayout.class.getSimpleName();
-
     protected ImageView mHeaderImageView;
     protected TextView mHeaderTextView;
     protected TextView mSubheaderTextView;

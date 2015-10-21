@@ -17,7 +17,7 @@ import rx.functions.Action1;
 public class CheckQueueService extends Service {
 
     private final IBinder mBinder = new LocalBinder();      // interface for clients that bind
-    boolean mAllowRebind; // indicates whether onRebind should be used
+    private boolean mAllowRebind; // indicates whether onRebind should be used
     private static final String TAG = CheckQueueService.class.getSimpleName();
     private static Queue sQueue;
     private int mLastPosition;

@@ -22,7 +22,7 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
         buttonTransition(R.drawable.animation_button);
     }
 
-    public void startQueueClosedButtonTransition() {
+    private void startQueueClosedButtonTransition() {
         buttonTransition(R.drawable.animation_button_closed);
     }
 

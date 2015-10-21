@@ -26,7 +26,7 @@ import rx.schedulers.Schedulers;
 public class BeaconListener {
 
     private BeaconManager mBeaconManager;
-    private Subscriber mSubscriber;
+    private Subscriber<String> mSubscriber;
     private BroadcastReceiver mReciever;
     private boolean mRecieverRegistered;
     private boolean mBluetoothDenied;
@@ -36,8 +36,6 @@ public class BeaconListener {
     private static final String TAG = BeaconListener.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
     private static final Region ALL_ESTIMOTE_BEACONS_REGION = new Region("rid", null, null, null);
-
-    private Observable<String> mObservable;
 
     public BeaconListener(Activity activity) {
         this.mActivity = activity;
@@ -158,15 +156,14 @@ public class BeaconListener {
         mSubscriber.onCompleted();
     }
 
-    public void stopRanging() {
+    private void stopRanging() {
         mBeaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
     }
 
-    public Observable<String> createObservable() {
-        mObservable = Observable.create(subscriber -> {
-            mSubscriber = subscriber;
+    private Observable<String> createObservable() {
+        return Observable.create(subscriber -> {
+            mSubscriber = (Subscriber<String>) subscriber;
             checkBluetooth();
         });
-        return mObservable;
     }
 }

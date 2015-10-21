@@ -8,9 +8,6 @@ import app.com.example.android.queuee2.view.ThankYouLinearLayout;
 
 public class ThankYouActivity extends StyledActionBarActivity {
 
-    private static final String TAG = ThankYouActivity.class.getSimpleName();
-    private ThankYouLinearLayout mView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,11 +16,11 @@ public class ThankYouActivity extends StyledActionBarActivity {
     }
 
     private void setView() {
-        mView = (ThankYouLinearLayout) findViewById(R.id.thank_you_linear_layout);
+        ThankYouLinearLayout mView = (ThankYouLinearLayout) findViewById(R.id.thank_you_linear_layout);
         mView.setQueueAgainButtonListener(this::backToAddToQueueActivity);
     }
 
-    public void backToAddToQueueActivity() {
+    private void backToAddToQueueActivity() {
         Intent intent = new Intent(this, AddToQueueActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

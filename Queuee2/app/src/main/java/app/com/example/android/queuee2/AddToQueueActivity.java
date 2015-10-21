@@ -20,7 +20,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
 
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
@@ -35,11 +35,6 @@ public class AddToQueueActivity extends StyledActionBarActivity {
         setInstanceVariables();
         setupView();
         Permissions.askLocationPermission(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -67,11 +62,8 @@ public class AddToQueueActivity extends StyledActionBarActivity {
     private void setupView() {
         hideActionBarLogo();
         mView = (AddToQueueLinearLayout) findViewById(R.id.add_to_queue_linear_layout);
-        mView.setAddToQueueButtonListener(this::addUserToQueue);
-    }
-
-    private void addUserToQueue(View v) {
-        mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError);
+        mView.setAddToQueueButtonListener(v ->
+                mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError));
     }
 
     private void onUserAdded(Response response) {
@@ -94,15 +86,12 @@ public class AddToQueueActivity extends StyledActionBarActivity {
 
     private void onBeaconFound(String queueId) {
         Utils.storeQueueId(queueId);
-        mQueue.setChangeListener(queueId, this::changeListener);
+        mQueue.setChangeListener(queueId,
+                () -> mQueue.getQueue(this::onGetQueue, this::onGetQueueError));
     }
 
     private void onBeaconError(Throwable throwable) {
         Log.d(TAG, "EstimoteBeacon error:" + throwable.getMessage());
-    }
-
-    private void changeListener() {
-        mQueue.getQueue(this::onGetQueue, this::onGetQueueError);
     }
 
     private void onGetQueue(ArrayList<String> queueData) {
@@ -121,7 +110,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
     }
 
     private void launchActivity() {
-        Intent intent = InQueueActivity.createIntent(this, true);
+        Intent intent = InQueueActivity.createInQueueActivityIntent(this);
         startActivity(intent);
     }
 

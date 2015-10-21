@@ -15,9 +15,9 @@ import app.com.example.android.queuee2.MyApplication;
 public class FirebaseListener {
 
     private final static String TAG = FirebaseListener.class.getSimpleName();
-    Firebase fRef;
-    Runnable onChange;
-    ValueEventListener eventListener;
+    private Firebase fRef;
+    private Runnable onChange;
+    private ValueEventListener eventListener;
 
     public FirebaseListener(Runnable onChange) {
         Firebase.setAndroidContext(MyApplication.getAppContext());
