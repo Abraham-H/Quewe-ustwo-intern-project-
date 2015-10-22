@@ -1,4 +1,4 @@
-<app.com.example.android.queuee2.view.BaseLinearLayout
+<app.com.example.android.queuee2.view.ThankYouLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
@@ -7,6 +7,6 @@
     app:header_text="@string/thank_you_header"
     app:subheader_text="@string/thank_you_subheader"
     app:footer_image_hidden="true"
-    app:footer_image_drawable="@drawable/restart_button_selector"
+    app:footer_image_drawable="@drawable/shop_again_button_selector"
     app:initial_animation="@drawable/thank_you_smiley"
     />

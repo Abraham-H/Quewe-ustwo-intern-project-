@@ -56,11 +56,11 @@ public class BaseDialog extends Dialog {
         mImageView = (ImageView) findViewById(R.id.base_dialog_image);
 
         mYesButton = (Button) findViewById(R.id.base_dialog_yes);
-        mYesButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue,null));
+        mYesButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
         mNoButton = (Button) findViewById(R.id.base_dialog_no);
-        mNoButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue,null));
+        mNoButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
         mOkButton = (Button) findViewById(R.id.base_dialog_ok);
-        mOkButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue,null));
+        mOkButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
         mText = (TextView) findViewById(R.id.base_dialog_text);
     }
 

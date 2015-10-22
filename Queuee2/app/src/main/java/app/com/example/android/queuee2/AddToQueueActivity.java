@@ -20,7 +20,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
 
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
@@ -81,7 +81,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
         if (!DEBUG)
             mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
         else
-            onBeaconFound("queue1");
+            onBeaconFound("queue2");
     }
 
     private void onBeaconFound(String queueId) {

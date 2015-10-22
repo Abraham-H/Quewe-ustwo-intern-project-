@@ -13,6 +13,7 @@ public class ThankYouLinearLayout extends BaseLinearLayout {
     }
 
     public void setQueueAgainButtonListener(Runnable runnable) {
+        mFooterImageButton.setVisibility(VISIBLE);
         setFooterButtonListener((v) -> runnable.run());
     }
 }

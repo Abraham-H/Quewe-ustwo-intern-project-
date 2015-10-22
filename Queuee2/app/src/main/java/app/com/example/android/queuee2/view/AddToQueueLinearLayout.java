@@ -28,7 +28,7 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
 
     private void buttonTransition(int resourceId) {
         replaceAnimationDrawable(resourceId);
-        Utils.afterDelayRun(1, () -> {
+        Utils.afterDelayRun(5, () -> {
             mCenterImageButton.setVisibility(View.VISIBLE);
             mAnimationView.setVisibility(View.GONE);
         });
