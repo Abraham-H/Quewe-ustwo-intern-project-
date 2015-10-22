@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.fasterxml.jackson.databind.deser.Deserializers;
 
 import app.com.example.android.queuee2.R;
 import app.com.example.android.queuee2.utils.Utils;
@@ -24,6 +28,7 @@ import app.com.example.android.queuee2.utils.Utils;
  */
 public class BaseLinearLayout extends LinearLayout {
 
+    private final static String TAG = BaseLinearLayout.class.getSimpleName();
     protected ImageView mHeaderImageView;
     protected TextView mHeaderTextView;
     protected TextView mSubheaderTextView;
@@ -32,11 +37,12 @@ public class BaseLinearLayout extends LinearLayout {
     protected ImageButton mFooterImageButton;
     protected TextView mFooterTextView;
     protected FrameLayout mFrameLayout;
+    protected ImageView mOverlayImageView;
 
     public BaseLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.base_activity_layout, (ViewGroup) this.getRootView(), true);
+        inflater.inflate(R.layout.base_linear_layout, (ViewGroup) this.getRootView(), true);
         setViews();
         setAttributes(context, attrs);
     }
@@ -50,6 +56,8 @@ public class BaseLinearLayout extends LinearLayout {
         mFooterImageButton = (ImageButton) findViewById(R.id.custom_footer_image_button);
         mFooterTextView = (TextView) findViewById(R.id.custom_footer_text_view);
         mFrameLayout = (FrameLayout) findViewById(R.id.custom_frame_layout);
+        mOverlayImageView = (ImageView) findViewById(R.id.custom_overlay_image_view);
+        setTouchAnimationListener();
     }
 
     private void setAttributes(Context context, AttributeSet attrs) {
@@ -73,6 +81,21 @@ public class BaseLinearLayout extends LinearLayout {
         } finally {
             a.recycle();
         }
+    }
+
+    protected void setTouchAnimationListener(){
+        mAnimationView.setOnTouchListener((view, motionEvent) -> {
+            switch (motionEvent.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    mOverlayImageView.setVisibility(VISIBLE);
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    mOverlayImageView.setVisibility(INVISIBLE);
+                    return true;
+                default:
+                    return super.onTouchEvent(motionEvent);
+            }
+        });
     }
 
     protected void replaceAnimationDrawable(int drawable) {

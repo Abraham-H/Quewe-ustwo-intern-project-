@@ -72,6 +72,14 @@
             app:placeholderImageScaleType="fitCenter"
             android:layout_gravity="center" />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/pushed_face_icon"
+            android:id="@+id/custom_overlay_image_view"
+            android:visibility="invisible"/>
+
+
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"

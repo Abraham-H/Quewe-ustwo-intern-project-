@@ -53,4 +53,18 @@ public final class Utils {
         final Handler handler = new Handler();
         handler.postDelayed(callback, time * 1000);
     }
+
+    public static String positionToString(int position) {
+        String suffix;
+        if (position % 10 == 1 && position % 11 != 0) {
+            suffix = "st";
+        } else if (position % 10 == 2 && position % 12 != 0) {
+            suffix = "nd";
+        } else if (position % 10 == 3 && position % 13 != 0) {
+            suffix = "rd";
+        } else {
+            suffix = "th";
+        }
+        return String.valueOf(position) + suffix;
+    }
 }

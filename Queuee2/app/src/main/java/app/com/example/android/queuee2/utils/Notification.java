@@ -43,7 +43,7 @@ public final class Notification {
         ACTIVE_NOTIFICATION_ID = NOTIFICATION_ID;
     }
 
-    public static void almostThereNotification(Context fromActivity, Class toActivityClass) {
+    public static void almostThereNotification(Context fromActivity, Class toActivityClass, int position) {
         final int NOTIFICATION_ID = 456;
         NotificationManager notificationManager;
         notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -59,6 +59,7 @@ public final class Notification {
         android.app.Notification notification = new android.app.Notification.Builder(fromActivity)
                 .setSmallIcon(R.drawable.happy_face_icon)
                 .setContentTitle("Almost There!")
+                .setContentText(Utils.positionToString(position) + " in line")
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .build();

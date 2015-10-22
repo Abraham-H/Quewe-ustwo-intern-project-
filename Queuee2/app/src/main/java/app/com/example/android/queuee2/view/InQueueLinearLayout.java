@@ -7,19 +7,22 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 
 import app.com.example.android.queuee2.R;
+import app.com.example.android.queuee2.utils.Utils;
 
 /**
  * Created by bkach on 10/18/15.
  */
 public class InQueueLinearLayout extends BaseLinearLayout {
 
-    private boolean mAlmostNext;
+    private boolean mAlmostThere;
     private boolean mYourTurn;
+    private boolean mNext;
 
     public InQueueLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mAlmostNext = false;
+        mAlmostThere = false;
         mYourTurn = false;
+        mNext = false;
     }
 
     public void setSnoozeButtonListener(Runnable runnable) {
@@ -45,54 +48,51 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mSubheaderTextView.setText("Leaving queue...");
     }
 
-    private String positionToString(int position) {
-        String suffix;
-        if (position % 10 == 1 && position % 11 != 0) {
-            suffix = "st";
-        } else if (position % 10 == 2 && position % 12 != 0) {
-            suffix = "nd";
-        } else if (position % 10 == 3 && position % 13 != 0) {
-            suffix = "rd";
-        } else {
-            suffix = "th";
-        }
-        return String.valueOf(position) + suffix;
-    }
 
     public void update(int position) {
         if (position == 1) {
             if (!mYourTurn) {
                 setYourTurnStyle();
             }
-        } else if (position == 3) {
-            if (!mAlmostNext) {
-                setAlmostNextStyle();
+        } else if (position == 2) {
+            if (!mNext) {
+                setNextStyle();
+            }
+        } else if (position == 5) {
+            if (!mAlmostThere) {
+                setAlmostThereStyle(position);
             }
         } else {
-            if (mAlmostNext) {
-                clearStyles();
+            if (mAlmostThere) {
+                setDefaultStyle();
             }
-            mHeaderTextView.setText(positionToString(position));
+            mHeaderTextView.setText(Utils.positionToString(position));
             String subheaderText = "About " + String.valueOf(position * 2) + " min left";
             mSubheaderTextView.setText(subheaderText);
         }
     }
 
-    private void setAlmostNextStyle() {
-        mAlmostNext = true;
+    private void setNextStyle() {
+       mNext = true;
+        mHeaderTextView.setTextSize(42.0f);
+        mHeaderTextView.setText("You're Next!");
+    }
+
+    private void setAlmostThereStyle(int position) {
+        mAlmostThere = true;
         transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_peach));
         replaceAnimationDrawable(R.drawable.animation_almost_there);
         mHeaderTextView.setTextSize(42.0f);
         mHeaderTextView.setText(R.string.in_queue_almost_there_header);
-        mSubheaderTextView.setText(R.string.in_queue_almost_there_subheader);
+        mSubheaderTextView.setText(Utils.positionToString(position));
         mSubheaderTextView.setTextColor(Color.WHITE);
         mHeaderTextView.setTextColor(Color.WHITE);
         mFooterTextView.setTextColor(Color.WHITE);
         mFooterImageButton.setImageResource(R.drawable.snooze_almost_there_button_selector);
     }
 
-    private void clearStyles() {
-        mAlmostNext = false;
+    private void setDefaultStyle() {
+        mAlmostThere = false;
         transitionBackgroundColor(getResources().getColor(R.color.happy_peach), Color.WHITE);
         replaceAnimationDrawable(R.drawable.animation_waiting);
         mHeaderTextView.setTextSize(70.0f);

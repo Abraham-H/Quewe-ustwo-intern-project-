@@ -89,9 +89,9 @@ public class CheckQueueService extends Service {
             if (position == 1) {
                 Notification.removeLastNotification(this);
                 Notification.youAreNextNotification(this, InQueueActivity.class);
-            } else if (position == 3) {
+            } else if (position == 5) {
                 Notification.removeLastNotification(this);
-                Notification.almostThereNotification(this, InQueueActivity.class);
+                Notification.almostThereNotification(this, InQueueActivity.class, position);
             }
         }
     }
