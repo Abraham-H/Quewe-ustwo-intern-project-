@@ -2,16 +2,19 @@
     <string name="app_name">CashierQueuee</string>
     <string name="cashier_text">Cashier</string>
     <string name="cashier_number">#</string>
+    <string name="welcome_text">Welcome!</string>
 
     <string name="title_activity_start_queue">StartQueue</string>
-    <string name="welcome_text">Welcome!</string>
     <string name="help_text">We help you to queue</string>
     <string name="scanning_text">Scanning</string>
-
+    <string name="queue_empty_text">Queue Empty</string>
     <string name="start_queue_text">Tap to start queue!</string>
 
     <string name="title_activity_queue_in_progress">QueueInProgressActivity</string>
-    <string name="number_of_people_in_queue">#</string>
+    <string name="number_of_people_in_queue_text">People In Queue</string>
+    <string name="deactivate_queue_text">Deactivate Queue</string>
+    <string name="queue_in_progress_subheader_empty">queue empty</string>
 
     <string name="action_settings">Settings</string>
+
 </resources>

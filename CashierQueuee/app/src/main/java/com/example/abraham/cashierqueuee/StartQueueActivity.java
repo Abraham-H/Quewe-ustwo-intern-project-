@@ -14,9 +14,11 @@ import android.widget.Toast;
 
 import com.example.abraham.cashierqueuee.R;
 
+import dialog.CloseQueueConfirmationDialog;
 import model.Queue;
 import model.Response;
 import utils.Utils;
+import views.StartQueueActivityLinearLayout;
 
 public class StartQueueActivity extends Activity {
 
@@ -24,9 +26,7 @@ public class StartQueueActivity extends Activity {
 
     private static String TAG = StartQueueActivity.class.getSimpleName();
 
-    private ImageView mWhichStoreImageView;
-    private TextView mCashierNumberTextView;
-    private ImageButton mStartQueueImageButton;
+    private StartQueueActivityLinearLayout mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,24 +37,16 @@ public class StartQueueActivity extends Activity {
     }
 
     private void setViews(){
-        mWhichStoreImageView = (ImageView) findViewById(R.id.activity_start_queue_image_view_which_shop);
-        mCashierNumberTextView = (TextView) findViewById(R.id.cashier_number);
-        mStartQueueImageButton = (ImageButton) findViewById(R.id.start_queue_image_button);
-        mStartQueueImageButton.setOnClickListener(this::startQueueButtonTapped);
+        Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
+                getActionBar());
+
+        mView = (StartQueueActivityLinearLayout) findViewById(R.id.start_queue_linear_layout);
+        mView.setStartQueueButtonOnClickListener(this::startQueueButtonTapped);
     }
 
     private void setQueue(){
         mQueue = new Queue();
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
-
-        Log.d("StartQueueActivity", mQueue.getQueueId());
-        mCashierNumberTextView.setText(mQueue.getQueueId());
-
-        setWhichStoreImageResource();
-    }
-
-    private void setWhichStoreImageResource() {
-        mWhichStoreImageView.setImageResource(Utils.getQueueImageResource(mQueue.getQueueId()));
     }
 
     private void startQueueButtonTapped(View v){

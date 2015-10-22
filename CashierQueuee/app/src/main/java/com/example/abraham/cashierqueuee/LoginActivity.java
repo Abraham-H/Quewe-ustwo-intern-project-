@@ -16,15 +16,12 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import model.BeaconListener;
 import model.Queue;
 import model.Response;
+import utils.Utils;
 
 public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
-
-    private SimpleDraweeView mLoadingAnimationView;
-
-
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
@@ -34,7 +31,6 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setInstanceVariables();
-        setViews();
     }
 
     @Override
@@ -62,29 +58,12 @@ public class LoginActivity extends Activity {
         mIsBluetoothDenied = false;
     }
 
-    private void setViews() {
-        mLoadingAnimationView = (SimpleDraweeView) findViewById(R.id.activity_login_loading_animation);
-        runAnimation(R.drawable.animation_loading);
-    }
-
-    private void runAnimation(int drawable){
-        Uri uri = new Uri.Builder()
-                .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
-                .path(String.valueOf(drawable))
-                .build();
-
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build();
-
-        mLoadingAnimationView.setController(controller);
-    }
     private void connectBeaconListener(boolean isBluetoothDenied) {
         mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
     }
 
     private void onBeaconFound(String queueId) {
+        Utils.storeQueueId(queueId);
         mQueue.setQueueId(queueId);
         mQueue.getQueue(this::onQueueExists, this::onQueueExistError);
     }

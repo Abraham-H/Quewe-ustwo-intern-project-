@@ -1,69 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<views.StartQueueActivityLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1"
-    tools:context="com.example.abraham.cashierqueuee.StartQueueActivity">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.20">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.15" />
-
-            <ImageView
-                android:id="@+id/activity_start_queue_image_view_which_shop"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:scaleType="fitEnd" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.15" />
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/cashier_number"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.10"
-        style="@style/normal_text_style"
-        android:gravity="top|center_horizontal"
-        android:text="" />
-
-
-    <ImageButton
-        android:id="@+id/start_queue_image_button"
-        android:layout_weight="0.4"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/start_button_selector" />
-
-    <TextView
-        android:id="@+id/start_queue_text"
-        style="@style/subheaderTextStyle"
-        android:layout_weight="0.20"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
-        android:text="@string/start_queue_text" />
-
-</LinearLayout>
+    android:layout_width="match_parent"
+    android:id="@+id/start_queue_linear_layout"
+    app:header_text=" "
+    app:subheader_text=" "
+    app:footer_text="@string/start_queue_text"/>
