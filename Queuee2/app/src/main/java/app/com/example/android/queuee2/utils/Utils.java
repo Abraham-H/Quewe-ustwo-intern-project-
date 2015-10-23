@@ -25,15 +25,21 @@ public final class Utils {
     }
 
     public static int getQueueImageResource() {
-        switch (getQueueId()) {
-            case "queue1":
-                return R.drawable.logo_hm;
-            case "queue2":
-                return R.drawable.logo_lindex;
-            case "queue3":
-                return R.drawable.logo_monki;
+        String queueId = getQueueId();
+        if (queueId != null) {
+            switch (getQueueId()) {
+                case "queue1":
+                    return R.drawable.logo_hm;
+                case "queue2":
+                    return R.drawable.logo_lindex;
+                case "queue3":
+                    return R.drawable.logo_monki;
+                default:
+                    return 0;
+            }
+        } else {
+            return 0;
         }
-        return -1;
     }
 
     public static void storeQueueId(String queueId) {

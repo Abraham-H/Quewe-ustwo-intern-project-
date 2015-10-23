@@ -75,7 +75,9 @@ public abstract class StyledActionBarActivity extends Activity {
     }
 
     private void setActionBarLogo() {
-        mActionBarLogoImageView.setImageResource(Utils.getQueueImageResource());
+        if (Utils.getQueueImageResource() != 0){
+            mActionBarLogoImageView.setImageResource(Utils.getQueueImageResource());
+        }
         mActionBarTitleTextView.setVisibility(View.INVISIBLE);
         mActionBarLogoImageView.setVisibility(View.VISIBLE);
 

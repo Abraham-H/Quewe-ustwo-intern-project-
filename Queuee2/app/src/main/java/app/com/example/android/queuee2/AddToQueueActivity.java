@@ -20,7 +20,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
 
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
