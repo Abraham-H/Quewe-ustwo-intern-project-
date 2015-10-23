@@ -62,6 +62,7 @@ public class BaseDialog extends Dialog {
         mLogo = (ImageView) findViewById(R.id.base_dialog_logo);
 
         getWindow().setBackgroundDrawableResource(android.R.color.white);
+        mLogo.setImageResource(Utils.getQueueImageResource());
 
         mYesButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
         mNoButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));

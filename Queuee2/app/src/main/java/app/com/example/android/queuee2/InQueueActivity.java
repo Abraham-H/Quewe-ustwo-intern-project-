@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import app.com.example.android.queuee2.activity.StyledActionBarActivity;
+import app.com.example.android.queuee2.dialog.GettingCloseDialog;
 import app.com.example.android.queuee2.dialog.HalfwayDialog;
 import app.com.example.android.queuee2.dialog.InQueueDialog;
 import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
@@ -103,6 +104,10 @@ public class InQueueActivity extends StyledActionBarActivity {
                 } else if (mService.getQueue().isHalfway(position) && position > 10) {
                     if (currentDialog != null && !currentDialog.isShowing()) {
                         currentDialog = new HalfwayDialog(this);
+                    }
+                } else if (position == 10) {
+                    if (currentDialog != null && !currentDialog.isShowing()) {
+                        currentDialog = new GettingCloseDialog(this);
                     }
                 }
 

@@ -105,6 +105,7 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mHeaderTextView.setTextColor(Color.WHITE);
         mFooterTextView.setTextColor(Color.WHITE);
         mFooterImageButton.setImageResource(R.drawable.snooze_almost_there_button_selector);
+        mOverlayImageView.setImageResource(R.drawable.pushed_face_almost_there);
     }
 
     private void setDefaultStyle() {
@@ -116,6 +117,7 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mFooterTextView.setTextColor(getResources().getColor(R.color.happy_grey));
         mSubheaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
         mFooterImageButton.setImageResource(R.drawable.snooze_button_selector);
+        mOverlayImageView.setImageResource(R.drawable.pushed_face);
     }
 
     private void setOverTenStyle() {
@@ -127,6 +129,7 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mFooterTextView.setTextColor(getResources().getColor(R.color.happy_grey));
         mSubheaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
         mFooterImageButton.setImageResource(R.drawable.snooze_button_selector);
+        mOverlayImageView.setImageResource(R.drawable.pushed_face);
     }
 
     private void setYourTurnStyle() {
@@ -141,6 +144,7 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mFooterTextView.setTextColor(Color.WHITE);
         mFooterTextView.setText("Show this screen to the cashier");
         mFooterImageButton.setVisibility(GONE);
+        mOverlayImageView.setImageResource(R.drawable.pushed_face_your_turn);
     }
 
     private int getDrawableForState() {

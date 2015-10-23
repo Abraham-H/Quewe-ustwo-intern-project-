@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -32,7 +33,8 @@ public abstract class StyledActionBarActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     private void setupActionBar() {
@@ -73,10 +75,7 @@ public abstract class StyledActionBarActivity extends Activity {
     }
 
     private void setActionBarLogo() {
-        String queueId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getString("queueId", null);
-        queueId = (queueId == null) ? "queue1" : queueId;
-        mActionBarLogoImageView.setImageResource(Utils.getQueueImageResource(queueId));
+        mActionBarLogoImageView.setImageResource(Utils.getQueueImageResource());
         mActionBarTitleTextView.setVisibility(View.INVISIBLE);
         mActionBarLogoImageView.setVisibility(View.VISIBLE);
 

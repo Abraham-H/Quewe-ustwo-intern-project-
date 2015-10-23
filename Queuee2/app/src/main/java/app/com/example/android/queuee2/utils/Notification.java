@@ -18,7 +18,7 @@ public final class Notification {
     }
 
     public static void youAreNextNotification(Context fromActivity, Class toActivityClass) {
-        final int NOTIFICATION_ID = 123;
+        final int NOTIFICATION_ID = 1;
         NotificationManager notificationManager;
         notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -43,7 +43,7 @@ public final class Notification {
     }
 
     public static void almostThereNotification(Context fromActivity, Class toActivityClass, int position) {
-        final int NOTIFICATION_ID = 456;
+        final int NOTIFICATION_ID = 2;
         NotificationManager notificationManager;
         notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -68,7 +68,7 @@ public final class Notification {
     }
 
     public static void halfwayThereNotification(Context fromActivity, Class toActivityClass, int position) {
-        final int NOTIFICATION_ID = 780;
+        final int NOTIFICATION_ID = 3;
         NotificationManager notificationManager;
         notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -82,6 +82,31 @@ public final class Notification {
         android.app.Notification notification = new android.app.Notification.Builder(fromActivity)
                 .setSmallIcon(R.drawable.happy_face_icon)
                 .setContentTitle("Halfway There!")
+                .setContentText(Utils.positionToString(position) + " in line")
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .build();
+        notification.defaults |= android.app.Notification.DEFAULT_SOUND;
+        notification.defaults |= android.app.Notification.DEFAULT_LIGHTS;
+        notificationManager.notify(NOTIFICATION_ID, notification);
+        ACTIVE_NOTIFICATION_ID = NOTIFICATION_ID;
+    }
+
+    public static void gettingCloseNotification(Context fromActivity, Class toActivityClass, int position) {
+        final int NOTIFICATION_ID = 4;
+        NotificationManager notificationManager;
+        notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent notifyIntent = new Intent(fromActivity, toActivityClass);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivities(
+                fromActivity,
+                0,
+                new Intent[]{notifyIntent},
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        android.app.Notification notification = new android.app.Notification.Builder(fromActivity)
+                .setSmallIcon(R.drawable.happy_face_icon)
+                .setContentTitle("Getting Close!")
                 .setContentText(Utils.positionToString(position) + " in line")
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)

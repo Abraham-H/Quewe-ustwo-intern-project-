@@ -24,8 +24,8 @@ public final class Utils {
         return gson.fromJson(data, Response.class);
     }
 
-    public static int getQueueImageResource(String queueId) {
-        switch (queueId) {
+    public static int getQueueImageResource() {
+        switch (getQueueId()) {
             case "queue1":
                 return R.drawable.logo_hm;
             case "queue2":

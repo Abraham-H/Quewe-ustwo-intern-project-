@@ -112,7 +112,7 @@ public class BaseLinearLayout extends LinearLayout {
     }
 
     protected void setHeaderImageView() {
-        mHeaderImageView.setImageResource(Utils.getQueueImageResource(Utils.getQueueId()));
+        mHeaderImageView.setImageResource(Utils.getQueueImageResource());
         if (mHeaderTextView.getVisibility() == VISIBLE) {
             mHeaderTextView.setVisibility(INVISIBLE);
         }
