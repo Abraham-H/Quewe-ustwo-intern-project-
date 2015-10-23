@@ -8,5 +8,5 @@
     app:subheader_text="@string/thank_you_subheader"
     app:footer_image_hidden="true"
     app:footer_image_drawable="@drawable/shop_again_button_selector"
-    app:initial_animation="@drawable/thank_you_smiley"
+    app:initial_animation="@drawable/animation_thank_you"
     />

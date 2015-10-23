@@ -92,6 +92,9 @@ public class CheckQueueService extends Service {
             } else if (position == 5) {
                 Notification.removeLastNotification(this);
                 Notification.almostThereNotification(this, InQueueActivity.class, position);
+            } else if (position > 10 && getQueue().isHalfway(position)){
+                Notification.removeLastNotification(this);
+                Notification.halfwayThereNotification(this, InQueueActivity.class, position);
             }
         }
     }

@@ -1,5 +1,6 @@
 package app.com.example.android.queuee2;
 
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import app.com.example.android.queuee2.activity.StyledActionBarActivity;
+import app.com.example.android.queuee2.dialog.HalfwayDialog;
 import app.com.example.android.queuee2.dialog.InQueueDialog;
 import app.com.example.android.queuee2.dialog.LeaveQueueConfirmationDialog;
 import app.com.example.android.queuee2.model.Response;
@@ -26,6 +28,7 @@ public class InQueueActivity extends StyledActionBarActivity {
     private Intent mServiceIntent;
     private CheckQueueService mService;
     private Action1<Integer> mChangeListener;
+    private Dialog currentDialog;
 
     @NonNull
     static Intent createInQueueActivityIntent(Context context) {
@@ -38,7 +41,7 @@ public class InQueueActivity extends StyledActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_queue);
-        launchPopup();
+        launchDialog();
         setupView();
         setListener();
         launchService();
@@ -57,9 +60,10 @@ public class InQueueActivity extends StyledActionBarActivity {
         unbindService(mConnection);
     }
 
-    private void launchPopup() {
+    private void launchDialog() {
+        // TODO: 10/23/15 change
         if (getIntent().getBooleanExtra(LAUNCH_DIALOG, false)) {
-            new InQueueDialog(this);
+            currentDialog = new InQueueDialog(this);
         }
     }
 
@@ -94,6 +98,10 @@ public class InQueueActivity extends StyledActionBarActivity {
                 mView.update(position);
                 if (position == 1) {
                     removeCancelButton();
+                } else if (mService.getQueue().isHalfway(position) && position > 10){
+                    if (currentDialog != null && !currentDialog.isShowing()) {
+                        currentDialog = new HalfwayDialog(this);
+                    }
                 } else {
                     if (mService.isLast()) {
                         mView.lastInQueue();
@@ -111,7 +119,7 @@ public class InQueueActivity extends StyledActionBarActivity {
     }
 
     private void cancelConfirmation() {
-        new LeaveQueueConfirmationDialog(this, this::removeFromQueue, () -> {});
+        currentDialog = new LeaveQueueConfirmationDialog(this, this::removeFromQueue, () -> { });
     }
 
     private void removeFromQueue() {

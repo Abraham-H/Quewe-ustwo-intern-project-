@@ -34,11 +34,11 @@ public class BaseDialog extends Dialog {
         super(context);
         mCtx = context;
         setContentView(R.layout.base_dialog_layout);
-        setWindowDimensions(0.6f, 0.5f);
+        setWindowDimensions();
         setDialogViews();
     }
 
-    private void setWindowDimensions(float width, float height) {
+    private void setWindowDimensions() {
         Display display = ((WindowManager) mCtx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         LinearLayout layout = (LinearLayout) findViewById(R.id.base_dialog_layout);
 

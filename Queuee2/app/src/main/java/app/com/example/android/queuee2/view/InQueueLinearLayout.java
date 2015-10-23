@@ -14,20 +14,28 @@ import app.com.example.android.queuee2.utils.Utils;
  */
 public class InQueueLinearLayout extends BaseLinearLayout {
 
-    private boolean mAlmostThere;
-    private boolean mYourTurn;
-    private boolean mNext;
+    private int mState;
+    private final int DEFAULT = 0;
+    private final int ALMOST_THERE = 1;
+    private final int YOUR_TURN = 2;
+    private final int NEXT = 3;
+    private final int SNOOZE = 4;
+
+    private int mCurrentColor;
+
 
     public InQueueLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mAlmostThere = false;
-        mYourTurn = false;
-        mNext = false;
+        mState = DEFAULT;
+        mCurrentColor = getBackgroundColorForState();
     }
 
     public void setSnoozeButtonListener(Runnable runnable) {
         setFooterButtonListener((v) -> {
+            mState = SNOOZE;
+
             mFooterImageButton.setEnabled(false);
+            replaceAnimationDrawable(getDrawableForState());
             mFooterTextView.setText("Snoozing...");
             runnable.run();
         });
@@ -51,19 +59,19 @@ public class InQueueLinearLayout extends BaseLinearLayout {
 
     public void update(int position) {
         if (position == 1) {
-            if (!mYourTurn) {
+            if (mState != YOUR_TURN) {
                 setYourTurnStyle();
             }
         } else if (position == 2) {
-            if (!mNext) {
+            if (mState != NEXT) {
                 setNextStyle();
             }
         } else if (position == 5) {
-            if (!mAlmostThere) {
+            if (mState != ALMOST_THERE) {
                 setAlmostThereStyle(position);
             }
         } else {
-            if (mAlmostThere) {
+            if (mState != DEFAULT) {
                 setDefaultStyle();
             }
             mHeaderTextView.setText(Utils.positionToString(position));
@@ -73,15 +81,15 @@ public class InQueueLinearLayout extends BaseLinearLayout {
     }
 
     private void setNextStyle() {
-       mNext = true;
+        mState = NEXT;
         mHeaderTextView.setTextSize(42.0f);
         mHeaderTextView.setText("You're Next!");
     }
 
     private void setAlmostThereStyle(int position) {
-        mAlmostThere = true;
-        transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_peach));
-        replaceAnimationDrawable(R.drawable.animation_almost_there);
+        mState = ALMOST_THERE;
+        transitionBackgroundColor();
+        replaceAnimationDrawable(getDrawableForState());
         mHeaderTextView.setTextSize(42.0f);
         mHeaderTextView.setText(R.string.in_queue_almost_there_header);
         mSubheaderTextView.setText(Utils.positionToString(position));
@@ -92,9 +100,9 @@ public class InQueueLinearLayout extends BaseLinearLayout {
     }
 
     private void setDefaultStyle() {
-        mAlmostThere = false;
-        transitionBackgroundColor(getResources().getColor(R.color.happy_peach), Color.WHITE);
-        replaceAnimationDrawable(R.drawable.animation_waiting);
+        mState = DEFAULT;
+        transitionBackgroundColor();
+        replaceAnimationDrawable(getDrawableForState());
         mHeaderTextView.setTextSize(70.0f);
         mHeaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
         mFooterTextView.setTextColor(getResources().getColor(R.color.happy_grey));
@@ -103,9 +111,9 @@ public class InQueueLinearLayout extends BaseLinearLayout {
     }
 
     private void setYourTurnStyle() {
-        mYourTurn = true;
-        transitionBackgroundColor(Color.WHITE, getResources().getColor(R.color.happy_blue));
-        replaceAnimationDrawable(R.drawable.animation_you_are_next);
+        mState = YOUR_TURN;
+        transitionBackgroundColor();
+        replaceAnimationDrawable(getDrawableForState());
         mHeaderTextView.setTextSize(42.0f);
         mHeaderTextView.setText("It's your turn!");
         mHeaderTextView.setTextColor(Color.WHITE);
@@ -116,10 +124,41 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mFooterImageButton.setVisibility(GONE);
     }
 
-    private void transitionBackgroundColor(int colorFrom, int colorTo) {
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+    private int getDrawableForState() {
+        switch (mState){
+            case SNOOZE:
+                return R.drawable.snooze_face;
+            case YOUR_TURN:
+                return R.drawable.animation_you_are_next;
+            case ALMOST_THERE:
+                return R.drawable.animation_almost_there;
+            case DEFAULT:
+                return R.drawable.animation_waiting;
+            default:
+                return -1;
+        }
+    }
+
+    private int getBackgroundColorForState() {
+        switch (mState){
+            case SNOOZE:
+                return Color.WHITE;
+            case YOUR_TURN:
+                return getResources().getColor(R.color.happy_blue);
+            case ALMOST_THERE:
+                return getResources().getColor(R.color.happy_peach);
+            case DEFAULT:
+                return Color.WHITE;
+            default:
+                return -1;
+        }
+    }
+
+    private void transitionBackgroundColor() {
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), mCurrentColor, getBackgroundColorForState());
         colorAnimation.addUpdateListener(
                 animator -> setBackgroundColor((Integer) animator.getAnimatedValue()));
         colorAnimation.start();
+        mCurrentColor = getBackgroundColorForState();
     }
 }

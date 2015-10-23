@@ -81,7 +81,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
         if (!DEBUG)
             mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
         else
-            onBeaconFound("queue1");
+            onBeaconFound("queue2");
     }
 
     private void onBeaconFound(String queueId) {

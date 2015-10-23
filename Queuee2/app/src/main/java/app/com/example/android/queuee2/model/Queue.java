@@ -1,5 +1,7 @@
 package app.com.example.android.queuee2.model;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
@@ -54,7 +56,11 @@ public class Queue {
     }
 
     public void addUserToQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
-        addSubscribers(mHerokuService.add(mQueueId, sAndroidId), onSuccess, onFailure);
+        addSubscribers(mHerokuService.add(mQueueId, sAndroidId), response -> {
+            int position = (int) ((double) response.getData());
+            Utils.storeInitialPosition(position + 1); // One more than the current position
+            onSuccess.call(response);
+        }, onFailure);
     }
 
     public void removeUserFromQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
@@ -68,6 +74,11 @@ public class Queue {
             mLast = (position == queue.size());
             onSuccess.call(queue);
         }, onFailure);
+    }
+
+    public boolean isHalfway(int position){
+        int initialPos = Utils.getInitialPosition();
+        return ((int) (Utils.getInitialPosition() * 0.5)) == position;
     }
 
     public void snooze(Action1<Response> onSuccess, Action1<Throwable> onFailure) {

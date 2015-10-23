@@ -70,6 +70,7 @@ public class BaseLinearLayout extends LinearLayout {
             mSubheaderTextView.setText(a.getString(R.styleable.CustomLinearLayout_subheader_text));
             mFooterTextView.setText(a.getString(R.styleable.CustomLinearLayout_footer_text));
             mFooterImageButton.setImageDrawable(a.getDrawable(R.styleable.CustomLinearLayout_footer_image_drawable));
+            mCenterImageButton.setEnabled(false);
             if (a.getBoolean(R.styleable.CustomLinearLayout_footer_image_hidden, true)) {
                 mFooterImageButton.setVisibility(GONE);
             }

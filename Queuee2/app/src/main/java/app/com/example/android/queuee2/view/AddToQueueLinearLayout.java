@@ -28,9 +28,9 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
 
     private void buttonTransition(int resourceId) {
         replaceAnimationDrawable(resourceId);
-        Utils.afterDelayRun(5, () -> {
+        Utils.afterDelayRun(5000, () -> {
             mCenterImageButton.setVisibility(View.VISIBLE);
-            mAnimationView.setVisibility(View.GONE);
+            mAnimationView.setVisibility(View.INVISIBLE);
         });
     }
 
@@ -46,14 +46,23 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
         setHeaderImageView();
 
         if (data != null) {
-            startQueueOpenButtonTransition();
             if (!mCenterImageButton.isEnabled()) {
                 mCenterImageButton.setEnabled(true);
+                mAnimationView.setVisibility(View.VISIBLE);
+                mCenterImageButton.setVisibility(View.INVISIBLE);
+                startQueueOpenButtonTransition();
             }
             mSubheaderTextView.setText(numInQueueString(data.size()));
             mFooterTextView.setText(R.string.add_to_queue_subheader_instructions);
         } else {
-            startQueueClosedButtonTransition();
+            if (mAnimationView.getVisibility() == View.VISIBLE || mCenterImageButton.isEnabled()) {
+                startQueueClosedButtonTransition();
+                mAnimationView.setVisibility(View.VISIBLE);
+                mCenterImageButton.setVisibility(View.INVISIBLE);
+            } else {
+                mCenterImageButton.setVisibility(View.VISIBLE);
+                mAnimationView.setVisibility(View.INVISIBLE);
+            }
             mCenterImageButton.setEnabled(false);
             mSubheaderTextView.setText(R.string.add_to_queue_subheader_closed);
             mFooterTextView.setText(R.string.add_to_queue_footer_closed);

@@ -49,9 +49,22 @@ public final class Utils {
                 .getString("queueId", null);
     }
 
+    public static void storeInitialPosition(int position){
+        SharedPreferences sharedPref =
+                PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("initialPosition", position);
+        editor.apply();
+    }
+
+    public static int getInitialPosition(){
+        return PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext())
+                .getInt("initialPosition", -1);
+    }
+
     public static void afterDelayRun(int time, Runnable callback) {
         final Handler handler = new Handler();
-        handler.postDelayed(callback, time * 1000);
+        handler.postDelayed(callback, time);
     }
 
     public static String positionToString(int position) {
