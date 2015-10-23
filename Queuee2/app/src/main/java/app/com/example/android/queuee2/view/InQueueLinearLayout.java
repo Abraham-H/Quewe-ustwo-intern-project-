@@ -20,6 +20,7 @@ public class InQueueLinearLayout extends BaseLinearLayout {
     private final int YOUR_TURN = 2;
     private final int NEXT = 3;
     private final int SNOOZE = 4;
+    private final int OVER_TEN = 5;
 
     private int mCurrentColor;
 
@@ -33,7 +34,6 @@ public class InQueueLinearLayout extends BaseLinearLayout {
     public void setSnoozeButtonListener(Runnable runnable) {
         setFooterButtonListener((v) -> {
             mState = SNOOZE;
-
             mFooterImageButton.setEnabled(false);
             replaceAnimationDrawable(getDrawableForState());
             mFooterTextView.setText("Snoozing...");
@@ -58,6 +58,8 @@ public class InQueueLinearLayout extends BaseLinearLayout {
 
 
     public void update(int position) {
+        String timeEstimationString = "About " + String.valueOf((position-1) * 2) + " min left";
+
         if (position == 1) {
             if (mState != YOUR_TURN) {
                 setYourTurnStyle();
@@ -65,18 +67,24 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         } else if (position == 2) {
             if (mState != NEXT) {
                 setNextStyle();
+                mSubheaderTextView.setText(timeEstimationString);
             }
         } else if (position == 5) {
             if (mState != ALMOST_THERE) {
                 setAlmostThereStyle(position);
             }
+        } else if (position > 10) {
+            if (mState != OVER_TEN) {
+                setOverTenStyle();
+            }
+            mHeaderTextView.setText(Utils.positionToString(position));
+            mSubheaderTextView.setText(timeEstimationString);
         } else {
             if (mState != DEFAULT) {
                 setDefaultStyle();
             }
             mHeaderTextView.setText(Utils.positionToString(position));
-            String subheaderText = "About " + String.valueOf(position * 2) + " min left";
-            mSubheaderTextView.setText(subheaderText);
+            mSubheaderTextView.setText(timeEstimationString);
         }
     }
 
@@ -110,6 +118,17 @@ public class InQueueLinearLayout extends BaseLinearLayout {
         mFooterImageButton.setImageResource(R.drawable.snooze_button_selector);
     }
 
+    private void setOverTenStyle() {
+        mState = OVER_TEN;
+        transitionBackgroundColor();
+        replaceAnimationDrawable(getDrawableForState());
+        mHeaderTextView.setTextSize(70.0f);
+        mHeaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
+        mFooterTextView.setTextColor(getResources().getColor(R.color.happy_grey));
+        mSubheaderTextView.setTextColor(getResources().getColor(R.color.happy_grey));
+        mFooterImageButton.setImageResource(R.drawable.snooze_button_selector);
+    }
+
     private void setYourTurnStyle() {
         mState = YOUR_TURN;
         transitionBackgroundColor();
@@ -134,6 +153,8 @@ public class InQueueLinearLayout extends BaseLinearLayout {
                 return R.drawable.animation_almost_there;
             case DEFAULT:
                 return R.drawable.animation_waiting;
+            case OVER_TEN:
+                return R.drawable.animation_over_ten;
             default:
                 return -1;
         }

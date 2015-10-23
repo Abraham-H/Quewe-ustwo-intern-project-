@@ -19,7 +19,8 @@ public class InQueueDialog extends BaseDialog {
 
     private void setViewContent(){
         mImageView.setImageResource(R.drawable.happy_face_icon);
-        mText.setText("You are in the queue!");
+        mHeader.setText("Queued!");
+        mSubheader.setText("We'll notify you when it's your turn");
     }
 
     private void removeYesNoButtons(){

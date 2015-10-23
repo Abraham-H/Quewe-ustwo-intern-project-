@@ -20,7 +20,8 @@ public class LeaveQueueConfirmationDialog extends BaseDialog {
 
     private void setViewContent(){
         mImageView.setImageResource(R.drawable.sad_face_icon);
-        mText.setText("Are you sure you want to leave?");
+        mLogo.setVisibility(View.VISIBLE);
+        mSubheader.setText("Are you sure you want to leave?");
     }
 
     private void setDialogListeners(Runnable yes, Runnable no) {

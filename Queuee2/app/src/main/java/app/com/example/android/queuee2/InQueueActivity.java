@@ -47,7 +47,6 @@ public class InQueueActivity extends StyledActionBarActivity {
         launchService();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -79,7 +78,7 @@ public class InQueueActivity extends StyledActionBarActivity {
     private void launchService() {
         mServiceIntent = new Intent(this, CheckQueueService.class);
         startService(mServiceIntent);
-        bindService();
+//        bindService();
     }
 
     private void bindService() {
@@ -97,17 +96,20 @@ public class InQueueActivity extends StyledActionBarActivity {
             } else {
                 mView.update(position);
                 if (position == 1) {
+                    if (currentDialog != null && currentDialog.isShowing()) {
+                        currentDialog.dismiss();
+                    }
                     removeCancelButton();
-                } else if (mService.getQueue().isHalfway(position) && position > 10){
+                } else if (mService.getQueue().isHalfway(position) && position > 10) {
                     if (currentDialog != null && !currentDialog.isShowing()) {
                         currentDialog = new HalfwayDialog(this);
                     }
+                }
+
+                if (mService.isLast()) {
+                    mView.lastInQueue();
                 } else {
-                    if (mService.isLast()) {
-                        mView.lastInQueue();
-                    } else {
-                        mView.notLastInQueue();
-                    }
+                    mView.notLastInQueue();
                 }
             }
         };

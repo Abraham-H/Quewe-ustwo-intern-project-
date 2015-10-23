@@ -21,9 +21,11 @@ public class HalfwayDialog extends BaseDialog {
 
     private void setViewContent(){
         mImageView.setImageResource(R.drawable.half_way_face);
-        mText.setText("Halfway there!");
+        mHeader.setText("Halfway!");
+        mSubheader.setText("We'll notify you when it's your turn");
         getWindow().setBackgroundDrawableResource(R.color.happy_peach);
-        mText.setTextColor(Color.WHITE);
+        mHeader.setTextColor(Color.WHITE);
+        mSubheader.setTextColor(Color.WHITE);
         mOkButton.setTextColor(Color.WHITE);
     }
 

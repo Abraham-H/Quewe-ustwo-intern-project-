@@ -3,15 +3,17 @@ package app.com.example.android.queuee2.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.media.Image;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import app.com.example.android.queuee2.R;
 import app.com.example.android.queuee2.utils.Utils;
@@ -28,7 +30,8 @@ public class BaseDialog extends Dialog {
     protected Button mYesButton;
     protected Button mNoButton;
     protected Button mOkButton;
-    protected TextView mText;
+    protected TextView mSubheader;
+    protected TextView mHeader;
 
     BaseDialog(Context context) {
         super(context);
@@ -50,18 +53,19 @@ public class BaseDialog extends Dialog {
     }
 
     private void setDialogViews(){
-        mLogo = (ImageView) findViewById(R.id.base_dialog_logo);
-        mLogo.setImageResource(Utils.getQueueImageResource(Utils.getQueueId()));
-
-        mImageView = (ImageView) findViewById(R.id.base_dialog_image);
-
         mYesButton = (Button) findViewById(R.id.base_dialog_yes);
-        mYesButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
         mNoButton = (Button) findViewById(R.id.base_dialog_no);
-        mNoButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
         mOkButton = (Button) findViewById(R.id.base_dialog_ok);
+        mImageView = (ImageView) findViewById(R.id.base_dialog_image);
+        mSubheader = (TextView) findViewById(R.id.base_dialog_subheader);
+        mHeader = (TextView) findViewById(R.id.base_dialog_header);
+        mLogo = (ImageView) findViewById(R.id.base_dialog_logo);
+
+        getWindow().setBackgroundDrawableResource(android.R.color.white);
+
+        mYesButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
+        mNoButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
         mOkButton.setTextColor(mCtx.getResources().getColor(R.color.happy_blue));
-        mText = (TextView) findViewById(R.id.base_dialog_text);
     }
 
     protected void setListener(Button button, Runnable runnable) {
