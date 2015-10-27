@@ -3,12 +3,10 @@ package views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
-
 import com.example.abraham.cashierqueuee.R;
-
 import java.util.ArrayList;
-
 import model.Response;
 
 /**
@@ -29,9 +27,11 @@ public class QueueInProgressActivityLinearLayout extends BaseCustomLinearLayout 
 
         if (queueData.size() == 1) {
             mSubheaderTextView.setText("Person in queue");
-        } else mSubheaderTextView.setText("People in queue");
 
-        mCenterImageButton.setEnabled(true);
+        }
+
+        else mSubheaderTextView.setText("People in queue");
+        enableCentreImageButton();
     }
 
     private void setTextViewsVisibility() {
@@ -45,12 +45,18 @@ public class QueueInProgressActivityLinearLayout extends BaseCustomLinearLayout 
     }
 
     public void onUserPopped(Response response) {
-        disableNextQueueImageButton();
+        enableCentreImageButton();
+    }
+
+    private void enableCentreImageButton() {
+        mCenterImageButton.setEnabled(true);
+    }
+
+    public void disableCentreImageButton() {
+        mCenterImageButton.setEnabled(false);
     }
 
     public void onUserPoppedError(Throwable throwable) {
-        mFooterImageButton.setEnabled(true);
-
         Response.Error error = Response.getError(throwable);
         String errorMsg = error.toString();
         Toast.makeText(getContext(), errorMsg,
@@ -59,12 +65,8 @@ public class QueueInProgressActivityLinearLayout extends BaseCustomLinearLayout 
         Log.d(TAG, "EstimoteBeacon error:" + throwable.getMessage());
     }
 
-    public void disableCloseQueueButton() {
-        disableNextQueueImageButton();
-    }
-
-    public void disableNextQueueImageButton() {
-        disableNextQueueImageButton();
+    public void disableFooterImageButton() {
+        mFooterImageButton.setEnabled(false);
     }
 
     private void setImageButtonResources() {
@@ -72,11 +74,16 @@ public class QueueInProgressActivityLinearLayout extends BaseCustomLinearLayout 
         mFooterImageButton.setImageResource(R.drawable.stop_button_selector);
     }
 
-    public void setNextQueueButtonOnClickListener(OnClickListener onClickListener) {
-        mCenterImageButton.setOnClickListener(onClickListener);
+    public void setNextQueueButtonOnClickListener(Runnable activityCallback) {
+        mCenterImageButton.setOnClickListener(v -> {
+            disableCentreImageButton();
+            activityCallback.run();
+        });
     }
 
-    public void setCloseQueueButtonOnClickListener(OnClickListener onClickListener) {
-        mFooterImageButton.setOnClickListener(onClickListener);
+    public void setCloseQueueButtonOnClickListener(Runnable activityCallback) {
+        mFooterImageButton.setOnClickListener(v -> {
+            activityCallback.run();
+        });
     }
 }

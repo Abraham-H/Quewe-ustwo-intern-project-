@@ -21,6 +21,7 @@ import utils.Utils;
 public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final Boolean DEBUG = true;
     private static final int REQUEST_ENABLE_BT = 1234;
     private BeaconListener mBeaconListener;
     private Queue mQueue;

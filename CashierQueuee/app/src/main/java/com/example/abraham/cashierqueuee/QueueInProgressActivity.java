@@ -43,7 +43,6 @@ public class QueueInProgressActivity extends Activity {
 
         mView = (QueueInProgressActivityLinearLayout) findViewById(R.id.queue_in_progress_linear_layout);
         mView.setNextQueueButtonOnClickListener(this::nextInQueueImageButtonTapped);
-        mView.setNextQueueButtonOnClickListener(this::nextInQueueImageButtonTapped);
         mView.setCloseQueueButtonOnClickListener(this::finishQueueImageButtonTapped);
     }
 
@@ -74,12 +73,10 @@ public class QueueInProgressActivity extends Activity {
     private void onGetQueueError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
-          //  mView.disableNextQueueImageButton();
-          //  mView.disableCloseQueueButton();
         }
     }
 
-    private void finishQueueImageButtonTapped(View view) {
+    private void finishQueueImageButtonTapped() {
         launchCloseQueueConfirmationDialog();
     }
 
@@ -104,9 +101,8 @@ public class QueueInProgressActivity extends Activity {
         }
     }
 
-    private void nextInQueueImageButtonTapped(View view) {
+    private void nextInQueueImageButtonTapped() {
         popUserFromQueue();
-        mView.disableCloseQueueButton();
     }
 
     private void popUserFromQueue() {
