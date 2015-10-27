@@ -29,7 +29,7 @@
 
 
     <color name="happy_blue">#27b5c3</color>
-    <color name="happy_peach">#FCC3B0</color>
+    <color name="happy_peach">#FCB59D</color>
     <color name="happy_grey">#375355</color>
 
     <item name="headerTextSize" format="float" type="dimen">43.0</item>

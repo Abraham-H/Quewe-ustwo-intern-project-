@@ -3,7 +3,6 @@ package app.com.example.android.queuee2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,11 +19,14 @@ public class AddToQueueActivity extends StyledActionBarActivity {
 
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
+    private static final String testQueue = "queue1";
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
+
+    private boolean mIsLaunching;
 
     private AddToQueueLinearLayout mView;
 
@@ -50,6 +52,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
         if (!DEBUG)
             mBeaconListener.disconnect();
         mQueue.disconnectChangeListener();
+        mIsLaunching = false;
     }
 
     private void setInstanceVariables() {
@@ -62,7 +65,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
     private void setupView() {
         hideActionBarLogo();
         mView = (AddToQueueLinearLayout) findViewById(R.id.add_to_queue_linear_layout);
-        mView.setAddToQueueButtonListener(v ->
+        mView.setAddToQueueButtonListener(() ->
                 mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError));
     }
 
@@ -81,7 +84,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
         if (!DEBUG)
             mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
         else
-            onBeaconFound("queue1");
+            onBeaconFound(testQueue);
     }
 
     private void onBeaconFound(String queueId) {
@@ -110,8 +113,11 @@ public class AddToQueueActivity extends StyledActionBarActivity {
     }
 
     private void launchActivity() {
-        Intent intent = InQueueActivity.createInQueueActivityIntent(this);
-        startActivity(intent);
+        if (!mIsLaunching) {
+            mIsLaunching = true;
+            Intent intent = InQueueActivity.createInQueueActivityIntent(this);
+            startActivity(intent);
+        }
     }
 
     @Override // Bluetooth Dialogue callback

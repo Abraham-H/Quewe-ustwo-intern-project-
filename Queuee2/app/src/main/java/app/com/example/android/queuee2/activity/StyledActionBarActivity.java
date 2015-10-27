@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ import app.com.example.android.queuee2.utils.Utils;
 public abstract class StyledActionBarActivity extends Activity {
 
     private static final String TAG = StyledActionBarActivity.class.getSimpleName();
-    private TextView mActionBarTitleTextView;
+    private ImageView mActionBarQueweLogo;
     private ImageView mActionBarLogoImageView;
     private ImageView mCancelImageView;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
@@ -46,7 +45,7 @@ public abstract class StyledActionBarActivity extends Activity {
         actionBar.setCustomView(v, layout);
         actionBar.setDisplayShowCustomEnabled(true);
         mActionBarLogoImageView = (ImageView) findViewById(R.id.action_bar_centered_image);
-        mActionBarTitleTextView = (TextView) findViewById(R.id.action_bar_title_text);
+        mActionBarQueweLogo = (ImageView) findViewById(R.id.action_bar_quewe_logo);
         setActionBarLogo();
 
         Toolbar toolbar = (Toolbar) v.getParent();
@@ -65,20 +64,20 @@ public abstract class StyledActionBarActivity extends Activity {
 
     protected void hideActionBarLogo() {
         mActionBarLogoImageView.setVisibility(View.INVISIBLE);
-        mActionBarTitleTextView.setVisibility(View.VISIBLE);
+        mActionBarQueweLogo.setVisibility(View.VISIBLE);
     }
 
     protected void updateActionBarLogo() {
         setActionBarLogo();
         mActionBarLogoImageView.setVisibility(View.INVISIBLE);
-        mActionBarTitleTextView.setVisibility(View.VISIBLE);
+        mActionBarQueweLogo.setVisibility(View.VISIBLE);
     }
 
     private void setActionBarLogo() {
         if (Utils.getQueueImageResource() != 0){
             mActionBarLogoImageView.setImageResource(Utils.getQueueImageResource());
         }
-        mActionBarTitleTextView.setVisibility(View.INVISIBLE);
+        mActionBarQueweLogo.setVisibility(View.INVISIBLE);
         mActionBarLogoImageView.setVisibility(View.VISIBLE);
 
     }

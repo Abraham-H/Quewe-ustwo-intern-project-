@@ -23,7 +23,13 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
     }
 
     private void startQueueClosedButtonTransition() {
-        buttonTransition(R.drawable.animation_button_closed);
+//        buttonTransition(R.drawable.animation_button_closed);
+        replaceAnimationDrawable(R.drawable.animation_button_closed);
+        Utils.afterDelayRun(5000, () -> {
+//            mCenterImageButton.setVisibility(View.VISIBLE);
+            mAnimationView.getController().getAnimatable().stop();
+//            mAnimationView.setVisibility(View.INVISIBLE);
+        });
     }
 
     private void buttonTransition(int resourceId) {
@@ -70,7 +76,11 @@ public class AddToQueueLinearLayout extends BaseLinearLayout {
     }
 
 
-    public void setAddToQueueButtonListener(OnClickListener onClickListener) {
-        mCenterImageButton.setOnClickListener(onClickListener);
+    public void setAddToQueueButtonListener(Runnable callback) {
+        mCenterImageButton.setOnClickListener(v -> {
+            mCenterImageButton.setEnabled(false);
+//            mCenterImageButton.setImageResource(R.drawable.add_to_queue_button_off_2);
+            callback.run();
+        });
     }
 }

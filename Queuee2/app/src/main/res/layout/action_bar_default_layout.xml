@@ -62,14 +62,11 @@
 
             </LinearLayout>
 
-            <TextView
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:id="@+id/action_bar_title_text"
-                style="@style/subheaderTextStyle"
-                android:textSize="24sp"
-                android:text="@string/app_name"/>
+                android:src="@drawable/logo"
+                android:id="@+id/action_bar_quewe_logo"/>
 
         </FrameLayout>
 

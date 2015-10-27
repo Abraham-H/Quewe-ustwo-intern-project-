@@ -72,10 +72,10 @@
             app:placeholderImageScaleType="fitCenter"
             android:layout_gravity="center" />
 
-        <ImageView
+        <app.com.example.android.queuee2.view.OverlayFacesImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/pushed_face"
+            android:src="@drawable/pushed_face_0"
             android:id="@+id/custom_overlay_image_view"
             android:visibility="invisible"/>
 
@@ -86,7 +86,7 @@
             android:id="@+id/custom_center_image_button"
             android:src="@drawable/add_to_queue_button_selector"
             android:background="@null"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:scaleType="fitCenter"
             />
 

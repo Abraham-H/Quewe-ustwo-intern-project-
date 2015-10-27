@@ -37,7 +37,7 @@ public class BaseLinearLayout extends LinearLayout {
     protected ImageButton mFooterImageButton;
     protected TextView mFooterTextView;
     protected FrameLayout mFrameLayout;
-    protected ImageView mOverlayImageView;
+    protected OverlayFacesImageView mOverlayImageView;
 
     public BaseLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -56,7 +56,7 @@ public class BaseLinearLayout extends LinearLayout {
         mFooterImageButton = (ImageButton) findViewById(R.id.custom_footer_image_button);
         mFooterTextView = (TextView) findViewById(R.id.custom_footer_text_view);
         mFrameLayout = (FrameLayout) findViewById(R.id.custom_frame_layout);
-        mOverlayImageView = (ImageView) findViewById(R.id.custom_overlay_image_view);
+        mOverlayImageView = (OverlayFacesImageView) findViewById(R.id.custom_overlay_image_view);
         setTouchAnimationListener();
     }
 
@@ -88,10 +88,10 @@ public class BaseLinearLayout extends LinearLayout {
         mAnimationView.setOnTouchListener((view, motionEvent) -> {
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    mOverlayImageView.setVisibility(VISIBLE);
+                    mOverlayImageView.down();
                     return true;
                 case MotionEvent.ACTION_UP:
-                    mOverlayImageView.setVisibility(INVISIBLE);
+                    mOverlayImageView.up();
                     return true;
                 default:
                     return super.onTouchEvent(motionEvent);
