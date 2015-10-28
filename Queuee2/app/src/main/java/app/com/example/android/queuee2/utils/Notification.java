@@ -17,6 +17,31 @@ public final class Notification {
     private Notification() {
     }
 
+    public static void itsYourTurnNotification(Context fromActivity, Class toActivityClass) {
+        final int NOTIFICATION_ID = 1;
+        NotificationManager notificationManager;
+        notificationManager = (NotificationManager) fromActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent notifyIntent = new Intent(fromActivity, toActivityClass);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivities(
+                fromActivity,
+                0,
+                new Intent[]{notifyIntent},
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        android.app.Notification notification = new android.app.Notification.Builder(fromActivity)
+                .setSmallIcon(R.drawable.happy_face_icon)
+                .setContentTitle("It's Your Turn!")
+                .setContentText("Tap here!")
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .build();
+        notification.defaults |= android.app.Notification.DEFAULT_SOUND;
+        notification.defaults |= android.app.Notification.DEFAULT_LIGHTS;
+        notificationManager.notify(NOTIFICATION_ID, notification);
+        ACTIVE_NOTIFICATION_ID = NOTIFICATION_ID;
+    }
+
     public static void youAreNextNotification(Context fromActivity, Class toActivityClass) {
         final int NOTIFICATION_ID = 1;
         NotificationManager notificationManager;

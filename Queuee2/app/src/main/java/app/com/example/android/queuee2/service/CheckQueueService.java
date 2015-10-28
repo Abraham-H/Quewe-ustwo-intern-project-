@@ -88,6 +88,9 @@ public class CheckQueueService extends Service {
             mLastPosition = position;
             if (position == 1) {
                 Notification.removeLastNotification(this);
+                Notification.itsYourTurnNotification(this, InQueueActivity.class);
+            } else if (position == 2) {
+                Notification.removeLastNotification(this);
                 Notification.youAreNextNotification(this, InQueueActivity.class);
             } else if (position == 5) {
                 Notification.removeLastNotification(this);

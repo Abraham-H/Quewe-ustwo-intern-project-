@@ -44,6 +44,7 @@ public class AddToQueueActivity extends StyledActionBarActivity {
         super.onResume();
         connectBeaconListener(mIsBluetoothDenied);
         mQueue.connectChangeListener();
+        mIsLaunching = false;
     }
 
     @Override
@@ -52,7 +53,6 @@ public class AddToQueueActivity extends StyledActionBarActivity {
         if (!DEBUG)
             mBeaconListener.disconnect();
         mQueue.disconnectChangeListener();
-        mIsLaunching = false;
     }
 
     private void setInstanceVariables() {
