@@ -21,6 +21,8 @@ public class QueueInProgressActivity extends Activity {
 
     private Queue mQueue;
     private QueueInProgressActivityLinearLayout mView;
+    private static final Boolean DEBUG = true;
+    private static final String testQueue = "queue1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,10 @@ public class QueueInProgressActivity extends Activity {
 
     private void setQueue() {
         mQueue = new Queue();
+
+        if (DEBUG == true){
+            mQueue.setQueueId(testQueue);
+        }else
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
     }
 

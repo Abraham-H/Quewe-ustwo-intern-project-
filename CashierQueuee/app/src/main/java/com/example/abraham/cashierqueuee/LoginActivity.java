@@ -26,6 +26,7 @@ public class LoginActivity extends Activity {
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
+    private static final String testQueue = "queue1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +55,21 @@ public class LoginActivity extends Activity {
     }
 
     private void setInstanceVariables() {
-        mBeaconListener = new BeaconListener(this);
+
+        if (!DEBUG) {
+            mBeaconListener = new BeaconListener(this);
+        }
+
         mQueue = new Queue();
         mIsBluetoothDenied = false;
     }
 
     private void connectBeaconListener(boolean isBluetoothDenied) {
-        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+        if (DEBUG) {
+            onBeaconFound(testQueue);
+        } else {
+            mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+        }
     }
 
     private void onBeaconFound(String queueId) {
@@ -88,13 +97,15 @@ public class LoginActivity extends Activity {
     }
 
     private void disconnectBeaconListener() {
-        mBeaconListener.disconnect();
+        if (!DEBUG) {
+            mBeaconListener.disconnect();
+        }
     }
 
     private void launchActivity(Class toActivityClass) {
-        Intent intent = new Intent(this, toActivityClass);
-        intent.putExtra("queueId", mQueue.getQueueId());
-        startActivity(intent);
+            Intent intent = new Intent(this, toActivityClass);
+            intent.putExtra("queueId", mQueue.getQueueId());
+            startActivity(intent);
     }
 
     private void toastError(String message) {
