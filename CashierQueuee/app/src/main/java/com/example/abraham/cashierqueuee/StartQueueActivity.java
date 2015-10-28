@@ -51,7 +51,6 @@ public class StartQueueActivity extends Activity {
 
     private void startQueueButtonTapped(View v){
         mQueue.startQueue(this::onQueueStartedSuccess, this::onQueueStartedFailure);
-        launchActivity(QueueInProgressActivity.class);
     }
 
     private void onQueueStartedSuccess(Response response) {
