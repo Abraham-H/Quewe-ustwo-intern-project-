@@ -1,5 +1,12 @@
 package app.com.example.android.queuee2;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
 import app.com.example.android.queuee2.activity.StyledActionBarActivity;
 import app.com.example.android.queuee2.model.BeaconListener;
 import app.com.example.android.queuee2.model.Permissions;
@@ -8,22 +15,18 @@ import app.com.example.android.queuee2.model.Response;
 import app.com.example.android.queuee2.utils.Utils;
 import app.com.example.android.queuee2.view.AddToQueueLinearLayout;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-
-public class AddToQueueActivity extends StyledActionBarActivity{
+public class AddToQueueActivity extends StyledActionBarActivity {
 
     private static final String TAG = AddToQueueActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1234;
+    private static final boolean DEBUG = true;
+    private static final String testQueue = "queue1";
 
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
+
+    private boolean mIsLaunching;
 
     private AddToQueueLinearLayout mView;
 
@@ -37,26 +40,24 @@ public class AddToQueueActivity extends StyledActionBarActivity{
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         connectBeaconListener(mIsBluetoothDenied);
         mQueue.connectChangeListener();
+        mIsLaunching = false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mBeaconListener.disconnect();
+        if (!DEBUG)
+            mBeaconListener.disconnect();
         mQueue.disconnectChangeListener();
     }
 
     private void setInstanceVariables() {
-        mBeaconListener = new BeaconListener(this);
+        if (!DEBUG)
+            mBeaconListener = new BeaconListener(this);
         mQueue = new Queue();
         mIsBluetoothDenied = false;
     }
@@ -64,17 +65,14 @@ public class AddToQueueActivity extends StyledActionBarActivity{
     private void setupView() {
         hideActionBarLogo();
         mView = (AddToQueueLinearLayout) findViewById(R.id.add_to_queue_linear_layout);
-        mView.setAddToQueueButtonListener(this::addUserToQueue);
-    }
-
-    private void addUserToQueue(View v) {
-        mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError);
+        mView.setAddToQueueButtonListener(() ->
+                mQueue.addUserToQueue(this::onUserAdded, this::onUserAddedError));
     }
 
     private void onUserAdded(Response response) {
         Log.d(TAG, response.getMessage());
         mQueue.disconnectChangeListener();
-        launchActivity(InQueueActivity.class);
+        launchActivity();
     }
 
     private void onUserAddedError(Throwable throwable) {
@@ -83,32 +81,27 @@ public class AddToQueueActivity extends StyledActionBarActivity{
     }
 
     private void connectBeaconListener(boolean isBluetoothDenied) {
-        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+        if (!DEBUG)
+            mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+        else
+            onBeaconFound(testQueue);
     }
 
     private void onBeaconFound(String queueId) {
         Utils.storeQueueId(queueId);
-        mQueue.setChangeListener(queueId, this::changeListener);
+        mQueue.setChangeListener(queueId,
+                () -> mQueue.getQueue(this::onGetQueue, this::onGetQueueError));
     }
 
     private void onBeaconError(Throwable throwable) {
         Log.d(TAG, "EstimoteBeacon error:" + throwable.getMessage());
     }
 
-    private void changeListener(){
-        mQueue.getQueue(this::onGetQueue, this::onGetQueueError);
-    }
-
-    private void onGetQueue(Response response) {
-        ArrayList<String> data = (ArrayList<String>) response.getData();
-        if (data.contains(mQueue.getUserId())) {
-            if (data.indexOf(mQueue.getUserId()) == 0) {
-                launchActivity(YouAreNextActivity.class);
-            } else {
-                launchActivity(InQueueActivity.class);
-            }
+    private void onGetQueue(ArrayList<String> queueData) {
+        if (queueData.contains(mQueue.getUserId())) {
+            launchActivity();
         } else {
-            mView.update(data);
+            mView.update(queueData);
         }
     }
 
@@ -119,9 +112,12 @@ public class AddToQueueActivity extends StyledActionBarActivity{
         }
     }
 
-    private void launchActivity(Class toActivityClass) {
-        Intent intent = new Intent(this, toActivityClass);
-        startActivity(intent);
+    private void launchActivity() {
+        if (!mIsLaunching) {
+            mIsLaunching = true;
+            Intent intent = InQueueActivity.createInQueueActivityIntent(this);
+            startActivity(intent);
+        }
     }
 
     @Override // Bluetooth Dialogue callback

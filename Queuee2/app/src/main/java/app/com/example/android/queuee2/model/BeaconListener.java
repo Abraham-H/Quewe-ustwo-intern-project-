@@ -26,7 +26,7 @@ import rx.schedulers.Schedulers;
 public class BeaconListener {
 
     private BeaconManager mBeaconManager;
-    private Subscriber mSubscriber;
+    private Subscriber<String> mSubscriber;
     private BroadcastReceiver mReciever;
     private boolean mRecieverRegistered;
     private boolean mBluetoothDenied;
@@ -37,15 +37,13 @@ public class BeaconListener {
     private static final int REQUEST_ENABLE_BT = 1234;
     private static final Region ALL_ESTIMOTE_BEACONS_REGION = new Region("rid", null, null, null);
 
-    private Observable<String> mObservable;
-
-    public BeaconListener(Activity activity){
+    public BeaconListener(Activity activity) {
         this.mActivity = activity;
         mBeaconManager = new BeaconManager(activity);
         mRecieverRegistered = false;
     }
 
-    public void connect(Action1<String> onSuccess, Action1<Throwable> onFailure, boolean bluetoothDenied){
+    public void connect(Action1<String> onSuccess, Action1<Throwable> onFailure, boolean bluetoothDenied) {
         if (!mConnecting) {
             mConnecting = true;
             mBluetoothDenied = bluetoothDenied;
@@ -73,15 +71,15 @@ public class BeaconListener {
         }
     }
 
-    private void registerReciever(){
-        if(mReciever == null || !mRecieverRegistered) {
+    private void registerReciever() {
+        if (mReciever == null || !mRecieverRegistered) {
             mReciever = createBroadcastReceiver();
             mActivity.registerReceiver(mReciever, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
             mRecieverRegistered = true;
         }
     }
 
-    private void requestBluetooth(){
+    private void requestBluetooth() {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         mActivity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
     }
@@ -90,7 +88,7 @@ public class BeaconListener {
         mBeaconManager.connect(() -> mBeaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION));
     }
 
-    private void findBeacon(){
+    private void findBeacon() {
         mBeaconManager.setRangingListener(
                 (Region region, final List<Beacon> beacons) -> {
                     if (beacons.size() > 0) {
@@ -100,7 +98,7 @@ public class BeaconListener {
                         String queueId = null;
 
                         if (uuid.equals("b9407f30-f5f8-466e-aff9-25556b57fe6d")) {
-                            if(minor == 1) {
+                            if (minor == 1) {
                                 queueId = "queue1";
                             } else if (minor == 2) {
                                 queueId = "queue2";
@@ -146,7 +144,7 @@ public class BeaconListener {
         };
     }
 
-    public void disconnect(){
+    public void disconnect() {
         if (mBeaconManager != null) {
             mBeaconManager.disconnect();
             stopRanging();
@@ -158,15 +156,14 @@ public class BeaconListener {
         mSubscriber.onCompleted();
     }
 
-    public void stopRanging() {
+    private void stopRanging() {
         mBeaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
     }
 
-    public Observable<String> createObservable() {
-        mObservable = Observable.create(subscriber -> {
-            mSubscriber = subscriber;
+    private Observable<String> createObservable() {
+        return Observable.create(subscriber -> {
+            mSubscriber = (Subscriber<String>) subscriber;
             checkBluetooth();
         });
-        return mObservable;
     }
 }

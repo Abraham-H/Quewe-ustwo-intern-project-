@@ -14,14 +14,15 @@ import dialog.CloseQueueConfirmationDialog;
 import model.Queue;
 import model.Response;
 import utils.Utils;
+import views.QueueInProgressActivityLinearLayout;
+import views.StartQueueActivityLinearLayout;
 
 public class QueueInProgressActivity extends Activity {
 
     private Queue mQueue;
-    private ImageButton mNextInQueueImageButton;
-    private ImageButton mFinishQueueImageButton;
-    private TextView mCashierNumberTextView;
-    private TextView mNumOfPeopleInQueue;
+    private QueueInProgressActivityLinearLayout mView;
+    private static final Boolean DEBUG = true;
+    private static final String testQueue = "queue1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,26 +33,23 @@ public class QueueInProgressActivity extends Activity {
         changeListener();
         setChangeListener();
     }
+
     private void setQueue() {
         mQueue = new Queue();
+
+        if (DEBUG == true){
+            mQueue.setQueueId(testQueue);
+        }else
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
     }
 
     private void setViews() {
         Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
-                getActionBar(), this::launchCloseQueueConfirmationDialog);
+                getActionBar());
 
-        mCashierNumberTextView = (TextView) findViewById(R.id.queue_in_progress_textview_cashier_number);
-        mNumOfPeopleInQueue = (TextView) findViewById(R.id.activity_queue_in_progress_textview_number_in_queue);
-
-        mNextInQueueImageButton = (ImageButton) findViewById(R.id.activity_queue_in_progress_image_button_next);
-        mNextInQueueImageButton.setOnClickListener(this::nextInQueueImageButtonTapped);
-
-        mFinishQueueImageButton = (ImageButton) findViewById(R.id.finish_queue_image_button);
-        mFinishQueueImageButton.setOnClickListener(this::finishQueueImageButtonTapped);
-
-        mCashierNumberTextView.setText("People in " + mQueue.getQueueId());
-
+        mView = (QueueInProgressActivityLinearLayout) findViewById(R.id.queue_in_progress_linear_layout);
+        mView.setNextQueueButtonOnClickListener(this::nextInQueueImageButtonTapped);
+        mView.setCloseQueueButtonOnClickListener(this::finishQueueImageButtonTapped);
     }
 
     private void launchCloseQueueConfirmationDialog() {
@@ -75,35 +73,16 @@ public class QueueInProgressActivity extends Activity {
 
     private void onGetQueue(Response response) {
         ArrayList<String> queueData = (ArrayList<String>) response.getData();
-        String resultString = String.valueOf(queueData.size());
-        if (resultString == "0") {
-            mNumOfPeopleInQueue.setText("No");
-            disableNextImageButton();
-        } else {
-            mNumOfPeopleInQueue.setText(resultString);
-            enableActivityImageButtons();
-        }
+        mView.update(queueData);
     }
 
     private void onGetQueueError(Throwable throwable) {
         Response.Error error = Response.getError(throwable);
         if (error.getStatus() == 404) { // Queue not found
-            mNextInQueueImageButton.setEnabled(false);
-            mFinishQueueImageButton.setEnabled(true);
-            mNumOfPeopleInQueue.setText("No");
         }
     }
 
-    private void enableActivityImageButtons() {
-        mNextInQueueImageButton.setEnabled(true);
-        mFinishQueueImageButton.setEnabled(true);
-    }
-
-    private void disableNextImageButton() {
-        mNextInQueueImageButton.setEnabled(false);
-    }
-
-    private void finishQueueImageButtonTapped(View view) {
+    private void finishQueueImageButtonTapped() {
         launchCloseQueueConfirmationDialog();
     }
 
@@ -128,20 +107,12 @@ public class QueueInProgressActivity extends Activity {
         }
     }
 
-    private void nextInQueueImageButtonTapped(View view) {
+    private void nextInQueueImageButtonTapped() {
         popUserFromQueue();
     }
 
     private void popUserFromQueue() {
-        mQueue.popUserFromQueue(this::onUserPopped, this::onUserPoppedError);
-    }
-
-    private void onUserPopped(Response response) {
-    }
-
-    private void onUserPoppedError(Throwable throwable) {
-        Toast.makeText(getApplicationContext(), "User NOT popped...ERRRRROR!",
-                Toast.LENGTH_LONG).show();
+        mQueue.popUserFromQueue(mView::onUserPopped, mView::onUserPoppedError);
     }
 
     private void launchActivity(Class toActivityClass) {

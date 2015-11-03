@@ -1,7 +1,6 @@
 package app.com.example.android.queuee2.model;
 
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,17 +17,22 @@ public class Response {
     private String message;
     private Object data;
 
-    public Response(String message){
+    public Response(String message) {
         this(message, null);
     }
 
-    public Response(String message, Object data){
+    public Response(String message, Object data) {
         this.message = message;
         this.data = data;
     }
 
-    public String getMessage() {return message;}
-    public Object getData() {return data;}
+    public String getMessage() {
+        return message;
+    }
+
+    public Object getData() {
+        return data;
+    }
 
     public static Response.Error getError(Throwable error) {
         Gson gson = new Gson();
@@ -49,13 +53,13 @@ public class Response {
                     out.append(newLine);
                 }
             }
-            bodyString = gson.fromJson(out.toString(),Response.class).getMessage();
-            data = gson.fromJson(out.toString(),Response.class).getData();
+            bodyString = gson.fromJson(out.toString(), Response.class).getMessage();
+            data = gson.fromJson(out.toString(), Response.class).getData();
             status = retrofitError.getResponse().getStatus();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Response.Error(bodyString,status,data);
+        return new Response.Error(bodyString, status, data);
     }
 
     public static class Error {
@@ -63,7 +67,7 @@ public class Response {
         private int status;
         private Object data;
 
-        public Error(String message,int status, Object data) {
+        public Error(String message, int status, Object data) {
             this.message = message;
             this.status = status;
             this.data = data;

@@ -8,15 +8,17 @@ import android.os.Build;
 /**
  * Created by bkach on 10/9/15.
  */
-public class Permissions {
+public final class Permissions {
 
-    public static final String TAG = Permissions.class.getSimpleName();
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+
+    private Permissions() {
+    }
 
     public static void askLocationPermission(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android M Permission check
-            if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 activity.requestPermissions(
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                         PERMISSION_REQUEST_COARSE_LOCATION);

@@ -4,6 +4,20 @@
       <attr name="header_text" format="string" />
       <attr name="subheader_text" format="string" />
       <attr name="footer_text" format="string" />
-      <attr name="snooze_hidden" format="boolean" />
+      <attr name="footer_image_hidden" format="boolean" />
+      <attr name="footer_image_drawable" format="integer" />
+      <attr name="initial_animation" format="integer" />
    </declare-styleable>
+
+    <array name="in_queue_animations">
+        <item>waiting_animation</item>
+        <item>animation_almost_there</item>
+    </array>
+
+    <array name="add_to_queue_animations">
+        <item>animation_loading</item>
+        <item>animation_button</item>
+        <item>animation_button_closed</item>
+    </array>
+
 </resources>

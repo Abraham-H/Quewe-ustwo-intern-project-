@@ -19,7 +19,6 @@
         <activity
             android:name=".AddToQueueActivity"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".InQueueActivity"
@@ -29,10 +28,6 @@
             android:name=".ThankYouActivity"
             android:label="@string/title_activity_thank_you" >
         </activity>
-        <activity
-            android:name=".YouAreNextActivity"
-            android:label="@string/title_activity_you_are_next" >
-        </activity>
 
         <service
             android:name=".service.CheckQueueService"
@@ -41,7 +36,7 @@
 
         <activity
             android:name=".SplashActivity"
-            android:label="@string/title_activity_splash" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

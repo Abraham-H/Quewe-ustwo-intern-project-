@@ -7,5 +7,6 @@
     app:header_text="@string/add_to_queue_header_welcome"
     app:footer_text="@string/add_to_queue_footer_welcome"
     app:subheader_text="@string/add_to_queue_subheader_welcome"
-    app:snooze_hidden="true"
+    app:footer_image_hidden="true"
+    app:initial_animation="@drawable/animation_loading"
      />

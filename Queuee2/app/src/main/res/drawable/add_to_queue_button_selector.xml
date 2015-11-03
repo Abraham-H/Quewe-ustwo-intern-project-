@@ -3,6 +3,6 @@
      <item android:state_pressed="true"
            android:drawable="@drawable/add_to_queue_button_pressed" /> <!-- pressed -->
      <item android:state_enabled="false"
-           android:drawable="@drawable/add_to_queue_button_off" />
+           android:drawable="@drawable/add_to_queue_button_off_2" />
      <item android:drawable="@drawable/add_to_queue_button_default" /> <!-- default -->
  </selector>

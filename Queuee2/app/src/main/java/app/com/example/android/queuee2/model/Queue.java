@@ -1,9 +1,13 @@
 package app.com.example.android.queuee2.model;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import java.util.ArrayList;
 
 import com.google.gson.JsonElement;
+
+import java.util.ArrayList;
+
 import app.com.example.android.queuee2.MyApplication;
 import app.com.example.android.queuee2.utils.Utils;
 import rx.Observable;
@@ -20,27 +24,26 @@ public class Queue {
 
     private HerokuApiClient.HerokuService mHerokuService;
     private FirebaseListener mFirebaseListener;
-    private Runnable mOnFirebaseChange;
     private static String sAndroidId;
     private String mQueueId;
-    private boolean mSnoozable;
+    private boolean mLast;
 
     public Queue() {
         mHerokuService = HerokuApiClient.getHerokuService();
         sAndroidId = android.provider.Settings.Secure.getString(
                 MyApplication.getAppContext().getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
+        mLast = false;
     }
 
     public void setChangeListener(String queueId, Runnable callback) {
         this.disconnectChangeListener();
         this.mQueueId = queueId;
-        this.mOnFirebaseChange = callback::run;
-        mFirebaseListener = new FirebaseListener(mOnFirebaseChange);
+        mFirebaseListener = new FirebaseListener(callback::run);
         mFirebaseListener.connectListener();
     }
 
-    public void connectChangeListener(){
+    public void connectChangeListener() {
         if (mFirebaseListener != null) {
             mFirebaseListener.connectListener();
         }
@@ -53,27 +56,36 @@ public class Queue {
     }
 
     public void addUserToQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
-        addSubscribers(mHerokuService.add(mQueueId, sAndroidId), onSuccess, onFailure);
+        addSubscribers(mHerokuService.add(mQueueId, sAndroidId), response -> {
+            int position = (int) ((double) response.getData());
+            Utils.storeInitialPosition(position + 1); // One more than the current position
+            onSuccess.call(response);
+        }, onFailure);
     }
 
-    public void removeUserFromQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure){
+    public void removeUserFromQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         addSubscribers(mHerokuService.remove(mQueueId, sAndroidId), onSuccess, onFailure);
     }
 
-    public void getQueue(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
-        addSubscribers(mHerokuService.info(mQueueId), onSuccess, onFailure);
+    public void getQueue(Action1<ArrayList<String>> onSuccess, Action1<Throwable> onFailure) {
+        addSubscribers(mHerokuService.info(mQueueId), (response) -> {
+            ArrayList<String> queue = (ArrayList<String>) response.getData();
+            int position = queue.indexOf(getUserId()) + 1;
+            mLast = (position == queue.size());
+            onSuccess.call(queue);
+        }, onFailure);
     }
 
-    public void getUser(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
-        Log.d(TAG, "getUser(): " + String.valueOf(sAndroidId) + ", " + mQueueId);
-        addSubscribers(mHerokuService.info(mQueueId, sAndroidId), onSuccess, onFailure);
+    public boolean isHalfway(int position){
+        int initialPos = Utils.getInitialPosition();
+        return ((int) (Utils.getInitialPosition() * 0.5)) == position;
     }
 
     public void snooze(Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         addSubscribers(mHerokuService.snooze(mQueueId, sAndroidId), onSuccess, onFailure);
     }
 
-    public void addSubscribers(Observable<JsonElement> observable, Action1<Response> onSuccess, Action1<Throwable> onFailure) {
+    private void addSubscribers(Observable<JsonElement> observable, Action1<Response> onSuccess, Action1<Throwable> onFailure) {
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -81,15 +93,8 @@ public class Queue {
                 .subscribe(onSuccess, onFailure);
     }
 
-    public boolean snoozeable() {
-        mHerokuService.info(mQueueId)
-                .map(Utils::jsonToResponse)
-                .subscribe(
-                        (response) -> {
-                        }
-                        ,
-                        (e) -> Log.d(TAG, e.getLocalizedMessage()));
-        return mSnoozable;
+    public boolean isLast() {
+        return mLast;
     }
 
     public String getUserId() {

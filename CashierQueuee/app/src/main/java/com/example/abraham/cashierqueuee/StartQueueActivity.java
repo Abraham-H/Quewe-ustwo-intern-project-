@@ -8,13 +8,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abraham.cashierqueuee.R;
 
+import dialog.CloseQueueConfirmationDialog;
 import model.Queue;
 import model.Response;
+import utils.Utils;
+import views.StartQueueActivityLinearLayout;
 
 public class StartQueueActivity extends Activity {
 
@@ -22,9 +26,7 @@ public class StartQueueActivity extends Activity {
 
     private static String TAG = StartQueueActivity.class.getSimpleName();
 
-    private TextView mCashierNumberTextView;
-    private ImageButton mStartQueueImageButton;
-    private ImageButton mFinishQueueImageButton;
+    private StartQueueActivityLinearLayout mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +37,20 @@ public class StartQueueActivity extends Activity {
     }
 
     private void setViews(){
-        mCashierNumberTextView = (TextView) findViewById(R.id.cashier_number);
-        mStartQueueImageButton = (ImageButton) findViewById(R.id.start_queue_image_button);
-        mStartQueueImageButton.setOnClickListener(this::startQueueButtonTapped);
+        Utils.setupActionBar(this, getIntent().getStringExtra("queueId"),
+                getActionBar());
+
+        mView = (StartQueueActivityLinearLayout) findViewById(R.id.start_queue_linear_layout);
+        mView.setStartQueueButtonOnClickListener(this::startQueueButtonTapped);
     }
 
     private void setQueue(){
         mQueue = new Queue();
         mQueue.setQueueId(getIntent().getStringExtra("queueId"));
-
-        Log.d("StartQueueActivity", mQueue.getQueueId());
-        mCashierNumberTextView.setText(mQueue.getQueueId());
     }
 
     private void startQueueButtonTapped(View v){
         mQueue.startQueue(this::onQueueStartedSuccess, this::onQueueStartedFailure);
-        launchActivity(QueueInProgressActivity.class);
     }
 
     private void onQueueStartedSuccess(Response response) {

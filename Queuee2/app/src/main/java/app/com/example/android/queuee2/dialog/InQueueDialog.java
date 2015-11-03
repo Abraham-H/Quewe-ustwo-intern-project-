@@ -1,32 +1,30 @@
 package app.com.example.android.queuee2.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.view.View;
 
 import app.com.example.android.queuee2.R;
 
 /**
  * Created by Abraham on 10/2/2015.
  */
-public class InQueueDialog extends Dialog {
+public class InQueueDialog extends BaseDialog {
     public InQueueDialog(Context context) {
         super(context);
-        setDialogComponents();
+        removeYesNoButtons();
+        setViewContent();
+        setListener(mOkButton,()->{});
         show();
     }
 
-    private void setDialogComponents() {
-        setContentView(R.layout.in_queue_pop_up_dialog);
-        setTitle("You are lined up");
-        ImageView popUpImageView = (ImageView) findViewById(R.id.popUpDialogImage);
-        popUpImageView.setImageResource(R.drawable.happy_face_icon);
+    private void setViewContent(){
+        mImageView.setImageResource(R.drawable.happy_face_icon);
+        mHeader.setText("Queued!");
+        mSubheader.setText("We'll notify you when it's your turn");
+    }
 
-        Button popUpButton = (Button) findViewById(R.id.dialogButtonOK);
-        popUpButton.setOnClickListener(z -> {
-                    dismiss();
-                }
-        );
+    private void removeYesNoButtons(){
+        mYesButton.setVisibility(View.GONE);
+        mNoButton.setVisibility(View.GONE);
     }
 }

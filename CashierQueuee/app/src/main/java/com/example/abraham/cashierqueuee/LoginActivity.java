@@ -2,30 +2,37 @@ package com.example.abraham.cashierqueuee;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import model.BeaconListener;
 import model.Queue;
 import model.Response;
+import utils.Utils;
 
 public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final Boolean DEBUG = true;
     private static final int REQUEST_ENABLE_BT = 1234;
-
     private BeaconListener mBeaconListener;
     private Queue mQueue;
     private boolean mIsBluetoothDenied;
+    private static final String testQueue = "queue1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setInstanceVariables();
-        setViews();
     }
 
     @Override
@@ -48,19 +55,25 @@ public class LoginActivity extends Activity {
     }
 
     private void setInstanceVariables() {
-        mBeaconListener = new BeaconListener(this);
+
+        if (!DEBUG) {
+            mBeaconListener = new BeaconListener(this);
+        }
+
         mQueue = new Queue();
         mIsBluetoothDenied = false;
     }
 
-    private void setViews() {
-    }
-
     private void connectBeaconListener(boolean isBluetoothDenied) {
-        mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+        if (DEBUG) {
+            onBeaconFound(testQueue);
+        } else {
+            mBeaconListener.connect(this::onBeaconFound, this::onBeaconError, isBluetoothDenied);
+        }
     }
 
     private void onBeaconFound(String queueId) {
+        Utils.storeQueueId(queueId);
         mQueue.setQueueId(queueId);
         mQueue.getQueue(this::onQueueExists, this::onQueueExistError);
     }
@@ -84,13 +97,15 @@ public class LoginActivity extends Activity {
     }
 
     private void disconnectBeaconListener() {
-        mBeaconListener.disconnect();
+        if (!DEBUG) {
+            mBeaconListener.disconnect();
+        }
     }
 
     private void launchActivity(Class toActivityClass) {
-        Intent intent = new Intent(this, toActivityClass);
-        intent.putExtra("queueId", mQueue.getQueueId());
-        startActivity(intent);
+            Intent intent = new Intent(this, toActivityClass);
+            intent.putExtra("queueId", mQueue.getQueueId());
+            startActivity(intent);
     }
 
     private void toastError(String message) {
